@@ -5,6 +5,7 @@ import Tanks3D.Object.Entity.Round.Round;
 import Tanks3D.Object.Wall.*;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
+import Tanks3D.Utilities.Wrappers.MutableDouble;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -105,8 +106,8 @@ public class Tank extends Entity {
             die();
         else {
             //Update the angle and position of the tank.
-            angle += rotationSpeed * deltaTime / 1000;
-            angle = FastMath.formatAngle(angle);
+            angle.add(rotationSpeed * deltaTime / 1000);
+            angle.setValue(FastMath.formatAngle(angle.getValue()));
             super.update(data, deltaTime, thisObject);
         }
     }
@@ -170,10 +171,10 @@ public class Tank extends Entity {
             //Calculate the distance to spawn the round.
             double distance = hitCircleRadius;
             //Calculate the x and y position to spawn the round based on the tank's position and angle.
-            double xPos = position.x + distance * FastMath.sin(angle);
-            double yPos = position.y + distance * FastMath.cos(angle);
+            double xPos = position.x + distance * FastMath.sin(angle.getValue());
+            double yPos = position.y + distance * FastMath.cos(angle.getValue());
             //Create the round and add it to the entity list.
-            Round.newArmorPiercing(xPos, yPos, gunHeight, angle, this);
+            Round.newArmorPiercing(xPos, yPos, gunHeight, angle.getValue(), this);
         }
         //If the tank is reloading, check if the reload time is up. If it is, set reloading to false.
         else if(System.currentTimeMillis() >= shotTime + shotCooldown) {
@@ -218,7 +219,7 @@ public class Tank extends Entity {
 
     public void resetTank() {
         position.setLocation(spawnPoint);
-        angle = spawnAngle;
+        angle.setValue(spawnAngle);
         entityColor = new Color(defaultColor.getRGB());
         health = maxHealth;
         alive = true;
@@ -242,7 +243,7 @@ public class Tank extends Entity {
     public Point2D.Double getPosition() {
         return position;
     }
-    public double getAngle() {
+    public MutableDouble getAngle() {
         return super.angle;
     }
     public int getMaxHealth() {

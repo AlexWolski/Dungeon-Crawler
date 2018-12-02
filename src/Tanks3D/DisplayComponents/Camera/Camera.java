@@ -1,16 +1,18 @@
-package Tanks3D.DisplayComponents;
+package Tanks3D.DisplayComponents.Camera;
 
 import Tanks3D.GameData;
 import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
+import Tanks3D.Utilities.Wrappers.MutableDouble;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.concurrent.Callable;
 
 //Draw the level and entities.
 public class Camera {
@@ -21,13 +23,19 @@ public class Camera {
     //An array containing the wall slices that need to be drawn.
     private final ObjectSlice[] wallBuffer;
     //An array full of booleans indicating whether a pixel has been written to or not.
-    private final boolean[][] pixelTable;
+    private Boolean[][] pixelTable;
     //The horizontal and vertical field of view of the camera.
-    private static double FOV = 60;
+    private final static double FOV = 60;
     //The distance from the camera to the projection plane.
-    private double distProjectionPlane;
+    private final double distProjectionPlane;
+    //The position of the camera
+    private final Point2D.Double position;
+    //The angle of the camera
+    private final MutableDouble angle;
+    //The number of threads that will draw the world
+    private final int numThreads;
 
-    public Camera(GameData gameData, BufferedImage canvas) {
+    public Camera(GameData gameData, BufferedImage canvas, Point2D.Double position, MutableDouble angle) {
         this.canvas = canvas;
         this.gameData = gameData;
 
@@ -35,7 +43,14 @@ public class Camera {
         distProjectionPlane = FastMath.cos(FOV /2) / FastMath.sin(FOV /2) * canvas.getWidth() / 2;
         //Initialize the array of wall slices and array of booleans.
         wallBuffer = new ObjectSlice[canvas.getWidth()];
-        pixelTable = new boolean[canvas.getWidth()][canvas.getHeight()];
+        pixelTable = new Boolean[canvas.getWidth()][canvas.getHeight()];
+        //Fill the pixel table so that it is all writable
+        clearPixelTable();
+        //Store the position and angle of the player
+        this.position = position;
+        this.angle = angle;
+        //Set the number of threads to one more than the number of cores
+        numThreads = Runtime.getRuntime().availableProcessors() + 1;
     }
 
     //Reset the pixel table.
@@ -46,7 +61,7 @@ public class Camera {
     }
 
     //Fill the given buffer with the slices of wall that needs to be drawn.
-    private void calculateWallBuffer(Point2D.Double position, double angle) {
+    private void calculateWallBuffer() {
         //The angle between each ray.
         double rayAngle = FOV /wallBuffer.length;
         //The angle of the first ray.
@@ -70,7 +85,7 @@ public class Camera {
                     Line2D.Double line = wall.getLine();
 
                     //Rotate the wall so that the ray is facing along the y axis.
-                    FastMath.rotate(line, position, -angle - currentRay);
+                    FastMath.rotate(line, position, -angle.getValue() - currentRay);
                     FastMath.translate(line, -position.x, -position.y);
 
                     //The distance between the camera and the point on the wall that the ray hit. Multiply by cos to remove the fish-eye effect.
@@ -125,7 +140,7 @@ public class Camera {
             //If the image wasn't loaded properly, just draw a purple slice.
             if(slice.image == null) {
                 for (int canvasY = wallStart; canvasY < wallEnd; canvasY++)
-                    if(pixelTable[canvasX][canvasY]) {
+                    if(pixelTable[canvasX][canvasY].equals(true)) {
                         canvas.setRGB(canvasX, canvasY, Color.MAGENTA.getRGB());
                         pixelTable[canvasX][canvasY] = false;
                     }
@@ -144,7 +159,7 @@ public class Camera {
                 //Loop through the image and draw all of the rows.
                 for (int canvasY = wallStart; canvasY < wallEnd; canvasY++) {
                     //If the pixel hasn't been written to yet, draw the pixel.
-                    if(pixelTable[canvasX][canvasY]) {
+                    if(pixelTable[canvasX][canvasY].equals(true)) {
                         //Get the color of the pixel at the current point in the image if the color is valid.
                         pixelColor = slice.image.getRGB(imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
 
@@ -175,14 +190,14 @@ public class Camera {
 
             //Draw the ceiling.
             for(int j = 0; j < canvas.getHeight()/2; j++)
-                if(pixelTable[i][j]) {
+                if(pixelTable[i][j].equals(true)) {
                     canvas.setRGB(i, j, gameData.gameLevel.getCeilColor());
                     pixelTable[i][j] = false;
                 }
 
             //Draw the floor.
             for(int j = canvas.getHeight()/2; j < canvas.getHeight(); j++)
-                if(pixelTable[i][j]) {
+                if(pixelTable[i][j].equals(true)) {
                     canvas.setRGB(i, j, gameData.gameLevel.getFloorColor());
                     pixelTable[i][j] = false;
                 }
@@ -190,11 +205,11 @@ public class Camera {
     }
 
     //Draw the entities, comparing their distance to the wall buffer.
-    private void drawEntities(Point2D.Double position, double angle) {
+    private void drawEntities() {
         //The angle between each ray.
-        double rayAngle = FOV /wallBuffer.length;
+        double rayAngle = FOV / wallBuffer.length;
         //The angle of the first ray.
-        double currentRay = -FOV /2;
+        double currentRay = -FOV / 2;
         //Distance from the camera to the center of the entity.
         double dist;
         //The angle between the camera and the entity.
@@ -209,12 +224,12 @@ public class Camera {
         ObjectSlice currentSlice;
 
         //Iterate through each ray.
-        for(int i = 0; i < wallBuffer.length; i++) {
+        for (int i = 0; i < wallBuffer.length; i++) {
             //Empty the list of entities.
             visibleEntities.clear();
 
             //Iterate through the entity list and draw the slices that are visible.
-            for(Entity entity : gameData.entityList) {
+            for (Entity entity : gameData.entityList) {
                 //Scan the entity if it is visible.
                 if (entity.getVisible()) {
                     //The angle between the camera and the entity.
@@ -225,7 +240,7 @@ public class Camera {
                     //Rotate the line around itself so that it is facing the camera.
                     FastMath.rotate(rotatedLine, entity.position, entityAngle);
                     //Rotate the line around the camera so that the ray is along the y axis.
-                    FastMath.rotate(rotatedLine, position, -angle - currentRay);
+                    FastMath.rotate(rotatedLine, position, -angle.getValue() - currentRay);
                     FastMath.translate(rotatedLine, -position.x, -position.y);
 
                     //Get the distance to the entity using the line accounting for the fish eye effect.
@@ -239,10 +254,10 @@ public class Camera {
                         FastMath.rotate(rotatedPoint, position, -entityAngle);
                         FastMath.subtract(rotatedPoint, position);
                         //Recalculate the distance to the center of the entity, not where it intersects.
-                        dist = rotatedPoint.y *  FastMath.cos(entityAngle - angle);
+                        dist = rotatedPoint.y * FastMath.cos(entityAngle - angle.getValue());
 
                         //Create the object slice.
-                        currentSlice = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(angle), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
+                        currentSlice = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(angle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
 
                         //If the array list is empty, add the object slice.
                         if (visibleEntities.isEmpty())
@@ -265,7 +280,7 @@ public class Camera {
             }
 
             //Draw all of the entities in the array list in order from nearest to farthest.
-            for(ObjectSlice slice : visibleEntities)
+            for (ObjectSlice slice : visibleEntities)
                 drawSlice(slice, i);
 
             //Move on to the next ray.
@@ -274,14 +289,15 @@ public class Camera {
     }
 
     //Calculate the wall slices, draw the entities, and finally draw the walls.
-    public void draw(Point2D.Double position, double angle) {
-        //Reset the pixel table so that every pixel is writable.
-        clearPixelTable();
+    public void draw() {
         //Calculate which walls to draw given the position and angle of the camera.
-        calculateWallBuffer(position, angle);
+        calculateWallBuffer();
         //Draw the entities.
-        drawEntities(position, angle);
+        drawEntities();
         //Draw the walls.
         drawWalls();
+
+        //Reset the pixel table so that every pixel is writable.
+        clearPixelTable();
     }
 }

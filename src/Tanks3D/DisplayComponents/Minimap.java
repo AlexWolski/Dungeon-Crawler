@@ -10,7 +10,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 //Displays the minimap.
-public class Minimap implements Runnable {
+public class Minimap {
     private final GameData gameData;
     private final BufferedImage canvas;
     private double mapSizeRatio;
@@ -69,7 +69,7 @@ public class Minimap implements Runnable {
             entityPos.x -= iconSize / 2.0;
             entityPos.y += iconSize / 2.0;
             //Draw it rotated.
-            Image.drawRotated(graphic, entity.getIcon(), entity.angle, (int) entityPos.x, canvas.getHeight() - (int) entityPos.y, iconSize, iconSize);
+            Image.drawRotated(graphic, entity.getIcon(), entity.angle.getValue(), (int) entityPos.x, canvas.getHeight() - (int) entityPos.y, iconSize, iconSize);
         }
     }
 
@@ -94,9 +94,5 @@ public class Minimap implements Runnable {
 
         //Delete the graphics object.
         graphic.dispose();
-    }
-
-    public void run() {
-        draw();
     }
 }

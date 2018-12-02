@@ -1,4 +1,4 @@
-package Tanks3D.DisplayComponents;
+package Tanks3D.DisplayComponents.Camera;
 
 import Tanks3D.Object.GameObject;
 
@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 //A 'struct' to contain the data needed to draw a slice of a wall or entity.
-class ObjectSlice {
+public class ObjectSlice {
     //The wall that this slice came from.
     final GameObject object;
     //The distance from the camera to the intersection between the ray and the wall.

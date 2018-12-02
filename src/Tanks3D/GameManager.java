@@ -1,7 +1,7 @@
 package Tanks3D;
 
 import Tanks3D.DisplayComponents.Minimap;
-import Tanks3D.DisplayComponents.SplitWindow;
+import Tanks3D.DisplayComponents.DisplayWindow;
 import Tanks3D.InputManager.InputManager;
 import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Round.Round;
@@ -14,14 +14,14 @@ import java.util.ListIterator;
 public abstract class GameManager {
     //Constant settings.
     private final static String levelFile = "Underground Arena.txt";
-    //Size of the display. The extra 4px on the width is for the screen divider.
-    private final static int defaultWidth = 1004;
-    private final static int defaultHeight = 500;
+    //Size of the display.
+    private final static int defaultWidth = 1200;
+    private final static int defaultHeight = 800;
     //How much space the title bar takes.
     private final static int titleBarHeight = 30;
 
     //The window that the game runs in and controls drawing of the screen.
-    private final static SplitWindow gameWindow;
+    private final static DisplayWindow gameWindow;
     //'struct' that holds all of the data for the game world.
     private final static GameData gameData;
 
@@ -66,15 +66,14 @@ public abstract class GameManager {
         gameData.gameLevel = new Level(levelFile, gameData.entityList);
 
         //Create and configure the JFrame. This JFrame will have three panels: the two players screens and a minimap.
-        gameWindow = new SplitWindow(gameData, "Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
+        gameWindow = new DisplayWindow(gameData, "Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
 
         //Initialize the 'Player' objects. Get the initial positions for both players and indicate which side of the screen the HUD icons are on.
-        gameData.player1 = new Player(gameData, gameWindow.getScreen1Buffer(), gameData.gameLevel.getPlayer1Spawn(), Color.cyan, "left");
-        gameData.player2 = new Player(gameData, gameWindow.getScreen2Buffer(), gameData.gameLevel.getPlayer2Spawn(), Color.green, "right");
+        gameData.player = new Player(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayer1Spawn(), Color.cyan);
         gameData.minimap = new Minimap(gameData, gameWindow.getMinimapBuffer());
 
         //Link the controls for each player.
-        InputManager.init(gameWindow.getPanel(), gameData.player1, gameData.player2);
+        InputManager.init(gameWindow.getPanel(), gameData.player);
         //Initialize the round object.
         Round.init(gameData.entityList);
 
@@ -91,14 +90,14 @@ public abstract class GameManager {
         gameData.gameLevel = new Level(levelFile, gameData.entityList);
         //Reset the entity list.
         gameData.entityList.clear();
-        gameData.entityList.add(gameData.player1.getTank());
-        gameData.entityList.add(gameData.player2.getTank());
+        gameData.entityList.add(gameData.player.getTank());
+        gameData.entityList.add(gameData.player.getTank());
         //Rest the round pool.
         Round.init(gameData.entityList);
 
         //Reset the tanks.
-        gameData.player1.reset();
-        gameData.player2.reset();
+        gameData.player.reset();
+        gameData.player.reset();
     }
 
     //Get the current time, calculate the time elapsed since the last frame, and store it in 'deltaTime;.
@@ -160,12 +159,6 @@ public abstract class GameManager {
         if(!restarting) {
             //Display 'You Lose' on the screen of the player who lost.
             player.lose();
-
-            //Determine which player won and display 'You Win' on their screen.
-            if (player == gameData.player1)
-                gameData.player2.win();
-            else
-                gameData.player1.win();
 
             //Save the current time and start counting down until the restart.
             timeOfGameEnd = System.currentTimeMillis();

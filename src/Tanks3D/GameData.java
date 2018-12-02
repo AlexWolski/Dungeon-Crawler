@@ -12,9 +12,8 @@ public final class GameData {
     //A list of entities in the game. The first index is always player 1 and the second index is always player 2.
     public ArrayList<Entity> entityList;
 
-    //The two objects that controls player input and displays their side of the screen.
-    public Player player1;
-    public Player player2;
+    //The object that controls the player's input and displays their screen.
+    public Player player;
     //The object that controls the minimap
     public Minimap minimap;
 }

@@ -110,7 +110,7 @@ public abstract class Round extends Entity {
             //Modify the variables of the round.
             tempRound.position.setLocation(x, y);
             tempRound.zPos = zPos;
-            tempRound.angle = angle;
+            tempRound.angle.setValue(angle);
             tempRound.distTraveled = 0;
             tempRound.owner = owner;
         }

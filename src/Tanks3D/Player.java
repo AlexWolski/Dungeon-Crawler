@@ -1,16 +1,17 @@
 package Tanks3D;
 
-import Tanks3D.DisplayComponents.Camera;
+import Tanks3D.DisplayComponents.Camera.Camera;
 import Tanks3D.DisplayComponents.HUD;
 import Tanks3D.Object.Entity.Tank;
 import Tanks3D.Object.SpawnPoint;
+import Tanks3D.Utilities.Wrappers.MutableDouble;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 //Manage the player's tank and screen. This extends 'Runnable' so that the draw function can be threaded.
-public class Player implements Runnable {
+public class Player {
     private final Tank myTank;
     //A camera for displaying the game world.
     private final Camera camera;
@@ -25,21 +26,21 @@ public class Player implements Runnable {
     //Determine whether to display the 'You Win' or 'You Lose' images.
     private boolean win, lose = false;
 
-    public Player(GameData gameData, BufferedImage canvas, SpawnPoint spawnPoint, Color tankColor, String iconSide) {
+    public Player(GameData gameData, BufferedImage canvas, SpawnPoint spawnPoint, Color tankColor) {
         //Create a new tank given the spawn-point and add it to the entity list.
         myTank = new Tank(spawnPoint.getPosition(), spawnPoint.getAngle(), tankColor);
         //Add the new tank to the list of all entities.
         gameData.entityList.add(myTank);
 
         //Create a new camera given the spawn-point position and angle.
-        camera = new Camera(gameData, canvas);
+        camera = new Camera(gameData, canvas, getPosition(), getAngle());
 
-        //Create a new HUD object with the tank's color. 'iconSide' determines which side of the screen the HUD icons are on.
-        hud = new HUD(canvas, getColor(), iconSide);
+        //Create a new HUD object with the tank's color.
+        hud = new HUD(canvas, getColor());
     }
 
     //Draw the player's screen.
-    private void draw() {
+    public void draw() {
         //If the tank is alive, check if it has any lives left.
         if(!myTank.isAlive()) {
             //If it has lives left, respawn the tank and reset the controls.
@@ -58,7 +59,7 @@ public class Player implements Runnable {
         drawing = true;
 
         //Draw the walls and entities.
-        camera.draw(myTank.getPosition(), myTank.getAngle());
+        camera.draw();
         //Draw the HUD.
         hud.draw(myTank.getMaxHealth(), myTank.getHealth(), myTank.getLives(), win, lose, myTank.isAlive());
 
@@ -85,18 +86,13 @@ public class Player implements Runnable {
         myTank.resetLives();
     }
 
-    //Draw the player's screen in a thread.
-    public void run() {
-        draw();
-    }
-
     public Color getColor() {
         return myTank.getColor();
     }
     public Point2D.Double getPosition() {
         return myTank.getPosition();
     }
-    public double getAngle() {
+    public MutableDouble getAngle() {
         return myTank.getAngle();
     }
     public Tank getTank() {

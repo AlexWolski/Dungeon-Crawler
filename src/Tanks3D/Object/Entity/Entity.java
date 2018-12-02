@@ -5,6 +5,7 @@ import Tanks3D.Object.Wall.UnbreakableWall;
 import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.GameData;
+import Tanks3D.Utilities.Wrappers.MutableDouble;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -28,13 +29,13 @@ public abstract class Entity extends GameObject {
     //The entity's data in 3d space.
     protected int zPos;
     public Point2D.Double position;
-    public double angle;
+    public MutableDouble angle;
     public double speed;
 
     public Entity(int hitCircleRadius, Point2D.Double position, double angle, double speed) {
         this.hitCircleRadius = hitCircleRadius;
         this.position = position;
-        this.angle = angle;
+        this.angle = new MutableDouble(angle);
         this.speed = speed;
     }
 
@@ -47,9 +48,9 @@ public abstract class Entity extends GameObject {
             //Move the entity based on its angle and speed.
             double distMoved = speed * deltaTime / 1000;
             //Equivalent of cos(angle-90)
-            position.x += distMoved * FastMath.sin(angle);
+            position.x += distMoved * FastMath.sin(angle.getValue());
             //Equivalent of sin(angle-90)
-            position.y += distMoved * FastMath.cos(angle);
+            position.y += distMoved * FastMath.cos(angle.getValue());
 
             //Check if the entity collides with any walls or entities.
             //Pass an iterator to this object in case it needs to remove itself from the list.
@@ -153,7 +154,7 @@ public abstract class Entity extends GameObject {
     //Given the angle of the camera, return the appropriate image.
     public BufferedImage getSprite(double viewerAngle) {
         //Get the difference in angle between the tank and the viewer.
-        viewerAngle = FastMath.formatAngle(this.angle - viewerAngle - 540.0/ sprites.length);
+        viewerAngle = FastMath.formatAngle(this.angle.getValue() - viewerAngle - 540.0/ sprites.length);
         //Map the angle to one of the sprites and return it.
         return sprites[(int)(viewerAngle * sprites.length/360)];
     }
