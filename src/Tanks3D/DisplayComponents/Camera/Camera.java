@@ -11,29 +11,32 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
-import java.util.concurrent.Callable;
 
 //Draw the level and entities.
 public class Camera {
     //A struct that contains the necessary data about the game.
-    private final GameData gameData;
+    public final GameData gameData;
     //An buffer that get written to, then displayed on the screen.
-    private final BufferedImage canvas;
+    public final BufferedImage canvas;
     //An array containing the wall slices that need to be drawn.
-    private final ObjectSlice[] wallBuffer;
+    public final ObjectSlice[] wallBuffer;
     //An array full of booleans indicating whether a pixel has been written to or not.
-    private Boolean[][] pixelTable;
+    public Boolean[][] pixelTable;
     //The horizontal and vertical field of view of the camera.
-    private final static double FOV = 60;
+    public final static double FOV = 60;
+    //The cameraPosition of the camera.
+    public final Point2D.Double cameraPosition;
+    //The angle of the camera.
+    public final MutableDouble cameraAngle;
     //The distance from the camera to the projection plane.
     private final double distProjectionPlane;
-    //The position of the camera
-    private final Point2D.Double position;
-    //The angle of the camera
-    private final MutableDouble angle;
-    //The number of threads that will draw the world
-    private final int numThreads;
+    //The color of the floor and ceiling.
+    private final int floorColor, ceilColor;
+    //Test
+    int[] imagePixelData;
+
 
     public Camera(GameData gameData, BufferedImage canvas, Point2D.Double position, MutableDouble angle) {
         this.canvas = canvas;
@@ -44,13 +47,19 @@ public class Camera {
         //Initialize the array of wall slices and array of booleans.
         wallBuffer = new ObjectSlice[canvas.getWidth()];
         pixelTable = new Boolean[canvas.getWidth()][canvas.getHeight()];
-        //Fill the pixel table so that it is all writable
+        //Get the floor and ceiling color.
+        floorColor = gameData.gameLevel.getFloorColor();
+        ceilColor = gameData.gameLevel.getCeilColor();
+
+        //Fill the pixel table so that it is all writable.
         clearPixelTable();
-        //Store the position and angle of the player
-        this.position = position;
-        this.angle = angle;
-        //Set the number of threads to one more than the number of cores
-        numThreads = Runtime.getRuntime().availableProcessors() + 1;
+
+        //Store the cameraPosition and angle of the player.
+        this.cameraPosition = position;
+        this.cameraAngle = angle;
+
+        //Test
+        imagePixelData = ((DataBufferInt)canvas.getRaster().getDataBuffer()).getData();
     }
 
     //Reset the pixel table.
@@ -60,62 +69,8 @@ public class Camera {
                 pixelTable[i][j] = true;
     }
 
-    //Fill the given buffer with the slices of wall that needs to be drawn.
-    private void calculateWallBuffer() {
-        //The angle between each ray.
-        double rayAngle = FOV /wallBuffer.length;
-        //The angle of the first ray.
-        double currentRay = -FOV /2;
-        //The distance from the camera to the wall slice.dd
-        double dist;
-
-        //Variables for calculating the intersection ratio of the wall texture.
-        double scaledImgWidth;
-        double inGameImgWidth;
-
-        //Iterate through each ray.
-        for(int i = 0; i < wallBuffer.length; i++) {
-            wallBuffer[i] = null;
-
-            //Iterate through each wall and determine which one to draw.
-            for(Wall wall : gameData.gameLevel.wallObjects) {
-                //Scan the wall if it is visible.
-                if(wall.getVisible()) {
-                    //Copy the points of the wall.
-                    Line2D.Double line = wall.getLine();
-
-                    //Rotate the wall so that the ray is facing along the y axis.
-                    FastMath.rotate(line, position, -angle.getValue() - currentRay);
-                    FastMath.translate(line, -position.x, -position.y);
-
-                    //The distance between the camera and the point on the wall that the ray hit. Multiply by cos to remove the fish-eye effect.
-                    dist = FastMath.getYIntercept(line) * FastMath.cos(currentRay);
-
-                    //If this wall is visible and is closer to the camera than walls previously checked, save it in the buffer.
-                    if (dist > 0 && (wallBuffer[i] == null || wallBuffer[i].distToCamera > dist)) {
-                        //If the texture for the wall wasn't loaded correctly, put a dummy variable in for inGameImgWidth.
-                        if(wall.getTexture() == null)
-                            inGameImgWidth = -1;
-                        else {
-                            //The size of the image fit to the wall.
-                            scaledImgWidth = wall.getHeight() / wall.getTexture().getHeight() * wall.getTexture().getWidth();
-                            //The width of the image as viewed from the camera.
-                            inGameImgWidth = Math.abs(line.x2 - line.x1) / (wall.getWidth()/scaledImgWidth);
-                        }
-
-                        //Calculate the intersection ratio for the texture and
-                        wallBuffer[i] = new ObjectSlice(wall, dist, wall.getHeight()/2, wall.getTexture(), wall.getTextureColor(), (Math.abs(line.x1) % inGameImgWidth)/inGameImgWidth);
-                    }
-                }
-            }
-
-            //Move on to the next ray.
-            currentRay += rayAngle;
-        }
-    }
-
     //Draw a slice of an image.
-    private void drawSlice(ObjectSlice slice, int canvasX) {
+    public void drawSlice(ObjectSlice slice, int canvasX) {
         if(slice != null) {
             //The color of the pixel being drawn to the screen.
             int pixelColor;
@@ -124,7 +79,7 @@ public class Camera {
             //The height of the image that actually gets drawn.
             int sliceHeight = (int) (slice.object.getHeight() / slice.distToCamera * distProjectionPlane);
 
-            //The y position where the image will be drawn.
+            //The y cameraPosition where the image will be drawn.
             int zPos = (int) Math.round(canvas.getHeight()/2.0 + ((Wall.defaultWallHeight()/slice.distToCamera * distProjectionPlane)/2) - (slice.zPos/slice.distToCamera * distProjectionPlane));
 
             //Calculate the y positions where the wall starts and stops on the screen.
@@ -141,7 +96,7 @@ public class Camera {
             if(slice.image == null) {
                 for (int canvasY = wallStart; canvasY < wallEnd; canvasY++)
                     if(pixelTable[canvasX][canvasY].equals(true)) {
-                        canvas.setRGB(canvasX, canvasY, Color.MAGENTA.getRGB());
+                        imagePixelData[canvasY * canvas.getWidth() + canvasX] = Color.MAGENTA.getRGB();
                         pixelTable[canvasX][canvasY] = false;
                     }
             }
@@ -170,7 +125,7 @@ public class Camera {
                                 pixelColor = Image.tintPixel(new Color(pixelColor), slice.imageColor);
 
                             //Draw the pixel.
-                            canvas.setRGB(canvasX, canvasY, pixelColor);
+                            imagePixelData[canvasY * canvas.getWidth() + canvasX] = pixelColor;
                             pixelTable[canvasX][canvasY] = false;
                         }
                     }
@@ -182,6 +137,60 @@ public class Camera {
         }
     }
 
+    //Fill the given buffer with the slices of wall that needs to be drawn.
+    private void calculateWallBuffer() {
+        //The angle between each ray.
+        double rayAngle = FOV /wallBuffer.length;
+        //The angle of the first ray.
+        double currentRay = -FOV /2;
+        //The distance from the camera to the wall slice.dd
+        double dist;
+
+        //Variables for calculating the intersection ratio of the wall texture.
+        double scaledImgWidth;
+        double inGameImgWidth;
+
+        //Iterate through each ray.
+        for(int i = 0; i < wallBuffer.length; i++) {
+            wallBuffer[i] = null;
+
+            //Iterate through each wall and determine which one to draw.
+            for(Wall wall : gameData.gameLevel.wallObjects) {
+                //Scan the wall if it is visible.
+                if(wall.getVisible()) {
+                    //Copy the points of the wall.
+                    Line2D.Double line = wall.getLine();
+
+                    //Rotate the wall so that the ray is facing along the y axis.
+                    FastMath.rotate(line, cameraPosition, -cameraAngle.getValue() - currentRay);
+                    FastMath.translate(line, -cameraPosition.x, -cameraPosition.y);
+
+                    //The distance between the camera and the point on the wall that the ray hit. Multiply by cos to remove the fish-eye effect.
+                    dist = FastMath.getYIntercept(line) * FastMath.cos(currentRay);
+
+                    //If this wall is visible and is closer to the camera than walls previously checked, save it in the buffer.
+                    if (dist > 0 && (wallBuffer[i] == null || wallBuffer[i].distToCamera > dist)) {
+                        //If the texture for the wall wasn't loaded correctly, put a dummy variable in for inGameImgWidth.
+                        if(wall.getTexture() == null)
+                            inGameImgWidth = -1;
+                        else {
+                            //The size of the image fit to the wall.
+                            scaledImgWidth = wall.getHeight() / wall.getTexture().getHeight() * wall.getTexture().getWidth();
+                            //The width of the image as viewed from the camera.
+                            inGameImgWidth = Math.abs(line.x2 - line.x1) / (wall.getWidth()/scaledImgWidth);
+                        }
+
+                        //Calculate the intersection ratio for the texture and
+                        wallBuffer[i] = new ObjectSlice(wall, dist, wall.getHeight()/2, wall.getTexture(), wall.getTextureColor(), (Math.abs(line.x1) % inGameImgWidth)/inGameImgWidth);
+                    }
+                }
+            }
+
+            //Move on to the next ray.
+            currentRay += rayAngle;
+        }
+    }
+
     //Draw the wall slices in the wall buffer.
     private void drawWalls() {
         //Iterate through the wall slices and draw them.
@@ -190,15 +199,15 @@ public class Camera {
 
             //Draw the ceiling.
             for(int j = 0; j < canvas.getHeight()/2; j++)
-                if(pixelTable[i][j].equals(true)) {
-                    canvas.setRGB(i, j, gameData.gameLevel.getCeilColor());
+                if(pixelTable[i][j]) {
+                    imagePixelData[j * canvas.getWidth() + i] = ceilColor;
                     pixelTable[i][j] = false;
                 }
 
             //Draw the floor.
             for(int j = canvas.getHeight()/2; j < canvas.getHeight(); j++)
-                if(pixelTable[i][j].equals(true)) {
-                    canvas.setRGB(i, j, gameData.gameLevel.getFloorColor());
+                if(pixelTable[i][j]) {
+                    imagePixelData[j * canvas.getWidth() + i] = floorColor;
                     pixelTable[i][j] = false;
                 }
         }
@@ -207,9 +216,9 @@ public class Camera {
     //Draw the entities, comparing their distance to the wall buffer.
     private void drawEntities() {
         //The angle between each ray.
-        double rayAngle = FOV / wallBuffer.length;
+        double rayAngle = FOV /wallBuffer.length;
         //The angle of the first ray.
-        double currentRay = -FOV / 2;
+        double currentRay = -FOV /2;
         //Distance from the camera to the center of the entity.
         double dist;
         //The angle between the camera and the entity.
@@ -224,24 +233,24 @@ public class Camera {
         ObjectSlice currentSlice;
 
         //Iterate through each ray.
-        for (int i = 0; i < wallBuffer.length; i++) {
+        for(int i = 0; i < wallBuffer.length; i++) {
             //Empty the list of entities.
             visibleEntities.clear();
 
             //Iterate through the entity list and draw the slices that are visible.
-            for (Entity entity : gameData.entityList) {
+            for(Entity entity : gameData.entityList) {
                 //Scan the entity if it is visible.
                 if (entity.getVisible()) {
                     //The angle between the camera and the entity.
-                    entityAngle = Math.toDegrees(Math.atan2(entity.position.x - position.x, entity.position.y - position.y));
+                    entityAngle = Math.toDegrees(Math.atan2(entity.position.x - cameraPosition.x, entity.position.y - cameraPosition.y));
 
                     //Create a line at the entity's position with the same width. It is horizontal.
                     rotatedLine.setLine(entity.position.x - entity.getWidth() / 2, entity.position.y, entity.position.x + entity.getWidth() / 2, entity.position.y);
                     //Rotate the line around itself so that it is facing the camera.
                     FastMath.rotate(rotatedLine, entity.position, entityAngle);
                     //Rotate the line around the camera so that the ray is along the y axis.
-                    FastMath.rotate(rotatedLine, position, -angle.getValue() - currentRay);
-                    FastMath.translate(rotatedLine, -position.x, -position.y);
+                    FastMath.rotate(rotatedLine, cameraPosition, -cameraAngle.getValue() - currentRay);
+                    FastMath.translate(rotatedLine, -cameraPosition.x, -cameraPosition.y);
 
                     //Get the distance to the entity using the line accounting for the fish eye effect.
                     dist = FastMath.getYIntercept(rotatedLine) * FastMath.cos(currentRay);
@@ -251,13 +260,13 @@ public class Camera {
                         //Copy the entity's position.
                         rotatedPoint.setLocation(entity.position.x, entity.position.y);
                         //Rotate it to in front of the ray.
-                        FastMath.rotate(rotatedPoint, position, -entityAngle);
-                        FastMath.subtract(rotatedPoint, position);
+                        FastMath.rotate(rotatedPoint, cameraPosition, -entityAngle);
+                        FastMath.subtract(rotatedPoint, cameraPosition);
                         //Recalculate the distance to the center of the entity, not where it intersects.
-                        dist = rotatedPoint.y * FastMath.cos(entityAngle - angle.getValue());
+                        dist = rotatedPoint.y *  FastMath.cos(entityAngle - cameraAngle.getValue());
 
                         //Create the object slice.
-                        currentSlice = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(angle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
+                        currentSlice = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(cameraAngle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
 
                         //If the array list is empty, add the object slice.
                         if (visibleEntities.isEmpty())
@@ -280,7 +289,7 @@ public class Camera {
             }
 
             //Draw all of the entities in the array list in order from nearest to farthest.
-            for (ObjectSlice slice : visibleEntities)
+            for(ObjectSlice slice : visibleEntities)
                 drawSlice(slice, i);
 
             //Move on to the next ray.
@@ -290,11 +299,11 @@ public class Camera {
 
     //Calculate the wall slices, draw the entities, and finally draw the walls.
     public void draw() {
-        //Calculate which walls to draw given the position and angle of the camera.
+        for(int i = 0; i < 960000; i++)
+            imagePixelData[i] = i;
+
         calculateWallBuffer();
-        //Draw the entities.
         drawEntities();
-        //Draw the walls.
         drawWalls();
 
         //Reset the pixel table so that every pixel is writable.

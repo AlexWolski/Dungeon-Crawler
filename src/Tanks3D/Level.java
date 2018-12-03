@@ -15,8 +15,7 @@ public final class Level {
     private Point2D.Double mapCenter;
     private double mapWidth;
     private double mapHeight;
-    private SpawnPoint player1Spawn;
-    private SpawnPoint player2Spawn;
+    private SpawnPoint playerSpawn;
     private int floorColor;
     private int ceilColor;
 
@@ -30,8 +29,7 @@ public final class Level {
     private void parseDataFile(String levelFile, ArrayList<Entity> entityList) {
         //remove
         wallObjects = new ArrayList<>();
-        player1Spawn = new SpawnPoint(new Point2D.Double(0, -80), 0);
-        player2Spawn = new SpawnPoint(new Point2D.Double(0, 80), 180);
+        playerSpawn = new SpawnPoint(new Point2D.Double(0, -80), 0);
 
         floorColor = Color.darkGray.getRGB();
         ceilColor = Color.darkGray.darker().getRGB();
@@ -74,10 +72,7 @@ public final class Level {
         return ceilColor;
     }
 
-    public SpawnPoint getPlayer1Spawn() {
-        return player1Spawn;
-    }
-    public SpawnPoint getPlayer2Spawn() {
-        return player2Spawn;
+    public SpawnPoint getPlayerSpawn() {
+        return playerSpawn;
     }
 }

@@ -69,7 +69,7 @@ public abstract class GameManager {
         gameWindow = new DisplayWindow(gameData, "Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
 
         //Initialize the 'Player' objects. Get the initial positions for both players and indicate which side of the screen the HUD icons are on.
-        gameData.player = new Player(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayer1Spawn(), Color.cyan);
+        gameData.player = new Player(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayerSpawn(), Color.cyan);
         gameData.minimap = new Minimap(gameData, gameWindow.getMinimapBuffer());
 
         //Link the controls for each player.

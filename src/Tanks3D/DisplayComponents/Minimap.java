@@ -8,6 +8,7 @@ import Tanks3D.Utilities.Image;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 
 //Displays the minimap.
 public class Minimap {
@@ -15,6 +16,8 @@ public class Minimap {
     private final BufferedImage canvas;
     private double mapSizeRatio;
     private int backgroundColor;
+    //Test
+    int[] imagePixelData;
 
     public Minimap(GameData gameData, BufferedImage canvas) {
         this.gameData = gameData;
@@ -35,6 +38,9 @@ public class Minimap {
             else
                 mapSizeRatio = gameData.gameLevel.getMapHeight() / (canvas.getWidth() - 1);
         }
+
+        //Test
+        imagePixelData = ((DataBufferInt)canvas.getRaster().getDataBuffer()).getData();
     }
 
     //Transform a point from the map dimensions to the minimap dimensions.
@@ -75,10 +81,9 @@ public class Minimap {
 
     public void draw() {
         //Draw a background.
-        for(int i = 0; i < canvas.getWidth(); i++) {
+        for(int i = 0; i < canvas.getWidth(); i++)
             for (int j = 0; j < canvas.getHeight(); j++)
-                canvas.setRGB(i, j, backgroundColor);
-        }
+                imagePixelData[j * canvas.getWidth() + i] = backgroundColor;
 
         //Create a graphic so that shapes can be drawn to the buffered image.
         Graphics2D graphic = canvas.createGraphics();

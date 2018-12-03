@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
 
@@ -12,6 +13,7 @@ public final class Image {
     private Image() {
     }
 
+    //Load an image file from a directory.
     public static BufferedImage load(String imageFile) {
         BufferedImage image = null;
 
@@ -24,6 +26,7 @@ public final class Image {
         return image;
     }
 
+    //Return a deep copy of the passed image.
     public static BufferedImage copy(BufferedImage image) {
         return new BufferedImage(image.getColorModel(), image.copyData(null), image.isAlphaPremultiplied(), null);
     }
@@ -41,6 +44,7 @@ public final class Image {
         graphic.drawImage(image, 0, 0, width, height, null);
     }
 
+    //Change the color of the pixel using its brightness to adjust the hue.
     public static int tintPixel(Color pixelColor, Color tintColor) {
         //Calculate the luminance. These values are pre-determined.
         double lum = (pixelColor.getRed() * 0.2126 + pixelColor.getGreen() * 0.7152 + pixelColor.getBlue() * 0.0722) / 255;
@@ -49,6 +53,7 @@ public final class Image {
         return new Color((int) (tintColor.getRed() * lum), (int) (tintColor.getGreen() * lum), (int) (tintColor.getBlue() * lum), pixelColor.getAlpha()).getRGB();
     }
 
+    //Tint every pixel of an image.
     public static void tintImage(BufferedImage image, Color tintColor) {
         //Loop through the image and change the tint of each color.
         for (int i = 0; i < image.getWidth(); i++)
