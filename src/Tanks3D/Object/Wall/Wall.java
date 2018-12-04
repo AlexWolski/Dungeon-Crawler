@@ -1,6 +1,7 @@
 package Tanks3D.Object.Wall;
 
 import Tanks3D.Object.GameObject;
+import Tanks3D.Utilities.Image;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -9,6 +10,7 @@ import java.awt.image.BufferedImage;
 
 public abstract class Wall extends GameObject {
     private BufferedImage texture;
+    private byte[] texturePixelData;
     private Color textureColor;
     private Line2D.Double line;
     private double length;
@@ -21,6 +23,9 @@ public abstract class Wall extends GameObject {
         this.texture = texture;
         this.textureColor = textureColor;
 
+        //Get the pixel data for the texture image.
+        texturePixelData = Image.getABGRColorData(texture);
+
         line = new Line2D.Double(point1, point2);
         //Distance formula.
         length = Math.sqrt(Math.pow(line.x1 - line.x2, 2) + Math.pow(line.y1 - line.y2, 2));
@@ -30,6 +35,9 @@ public abstract class Wall extends GameObject {
 
     public BufferedImage getTexture() {
         return texture;
+    }
+    public byte[] getTexturePixelData() {
+        return texturePixelData;
     }
     public Color getTextureColor() {
         return textureColor;

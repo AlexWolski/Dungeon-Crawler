@@ -5,6 +5,7 @@ import Tanks3D.Object.Wall.UnbreakableWall;
 import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.GameData;
+import Tanks3D.Utilities.Image;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
 
 import java.awt.*;
@@ -18,7 +19,9 @@ public abstract class Entity extends GameObject {
     //The radius of the hit circle of the entity.
     private final int hitCircleRadius;
     //An array containing the sprites for the entity at different angles.
-    private BufferedImage sprites[];
+    private BufferedImage[] sprites;
+    //An array containing the pixel data for each sprite.
+    private byte[][] spritePixelData;
     //The icon used to display the entity on the minimap.
     private BufferedImage icon;
     //The in-game size of the entity. The sprites are stretched to fit this.
@@ -141,9 +144,16 @@ public abstract class Entity extends GameObject {
     }
 
     //Set the sprites and size of the entity. The sprites start with a front shot and rotate clockwise.
-    protected void setSprites(BufferedImage images[], int width, int height) {
+    protected void setSprites(BufferedImage[] images, int width, int height) {
         this.sprites = images;
         this.entitySize = new Dimension(width, height);
+
+        //Initialize the array of image pixel data.
+        spritePixelData = new byte[sprites.length][];
+
+        //Get the pixel data of each sprite.
+        for(int i = 0; i < sprites.length; i++)
+            spritePixelData[i] = Image.getABGRColorData(sprites[i]);
     }
 
     //Set the icon for the minimap.
@@ -157,6 +167,14 @@ public abstract class Entity extends GameObject {
         viewerAngle = FastMath.formatAngle(this.angle.getValue() - viewerAngle - 540.0/ sprites.length);
         //Map the angle to one of the sprites and return it.
         return sprites[(int)(viewerAngle * sprites.length/360)];
+    }
+
+    //Given the angle of the camera, return the pixel data corresponding to the appropriate image.
+    public byte[] getSpritePixelData(double viewerAngle) {
+        //Get the difference in angle between the tank and the viewer.
+        viewerAngle = FastMath.formatAngle(this.angle.getValue() - viewerAngle - 540.0/ sprites.length);
+        //Map the angle to one of the sprites and return it.
+        return spritePixelData[(int)(viewerAngle * sprites.length/360)];
     }
 
     //Get the icon for the minimap.

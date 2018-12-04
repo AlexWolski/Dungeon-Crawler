@@ -11,37 +11,37 @@ import java.awt.*;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
 import java.util.ArrayList;
 
 //Draw the level and entities.
 public class Camera {
     //A struct that contains the necessary data about the game.
-    public final GameData gameData;
+    private final GameData gameData;
     //An buffer that get written to, then displayed on the screen.
-    public final BufferedImage canvas;
+    private final BufferedImage canvas;
+    //The raw, live pixel data of the canvas.
+    private int[] canvasPixelData;
     //An array containing the wall slices that need to be drawn.
-    public final ObjectSlice[] wallBuffer;
+    private final ObjectSlice[] wallBuffer;
     //An array full of booleans indicating whether a pixel has been written to or not.
-    public Boolean[][] pixelTable;
+    private Boolean[][] pixelTable;
     //The horizontal and vertical field of view of the camera.
-    public final static double FOV = 60;
+    private final static double FOV = 60;
     //The cameraPosition of the camera.
-    public final Point2D.Double cameraPosition;
+    private final Point2D.Double cameraPosition;
     //The angle of the camera.
-    public final MutableDouble cameraAngle;
+    private final MutableDouble cameraAngle;
     //The distance from the camera to the projection plane.
     private final double distProjectionPlane;
     //The color of the floor and ceiling.
     private final int floorColor, ceilColor;
-    //Test
-    int[] imagePixelData;
-
 
     public Camera(GameData gameData, BufferedImage canvas, Point2D.Double position, MutableDouble angle) {
         this.canvas = canvas;
         this.gameData = gameData;
 
+        //Get the pixel data from the canvas.
+        canvasPixelData = Image.getRGBColorData(canvas);
         //Calculate the distance from the camera to the projection plane from the FOV and image buffer width.
         distProjectionPlane = FastMath.cos(FOV /2) / FastMath.sin(FOV /2) * canvas.getWidth() / 2;
         //Initialize the array of wall slices and array of booleans.
@@ -57,9 +57,6 @@ public class Camera {
         //Store the cameraPosition and angle of the player.
         this.cameraPosition = position;
         this.cameraAngle = angle;
-
-        //Test
-        imagePixelData = ((DataBufferInt)canvas.getRaster().getDataBuffer()).getData();
     }
 
     //Reset the pixel table.
@@ -70,7 +67,7 @@ public class Camera {
     }
 
     //Draw a slice of an image.
-    public void drawSlice(ObjectSlice slice, int canvasX) {
+    private void drawSlice(ObjectSlice slice, int canvasX) {
         if(slice != null) {
             //The color of the pixel being drawn to the screen.
             int pixelColor;
@@ -96,7 +93,7 @@ public class Camera {
             if(slice.image == null) {
                 for (int canvasY = wallStart; canvasY < wallEnd; canvasY++)
                     if(pixelTable[canvasX][canvasY].equals(true)) {
-                        imagePixelData[canvasY * canvas.getWidth() + canvasX] = Color.MAGENTA.getRGB();
+                        Image.setRGBPixel(canvasPixelData, canvas.getWidth(), canvasX, canvasY, Color.MAGENTA.getRGB());
                         pixelTable[canvasX][canvasY] = false;
                     }
             }
@@ -116,18 +113,19 @@ public class Camera {
                     //If the pixel hasn't been written to yet, draw the pixel.
                     if(pixelTable[canvasX][canvasY].equals(true)) {
                         //Get the color of the pixel at the current point in the image if the color is valid.
-                        pixelColor = slice.image.getRGB(imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
+                        //pixelColor = slice.image.getRGB(imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
+                        pixelColor = Image.getABGRPixel(slice.imagePixelData, slice.image.getWidth(), imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
 
                         //If the pixel is not transparent, draw the pixel.
-                        if ((pixelColor >> 24) != 0x00) {
+                        //if ((pixelColor >> 24) != 0xff) {
                             //If the color is not null, tint the pixel.
                             if(slice.imageColor != null)
                                 pixelColor = Image.tintPixel(new Color(pixelColor), slice.imageColor);
 
                             //Draw the pixel.
-                            imagePixelData[canvasY * canvas.getWidth() + canvasX] = pixelColor;
+                            Image.setRGBPixel(canvasPixelData, canvas.getWidth(), canvasX, canvasY, pixelColor);
                             pixelTable[canvasX][canvasY] = false;
-                        }
+                        //}
                     }
 
                     //Move on to the next row to draw.
@@ -181,7 +179,7 @@ public class Camera {
                         }
 
                         //Calculate the intersection ratio for the texture and
-                        wallBuffer[i] = new ObjectSlice(wall, dist, wall.getHeight()/2, wall.getTexture(), wall.getTextureColor(), (Math.abs(line.x1) % inGameImgWidth)/inGameImgWidth);
+                        wallBuffer[i] = new ObjectSlice(wall, dist, wall.getHeight()/2, wall.getTexture(), wall.getTexturePixelData(), wall.getTextureColor(), (Math.abs(line.x1) % inGameImgWidth)/inGameImgWidth);
                     }
                 }
             }
@@ -200,14 +198,14 @@ public class Camera {
             //Draw the ceiling.
             for(int j = 0; j < canvas.getHeight()/2; j++)
                 if(pixelTable[i][j]) {
-                    imagePixelData[j * canvas.getWidth() + i] = ceilColor;
+                    Image.setRGBPixel(canvasPixelData, canvas.getWidth(), i, j, ceilColor);
                     pixelTable[i][j] = false;
                 }
 
             //Draw the floor.
             for(int j = canvas.getHeight()/2; j < canvas.getHeight(); j++)
                 if(pixelTable[i][j]) {
-                    imagePixelData[j * canvas.getWidth() + i] = floorColor;
+                    Image.setRGBPixel(canvasPixelData, canvas.getWidth(), i, j, floorColor);
                     pixelTable[i][j] = false;
                 }
         }
@@ -266,7 +264,7 @@ public class Camera {
                         dist = rotatedPoint.y *  FastMath.cos(entityAngle - cameraAngle.getValue());
 
                         //Create the object slice.
-                        currentSlice = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(cameraAngle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
+                        currentSlice = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(cameraAngle.getValue()), entity.getSpritePixelData(cameraAngle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
 
                         //If the array list is empty, add the object slice.
                         if (visibleEntities.isEmpty())
@@ -299,9 +297,6 @@ public class Camera {
 
     //Calculate the wall slices, draw the entities, and finally draw the walls.
     public void draw() {
-        for(int i = 0; i < 960000; i++)
-            imagePixelData[i] = i;
-
         calculateWallBuffer();
         drawEntities();
         drawWalls();

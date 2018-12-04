@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
+import java.awt.image.DataBufferByte;
 import java.awt.image.DataBufferInt;
 import java.io.File;
 import java.io.IOException;
@@ -60,5 +61,32 @@ public final class Image {
             for (int j = 0; j < image.getHeight(); j++)
                 //Get the color of the pixel, tint it, and write the new color to the pixel.
                 image.setRGB(i, j, tintPixel(new Color(image.getRGB(i, j), true), tintColor));
+    }
+
+    //A faster alternative BufferedImage's setRGB method for images of type TYPE_INT_RGB.
+    public static void setRGBPixel(int[] imagePixelData, int imageWidth, int x, int y, int pixelColor) {
+        imagePixelData[y*imageWidth + x] = pixelColor;
+    }
+
+    //A faster alternative BufferedImage's setRGB method for images of type TYPE_4BYTE_ABGR.
+    public static int getABGRPixel(byte [] imagePixelData, int imageWidth, int x, int y) {
+//        return imagePixelData[y*imageWidth + x];
+        return (imagePixelData[(y*imageWidth)*4+x] << 24) | (imagePixelData[(y*imageWidth+x)*4+3] & 0xff) << 16 | (imagePixelData[(y*imageWidth+x)*4+2] & 0xff) << 8 | imagePixelData[(y*imageWidth+x)*4+1] & 0xff;
+    }
+
+    //Return the raw data of an image of type TYPE_INT_RGB. Each pixel is stored in 3 bytes: Red, Green, and Blue.
+    public static int[] getRGBColorData(BufferedImage image) {
+        if(image.getType() == BufferedImage.TYPE_INT_RGB)
+            return ((DataBufferInt)image.getRaster().getDataBuffer()).getData();
+
+        return null;
+    }
+
+    //Return the raw data of an image of type TYPE_4BYTE_ABGR. Each pixel is stored in 4 bytes: Alpha, Blue, Green, and Red.
+    public static byte[] getABGRColorData(BufferedImage image) {
+        if(image.getType() == BufferedImage.TYPE_4BYTE_ABGR)
+            return ((DataBufferByte)image.getRaster().getDataBuffer()).getData();
+
+        return null;
     }
 }

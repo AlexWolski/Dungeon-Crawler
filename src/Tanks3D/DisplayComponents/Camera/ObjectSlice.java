@@ -15,16 +15,19 @@ public class ObjectSlice {
     public final double zPos;
     //The image that a slice will be taken out of.
     public final BufferedImage image;
+    //The pixel data of the image.
+    public final byte[] imagePixelData;
     //The color to tint the image.
     public final Color imageColor;
     //How far along the wall the ray intersected. Between 0 and 1.
     public final double intersectRatio;
 
-    public ObjectSlice(GameObject wall, double distToCamera, double zPos, BufferedImage image, Color imageColor, double intersectRatio) {
+    public ObjectSlice(GameObject wall, double distToCamera, double zPos, BufferedImage image, byte[] imagePixelData, Color imageColor, double intersectRatio) {
         this.object = wall;
         this.distToCamera = distToCamera;
         this.zPos = zPos;
         this.image = image;
+        this.imagePixelData = imagePixelData;
         this.imageColor = imageColor;
         this.intersectRatio = intersectRatio;
     }
