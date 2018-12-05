@@ -46,34 +46,48 @@ public final class Image {
     }
 
     //Change the color of the pixel using its brightness to adjust the hue.
-    public static int tintABGRPixel(Color pixelColor, Color tintColor) {
+    public static int tintABGRPixel(int pixelColor, Color tintColor) {
         //Calculate the luminance. These values are pre-determined.
-        double lum = (pixelColor.getRed() * 0.2126 + pixelColor.getGreen() * 0.7152 + pixelColor.getBlue() * 0.0722) / 255;
+        double lum = ((pixelColor>>16 & 0xff) * 0.2126 + (pixelColor>>8 & 0xff) * 0.7152 + (pixelColor & 0xff) * 0.0722) / 255;
 
         //Calculate the new tinted color of the pixel and return it.
-        return new Color((int) (tintColor.getRed() * lum), (int) (tintColor.getGreen() * lum), (int) (tintColor.getBlue() * lum), pixelColor.getAlpha()).getRGB();
+        return ((pixelColor>>24 & 0xff) << 24) | ((int)(tintColor.getBlue()*lum) & 0xff) | (((int)(tintColor.getGreen()*lum) & 0xff) << 8) | (((int)(tintColor.getRed()*lum) & 0xff) << 16);
     }
 
     //Tint every pixel of an image.
     public static void tintImage(BufferedImage image, Color tintColor) {
+        //Get the raw, live pixel data of the image.
+        byte[] imagePixelData = getABGRColorData(image);
+
         //Loop through the image and change the tint of each color.
         for (int i = 0; i < image.getWidth(); i++)
-            for (int j = 0; j < image.getHeight(); j++)
-                //Get the color of the pixel, tint it, and write the new color to the pixel.
-                image.setRGB(i, j, tintABGRPixel(new Color(image.getRGB(i, j), true), tintColor));
+            for (int j = 0; j < image.getHeight(); j++) {
+                //Get the original color of the image.
+                int originalColor = getABGRPixel(imagePixelData, image.getWidth(), i, j);
+                //Tint the color and update the pixel.
+                setABGRPixel(imagePixelData, image.getWidth(), i, j, tintABGRPixel(originalColor, tintColor));
+            }
     }
 
     //Combine 4 bytes into one int.
     private static int byteToInt(byte byte1, byte byte2, byte byte3, byte byte4) {
         return (byte1 << 24) | (byte2 & 0xff) << 16 | (byte3 & 0xff) << 8 | (byte4 & 0xff);
     }
-    //A faster alternative BufferedImage's setRGB method for images of type TYPE_INT_RGB.
+
+    //A faster alternative BufferedImage's setRGB method for images of type TYPE_INT_RGB or TYPE_4BYTE_ABGR.
     public static void setRGBPixel(int[] imagePixelData, int imageWidth, int x, int y, int pixelColor) {
         imagePixelData[y*imageWidth + x] = pixelColor;
     }
+    public static void setABGRPixel(byte[] imagePixelData, int imageWidth, int x, int y, int pixelColor) {
+        imagePixelData[(y*imageWidth+x)*4] = (byte)(pixelColor >>> 24);
+        imagePixelData[(y*imageWidth+x)*4+1] = (byte)(pixelColor);
+        imagePixelData[(y*imageWidth+x)*4+2] = (byte)(pixelColor >>> 8);
+        imagePixelData[(y*imageWidth+x)*4+3] = (byte)(pixelColor >>> 16);
+    }
+
     //A faster alternative BufferedImage's setRGB method for images of type TYPE_4BYTE_ABGR.
     public static int getABGRPixel(byte [] imagePixelData, int imageWidth, int x, int y) {
-        return byteToInt(imagePixelData[(y*imageWidth)*4+x], imagePixelData[(y*imageWidth+x)*4+3], imagePixelData[(y*imageWidth+x)*4+2], imagePixelData[(y*imageWidth+x)*4+1]);
+        return byteToInt(imagePixelData[(y*imageWidth+x)*4], imagePixelData[(y*imageWidth+x)*4+3], imagePixelData[(y*imageWidth+x)*4+2], imagePixelData[(y*imageWidth+x)*4+1]);
     }
 
     //Return the raw data of an image of type TYPE_INT_RGB. Each pixel is stored in 3 bytes: Red, Green, and Blue.

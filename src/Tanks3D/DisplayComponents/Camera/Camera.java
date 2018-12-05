@@ -75,11 +75,19 @@ public class Camera {
                 pixelTable[i][j] = true;
     }
 
+    //
+    private double getDistToWall(Line2D.Double line, double currentRay) {
+        //Rotate the wall so that the ray is facing along the y axis.
+        FastMath.rotate(line, cameraPosition, -cameraAngle.getValue() - currentRay);
+        FastMath.translate(line, -cameraPosition.x, -cameraPosition.y);
+
+        //Return the distance between the camera and the point on the wall that the ray hit. Multiply by cos to remove the fish-eye effect.
+        return FastMath.getYIntercept(line) * FastMath.cos(currentRay);
+    }
+
     //Draw a slice of an image.
     private void drawSlice(ObjectSlice slice, int canvasX) {
         if(!slice.isEmpty()) {
-            //The color of the pixel being drawn to the screen.
-            int pixelColor;
             //The y coordinate of the image where it will start being drawn.
             int imageStart = 0;
             //The height of the image that actually gets drawn.
@@ -122,15 +130,18 @@ public class Camera {
                     //If the pixel hasn't been written to yet, draw the pixel.
                     if(pixelTable[canvasX][canvasY].equals(true)) {
                         //Get the color of the pixel at the current point in the image if the color is valid.
-                        pixelColor = Image.getABGRPixel(slice.imagePixelData, slice.image.getWidth(), imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
+                        int pixelColor = Image.getABGRPixel(slice.imagePixelData, slice.image.getWidth(), imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
 
-                        //If the color is not null, tint the pixel.
-                        if(slice.imageColor != null)
-                            pixelColor = Image.tintABGRPixel(new Color(pixelColor), slice.imageColor);
+                        //If the pixel is not transparent, draw the pixel.
+                        if ((pixelColor >> 24) != 0x00) {
+                            //If the color is not null, tint the pixel.
+                            if (slice.imageColor != null)
+                                pixelColor = Image.tintABGRPixel(pixelColor, slice.imageColor);
 
-                        //Draw the pixel.
-                        Image.setRGBPixel(canvasPixelData, canvas.getWidth(), canvasX, canvasY, pixelColor);
-                        pixelTable[canvasX][canvasY] = false;
+                            //Draw the pixel.
+                            Image.setRGBPixel(canvasPixelData, canvas.getWidth(), canvasX, canvasY, pixelColor);
+                            pixelTable[canvasX][canvasY] = false;
+                        }
                     }
 
                     //Move on to the next row to draw.
@@ -146,8 +157,6 @@ public class Camera {
         double rayAngle = FOV /wallBuffer.length;
         //The angle of the first ray.
         double currentRay = -FOV /2;
-        //The distance from the camera to the wall slice.dd
-        double dist;
 
         //Variables for calculating the intersection ratio of the wall texture.
         double scaledImgWidth;
@@ -165,12 +174,8 @@ public class Camera {
                     //Copy the points of the wall.
                     Line2D.Double line = wall.getLine();
 
-                    //Rotate the wall so that the ray is facing along the y axis.
-                    FastMath.rotate(line, cameraPosition, -cameraAngle.getValue() - currentRay);
-                    FastMath.translate(line, -cameraPosition.x, -cameraPosition.y);
-
-                    //The distance between the camera and the point on the wall that the ray hit. Multiply by cos to remove the fish-eye effect.
-                    dist = FastMath.getYIntercept(line) * FastMath.cos(currentRay);
+                    //Get the distance from the camera to the wall.
+                    double dist = getDistToWall(line, currentRay);
 
                     //If this wall is visible and is closer to the camera than walls previously checked, save it in the buffer.
                     if (dist > 0 && (wallSlice.isEmpty() || wallSlice.distToCamera > dist)) {
@@ -223,18 +228,12 @@ public class Camera {
         double rayAngle = FOV /wallBuffer.length;
         //The angle of the first ray.
         double currentRay = -FOV /2;
-        //Distance from the camera to the center of the entity.
-        double dist;
-        //The angle between the camera and the entity.
-        double entityAngle;
         //A line representing the entity's location and the width of its image.
         Line2D.Double rotatedLine = new Line2D.Double();
         //The rotated point of the entity to calculate the distance to the center of the it.
         Point2D.Double rotatedPoint = new Point2D.Double();
         //A list of entities that the ray intersects.
         ArrayList<ObjectSlice> visibleEntities = new ArrayList<>();
-        //Temporarily hold an object slice before its stored in the array list.
-        ObjectSlice currentSlice;
 
         //Iterate through each ray.
         for(int i = 0; i < wallBuffer.length; i++) {
@@ -246,18 +245,15 @@ public class Camera {
                 //Scan the entity if it is visible.
                 if (entity.getVisible()) {
                     //The angle between the camera and the entity.
-                    entityAngle = Math.toDegrees(Math.atan2(entity.position.x - cameraPosition.x, entity.position.y - cameraPosition.y));
+                    double entityAngle = Math.toDegrees(Math.atan2(entity.position.x - cameraPosition.x, entity.position.y - cameraPosition.y));
 
                     //Create a line at the entity's position with the same width. It is horizontal.
                     rotatedLine.setLine(entity.position.x - entity.getWidth() / 2, entity.position.y, entity.position.x + entity.getWidth() / 2, entity.position.y);
                     //Rotate the line around itself so that it is facing the camera.
                     FastMath.rotate(rotatedLine, entity.position, entityAngle);
-                    //Rotate the line around the camera so that the ray is along the y axis.
-                    FastMath.rotate(rotatedLine, cameraPosition, -cameraAngle.getValue() - currentRay);
-                    FastMath.translate(rotatedLine, -cameraPosition.x, -cameraPosition.y);
 
-                    //Get the distance to the entity using the line accounting for the fish eye effect.
-                    dist = FastMath.getYIntercept(rotatedLine) * FastMath.cos(currentRay);
+                    //Get the distance from the camera to the wall.
+                    double dist = getDistToWall(rotatedLine, currentRay);
 
                     //If the entity intersects with the ray and it is in front of the walls, draw it.
                     if (dist > 0 && (wallBuffer[i].isEmpty() || dist <= wallBuffer[i].distToCamera)) {
@@ -269,8 +265,8 @@ public class Camera {
                         //Recalculate the distance to the center of the entity, not where it intersects.
                         dist = rotatedPoint.y *  FastMath.cos(entityAngle - cameraAngle.getValue());
 
-                        //Create the object slice.
-                        currentSlice = new ObjectSlice();
+                        //Create and temporarily hold an object slice before its stored in the array list.
+                        ObjectSlice currentSlice = new ObjectSlice();
                         currentSlice.setData(entity, dist, entity.getzPos(), entity.getSprite(cameraAngle.getValue()), entity.getSpritePixelData(cameraAngle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
 
                         //If the array list is empty, add the object slice.
