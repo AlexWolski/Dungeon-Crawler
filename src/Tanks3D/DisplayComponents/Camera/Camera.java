@@ -21,8 +21,10 @@ public class Camera {
     private final BufferedImage canvas;
     //The raw, live pixel data of the canvas.
     private int[] canvasPixelData;
-    //An array containing the wall slices that need to be drawn.
+    //An array containing the slices of the walls that need to be drawn.
     private final ObjectSlice[] wallBuffer;
+    //An array containing the slices of the entities need to be drawn.
+    private final ObjectSlice[] entityBuffer;
     //An array full of booleans indicating whether a pixel has been written to or not.
     private Boolean[][] pixelTable;
     //The horizontal and vertical field of view of the camera.
@@ -44,8 +46,9 @@ public class Camera {
         canvasPixelData = Image.getRGBColorData(canvas);
         //Calculate the distance from the camera to the projection plane from the FOV and image buffer width.
         distProjectionPlane = FastMath.cos(FOV /2) / FastMath.sin(FOV /2) * canvas.getWidth() / 2;
-        //Initialize the array of wall slices and array of booleans.
+        //Initialize the array of object slices and array of booleans.
         wallBuffer = new ObjectSlice[canvas.getWidth()];
+        entityBuffer = new ObjectSlice[canvas.getWidth()];
         pixelTable = new Boolean[canvas.getWidth()][canvas.getHeight()];
         //Get the floor and ceiling color.
         floorColor = gameData.gameLevel.getFloorColor();
@@ -53,6 +56,12 @@ public class Camera {
 
         //Fill the pixel table so that it is all writable.
         clearPixelTable();
+
+        //Fill both the wall and entity buffer with slice objects.
+        for(int i = 0; i < canvas.getWidth(); i++) {
+            wallBuffer[i] = new ObjectSlice();
+            entityBuffer[i] = new ObjectSlice();
+        }
 
         //Store the cameraPosition and angle of the player.
         this.cameraPosition = position;
@@ -68,7 +77,7 @@ public class Camera {
 
     //Draw a slice of an image.
     private void drawSlice(ObjectSlice slice, int canvasX) {
-        if(slice != null) {
+        if(!slice.isEmpty()) {
             //The color of the pixel being drawn to the screen.
             int pixelColor;
             //The y coordinate of the image where it will start being drawn.
@@ -113,19 +122,15 @@ public class Camera {
                     //If the pixel hasn't been written to yet, draw the pixel.
                     if(pixelTable[canvasX][canvasY].equals(true)) {
                         //Get the color of the pixel at the current point in the image if the color is valid.
-                        //pixelColor = slice.image.getRGB(imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
                         pixelColor = Image.getABGRPixel(slice.imagePixelData, slice.image.getWidth(), imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
 
-                        //If the pixel is not transparent, draw the pixel.
-                        //if ((pixelColor >> 24) != 0xff) {
-                            //If the color is not null, tint the pixel.
-                            if(slice.imageColor != null)
-                                pixelColor = Image.tintPixel(new Color(pixelColor), slice.imageColor);
+                        //If the color is not null, tint the pixel.
+                        if(slice.imageColor != null)
+                            pixelColor = Image.tintABGRPixel(new Color(pixelColor), slice.imageColor);
 
-                            //Draw the pixel.
-                            Image.setRGBPixel(canvasPixelData, canvas.getWidth(), canvasX, canvasY, pixelColor);
-                            pixelTable[canvasX][canvasY] = false;
-                        //}
+                        //Draw the pixel.
+                        Image.setRGBPixel(canvasPixelData, canvas.getWidth(), canvasX, canvasY, pixelColor);
+                        pixelTable[canvasX][canvasY] = false;
                     }
 
                     //Move on to the next row to draw.
@@ -149,8 +154,9 @@ public class Camera {
         double inGameImgWidth;
 
         //Iterate through each ray.
-        for(int i = 0; i < wallBuffer.length; i++) {
-            wallBuffer[i] = null;
+        for(ObjectSlice wallSlice : wallBuffer) {
+            //Reset the buffer corresponding to the ray.
+            wallSlice.reset();
 
             //Iterate through each wall and determine which one to draw.
             for(Wall wall : gameData.gameLevel.wallObjects) {
@@ -167,7 +173,7 @@ public class Camera {
                     dist = FastMath.getYIntercept(line) * FastMath.cos(currentRay);
 
                     //If this wall is visible and is closer to the camera than walls previously checked, save it in the buffer.
-                    if (dist > 0 && (wallBuffer[i] == null || wallBuffer[i].distToCamera > dist)) {
+                    if (dist > 0 && (wallSlice.isEmpty() || wallSlice.distToCamera > dist)) {
                         //If the texture for the wall wasn't loaded correctly, put a dummy variable in for inGameImgWidth.
                         if(wall.getTexture() == null)
                             inGameImgWidth = -1;
@@ -179,7 +185,7 @@ public class Camera {
                         }
 
                         //Calculate the intersection ratio for the texture and
-                        wallBuffer[i] = new ObjectSlice(wall, dist, wall.getHeight()/2, wall.getTexture(), wall.getTexturePixelData(), wall.getTextureColor(), (Math.abs(line.x1) % inGameImgWidth)/inGameImgWidth);
+                        wallSlice.setData(wall, dist, wall.getHeight()/2, wall.getTexture(), wall.getTexturePixelData(), wall.getTextureColor(), (Math.abs(line.x1) % inGameImgWidth)/inGameImgWidth);
                     }
                 }
             }
@@ -254,7 +260,7 @@ public class Camera {
                     dist = FastMath.getYIntercept(rotatedLine) * FastMath.cos(currentRay);
 
                     //If the entity intersects with the ray and it is in front of the walls, draw it.
-                    if (dist > 0 && (wallBuffer[i] == null || dist <= wallBuffer[i].distToCamera)) {
+                    if (dist > 0 && (wallBuffer[i].isEmpty() || dist <= wallBuffer[i].distToCamera)) {
                         //Copy the entity's position.
                         rotatedPoint.setLocation(entity.position.x, entity.position.y);
                         //Rotate it to in front of the ray.
@@ -264,7 +270,8 @@ public class Camera {
                         dist = rotatedPoint.y *  FastMath.cos(entityAngle - cameraAngle.getValue());
 
                         //Create the object slice.
-                        currentSlice = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(cameraAngle.getValue()), entity.getSpritePixelData(cameraAngle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
+                        currentSlice = new ObjectSlice();
+                        currentSlice.setData(entity, dist, entity.getzPos(), entity.getSprite(cameraAngle.getValue()), entity.getSpritePixelData(cameraAngle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
 
                         //If the array list is empty, add the object slice.
                         if (visibleEntities.isEmpty())

@@ -8,21 +8,27 @@ import java.awt.image.BufferedImage;
 //A 'struct' to contain the data needed to draw a slice of a wall or entity.
 public class ObjectSlice {
     //The wall that this slice came from.
-    public final GameObject object;
+    public GameObject object;
     //The distance from the camera to the intersection between the ray and the wall.
-    public final double distToCamera;
+    public double distToCamera;
     //The height of the object on the screen
-    public final double zPos;
+    public double zPos;
     //The image that a slice will be taken out of.
-    public final BufferedImage image;
+    public BufferedImage image;
     //The pixel data of the image.
-    public final byte[] imagePixelData;
+    public byte[] imagePixelData;
     //The color to tint the image.
-    public final Color imageColor;
+    public Color imageColor;
     //How far along the wall the ray intersected. Between 0 and 1.
-    public final double intersectRatio;
+    public double intersectRatio;
+    //Determine if the variables of the slice were set.
+    public boolean empty;
 
-    public ObjectSlice(GameObject wall, double distToCamera, double zPos, BufferedImage image, byte[] imagePixelData, Color imageColor, double intersectRatio) {
+    public void ObjectSlice() {
+        empty = true;
+    }
+
+    public void setData(GameObject wall, double distToCamera, double zPos, BufferedImage image, byte[] imagePixelData, Color imageColor, double intersectRatio) {
         this.object = wall;
         this.distToCamera = distToCamera;
         this.zPos = zPos;
@@ -30,5 +36,13 @@ public class ObjectSlice {
         this.imagePixelData = imagePixelData;
         this.imageColor = imageColor;
         this.intersectRatio = intersectRatio;
+        this.empty = false;
+    }
+
+    public boolean isEmpty() {
+        return empty;
+    }
+    public void reset() {
+        empty = true;
     }
 }
