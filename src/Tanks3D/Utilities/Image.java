@@ -45,13 +45,17 @@ public final class Image {
         graphic.drawImage(image, 0, 0, width, height, null);
     }
 
-    //Change the color of the pixel using its brightness to adjust the hue.
+    //Change the color of the pixel using its brightness.
     public static int tintABGRPixel(int pixelColor, Color tintColor) {
-        //Calculate the luminance. These values are pre-determined.
-        double lum = ((pixelColor>>16 & 0xff) * 0.2126 + (pixelColor>>8 & 0xff) * 0.7152 + (pixelColor & 0xff) * 0.0722) / 255;
+        //Calculate the luminance. The decimal values are pre-determined.
+        int x = pixelColor>>16 & 0xff, y = pixelColor>>8 & 0xff, z = pixelColor & 0xff;
+        int top = 2126*x + 7252*y + 722*z;
+        int tempB = (int)((tintColor.getBlue() * top * 1766117501L) >> 52);
+        int tempG = (int)((tintColor.getGreen() * top * 1766117501L) >> 52);
+        int tempR = (int)((tintColor.getRed() * top * 1766117501L) >> 52);
 
         //Calculate the new tinted color of the pixel and return it.
-        return ((pixelColor>>24 & 0xff) << 24) | ((int)(tintColor.getBlue()*lum) & 0xff) | (((int)(tintColor.getGreen()*lum) & 0xff) << 8) | (((int)(tintColor.getRed()*lum) & 0xff) << 16);
+        return ((pixelColor>>24 & 0xff) << 24) | tempB & 0xff | (tempG & 0xff) << 8 | (tempR & 0xff) << 16;
     }
 
     //Tint every pixel of an image.
