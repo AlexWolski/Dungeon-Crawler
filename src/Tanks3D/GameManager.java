@@ -4,7 +4,7 @@ import Tanks3D.DisplayComponents.Minimap;
 import Tanks3D.DisplayComponents.DisplayWindow;
 import Tanks3D.InputManager.InputManager;
 import Tanks3D.Object.Entity.Entity;
-import Tanks3D.Object.Entity.Round.Round;
+import Tanks3D.Object.Entity.Round.Projectile;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -75,7 +75,7 @@ public abstract class GameManager {
         //Link the controls for each player.
         InputManager.init(gameWindow.getPanel(), gameData.player);
         //Initialize the round object.
-        Round.init(gameData.entityList);
+        Projectile.init(gameData.entityList);
 
         //Set the initial time.
         timeOfLastFrame = System.currentTimeMillis();
@@ -93,7 +93,7 @@ public abstract class GameManager {
         gameData.entityList.add(gameData.player.getTank());
         gameData.entityList.add(gameData.player.getTank());
         //Rest the round pool.
-        Round.init(gameData.entityList);
+        Projectile.init(gameData.entityList);
 
         //Reset the tanks.
         gameData.player.reset();

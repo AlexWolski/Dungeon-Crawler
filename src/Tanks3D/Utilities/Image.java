@@ -48,13 +48,14 @@ public final class Image {
     //Change the color of the pixel using its brightness.
     public static int tintABGRPixel(int pixelColor, Color tintColor) {
         //Calculate the luminance. The decimal values are pre-determined.
-        int x = pixelColor>>16 & 0xff, y = pixelColor>>8 & 0xff, z = pixelColor & 0xff;
-        int top = 2126*x + 7252*y + 722*z;
-        int tempB = (int)((tintColor.getBlue() * top * 1766117501L) >> 52);
-        int tempG = (int)((tintColor.getGreen() * top * 1766117501L) >> 52);
-        int tempR = (int)((tintColor.getRed() * top * 1766117501L) >> 52);
+        int lum = (pixelColor>>16 & 0xff)*2126 + (pixelColor>>8 & 0xff)*7252 + (pixelColor & 0xff)*722;
 
-        //Calculate the new tinted color of the pixel and return it.
+        //Calculate the new tinted color of the pixel.
+        int tempB = (int)((tintColor.getBlue() * lum * 1755488566L) >> 52);
+        int tempG = (int)((tintColor.getGreen() * lum * 1755488566L) >> 52);
+        int tempR = (int)((tintColor.getRed() * lum * 1755488566L) >> 52);
+
+        //Combine the colors into an int and return it.
         return ((pixelColor>>24 & 0xff) << 24) | tempB & 0xff | (tempG & 0xff) << 8 | (tempR & 0xff) << 16;
     }
 

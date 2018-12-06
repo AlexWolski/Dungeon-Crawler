@@ -79,11 +79,16 @@ public abstract class Entity extends GameObject {
             //Check for collisions with the wall if it is visible.
             if(wall.getVisible()) {
                 //Check if the entity hits the sides of the wall. If it does, call the 'collide' method.
-                if(wall instanceof UnbreakableWall)
-                    if (FastMath.isPointInCircle(wall.getPoint1(), position, this.getHitCircleRadius()))
+                if (FastMath.isPointInCircle(wall.getPoint1(), position, this.getHitCircleRadius()))
+                    if(wall instanceof UnbreakableWall)
                         this.collide(wall.getPoint1(), thisObject, collidedObject);
-                    else if(FastMath.isPointInCircle(wall.getPoint2(), position, this.getHitCircleRadius()))
+                    else
+                        this.collide(wall, thisObject, collidedObject);
+                else if(FastMath.isPointInCircle(wall.getPoint2(), position, this.getHitCircleRadius()))
+                    if(wall instanceof UnbreakableWall)
                         this.collide(wall.getPoint2(), thisObject, collidedObject);
+                    else
+                        this.collide(wall, thisObject, collidedObject);
 
                 //Copy the line of the wall.
                 rotatedLine = wall.getLine();

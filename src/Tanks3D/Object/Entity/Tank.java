@@ -1,7 +1,7 @@
 package Tanks3D.Object.Entity;
 
 import Tanks3D.GameData;
-import Tanks3D.Object.Entity.Round.Round;
+import Tanks3D.Object.Entity.Round.Projectile;
 import Tanks3D.Object.Wall.*;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
@@ -27,8 +27,7 @@ public class Tank extends Entity {
 
     //Images for the tank in game and on the minimap.
     private final static BufferedImage[] sprites;
-    private final static BufferedImage deadIcon;
-    private final BufferedImage aliveIcon;
+    private final static BufferedImage playerIcon;
 
     //The number of milliseconds it takes to respawn.
     private final static int respawnCooldown = 2000;
@@ -59,15 +58,11 @@ public class Tank extends Entity {
 
     //Load the images for the tank.
     static {
-        //Load the sprites.
-        sprites = new BufferedImage[4];
-        sprites[0] = Image.load("resources/Tank/Front.png");
-        sprites[1] = Image.load("resources/Tank/Left.png");
-        sprites[2] = Image.load("resources/Tank/Back.png");
-        sprites[3] = Image.load("resources/Tank/Right.png");
+        //Load a blank buffered image as a placeholder.
+        sprites = new BufferedImage[] { new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB) };
 
         //Load the default icon.
-        deadIcon = Image.load("resources/HUD/Tank Icon.png");
+        playerIcon = Image.load("resources/HUD/Player Icon.png");
     }
 
     public Tank(Point2D.Double spawnPoint, double spawnAngle, Color tankColor) {
@@ -88,16 +83,14 @@ public class Tank extends Entity {
         //Pass the sprites to the parent class.
         setSprites(sprites, (int)(sprites[0].getWidth() * scale), (int)(sprites[0].getHeight() * scale));
 
-        //Copy and color it to get the alive icon.
-        aliveIcon = Image.copy(deadIcon);
-        Image.tintImage(aliveIcon, tankColor);
         //Set the icon to the alive icon.
-        setIcon(aliveIcon);
+        Image.tintImage(playerIcon, Color.RED);
+        setIcon(playerIcon);
 
         //Set the height of the tank.
-        zPos = (int)getHeight()/2;
+        zPos = (int)Wall.defaultWallHeight()/2;
         //Set the height of the gun.
-        gunHeight = zPos + (int)(getHeight()/2 * 0.65);
+        gunHeight = zPos;
     }
 
     public void update(GameData data, double deltaTime, ListIterator<Entity> thisObject) {
@@ -174,7 +167,7 @@ public class Tank extends Entity {
             double xPos = position.x + distance * FastMath.sin(angle.getValue());
             double yPos = position.y + distance * FastMath.cos(angle.getValue());
             //Create the round and add it to the entity list.
-            Round.newArmorPiercing(xPos, yPos, gunHeight, angle.getValue(), this);
+            Projectile.newArmorPiercing(xPos, yPos, gunHeight, angle.getValue(), this);
         }
         //If the tank is reloading, check if the reload time is up. If it is, set reloading to false.
         else if(System.currentTimeMillis() >= shotTime + shotCooldown) {
@@ -202,7 +195,6 @@ public class Tank extends Entity {
         lives--;
         speed = 0;
         rotationSpeed = 0;
-        setIcon(deadIcon);
     }
 
     //Respawn the tank.
@@ -224,7 +216,6 @@ public class Tank extends Entity {
         health = maxHealth;
         alive = true;
         respawning = false;
-        setIcon(aliveIcon);
     }
 
     public void resetLives() {

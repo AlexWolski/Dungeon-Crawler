@@ -88,7 +88,6 @@ public class Minimap {
         Graphics2D graphic = canvas.createGraphics();
 
         //Draw the walls if they are visible.
-
         for(Wall wall : gameData.gameLevel.wallObjects)
             if(wall.getVisible())
                 drawWall(graphic, wall);
