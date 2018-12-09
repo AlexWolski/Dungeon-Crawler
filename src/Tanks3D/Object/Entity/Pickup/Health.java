@@ -1,11 +1,11 @@
 package Tanks3D.Object.Entity.Pickup;
 
+import Tanks3D.GarbageCollector;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Utilities.Image;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.ListIterator;
 
 public class Health extends Pickup {
     private final static BufferedImage[] sprites;
@@ -24,13 +24,13 @@ public class Health extends Pickup {
         super(position, sprites, icon, null);
     }
 
-    public void collide(Object object, ListIterator thisObject, ListIterator iterator) {
+    public void collide(Object object) {
         if(object instanceof Player) {
             //Repair the tank.
             ((Player) object).repair(health);
 
             //Remove the round.
-            removePickup(thisObject);
+            GarbageCollector.remove(this);
         }
     }
 }

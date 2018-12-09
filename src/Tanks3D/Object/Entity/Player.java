@@ -3,7 +3,6 @@ package Tanks3D.Object.Entity;
 import Tanks3D.GameData;
 import Tanks3D.Object.Entity.Round.Projectile;
 import Tanks3D.Object.Wall.*;
-import Tanks3D.Object.Wall.BreakableWalls.BreakableWall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
@@ -11,7 +10,6 @@ import Tanks3D.Utilities.Wrappers.MutableDouble;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.ListIterator;
 
 public class Player extends Entity {
     //How many units the tank can move per second.
@@ -94,7 +92,7 @@ public class Player extends Entity {
         gunHeight = zPos;
     }
 
-    public void update(GameData data, double deltaTime, ListIterator<Entity> thisObject) {
+    public void update(GameData data, double deltaTime) {
         //If the tank has no health and isn't dead yet, kill it.
         if(alive && health <= 0)
             die();
@@ -102,18 +100,13 @@ public class Player extends Entity {
             //Update the angle and position of the tank.
             angle.add(rotationSpeed * deltaTime / 1000);
             angle.setValue(FastMath.formatAngle(angle.getValue()));
-            super.update(data, deltaTime, thisObject);
+            super.update(data, deltaTime);
         }
     }
 
-    public void collide(Object object, ListIterator thisObject, ListIterator collidedObject) {
-        //If the tank collides with a breakable wall, destroy the wall.
-        if(object instanceof BreakableWall) {
-            ((BreakableWall)object).breakWall();
-            collidedObject.remove();
-        }
+    public void collide(Object object) {
         //If the tank hits the corner of the wall, fix its position.
-        else if(object instanceof Point2D.Double) {
+        if(object instanceof Point2D.Double) {
             Point2D.Double point = (Point2D.Double)object;
 
             //Calculate the angle between the tank and the hit circle.
@@ -124,11 +117,11 @@ public class Player extends Entity {
             this.position.y = point.y - hitCircleRadius * FastMath.cos(angle);
         }
         //If the tank hits a wall, fix its position.
-        else if(object instanceof UnbreakableWall) {
+        else if(object instanceof Wall) {
             //Get the angle of the line.
-            double lineAngle = ((UnbreakableWall) object).getAngle();
+            double lineAngle = ((Wall) object).getAngle();
             //Copy the first point of the wall.
-            Point2D.Double linePoint1 = ((UnbreakableWall) object).getPoint1();
+            Point2D.Double linePoint1 = ((Wall) object).getPoint1();
 
             //Rotate the point so that the line it would be vertical next to the entity.
             FastMath.rotate(linePoint1, position, -lineAngle);

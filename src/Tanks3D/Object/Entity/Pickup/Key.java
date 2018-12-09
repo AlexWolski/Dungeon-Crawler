@@ -5,7 +5,6 @@ import Tanks3D.Utilities.Image;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.util.ListIterator;
 
 public class Key extends Pickup {
     private final static BufferedImage[] sprites;
@@ -22,7 +21,7 @@ public class Key extends Pickup {
         super(position, sprites, icon, null);
     }
 
-    public void collide(Object object, ListIterator thisObject, ListIterator iterator) {
+    public void collide(Object object) {
         if(object instanceof Player) {
 
         }

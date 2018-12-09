@@ -1,7 +1,7 @@
 package Tanks3D.Object.Entity;
 
+import Tanks3D.Object.Entity.Round.Projectile;
 import Tanks3D.Object.GameObject;
-import Tanks3D.Object.Wall.UnbreakableWall;
 import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.GameData;
@@ -44,9 +44,9 @@ public abstract class Entity extends GameObject {
 
     //All entity classes have a 'collide' method that handles the event that it collides with a wall or another entity.
     //Pass an iterator to the entity and the object it collided with in case either needs to be removed from the entity list.
-    public abstract void collide(Object object, ListIterator thisObject, ListIterator collidedObject);
+    public abstract void collide(Object object);
 
-    public void update(GameData gamedata, double deltaTime, ListIterator<Entity> thisObject) {
+    public void update(GameData gamedata, double deltaTime) {
         if(this.visible) {
             //Move the entity based on its angle and speed.
             double distMoved = speed * deltaTime / 1000;
@@ -57,13 +57,13 @@ public abstract class Entity extends GameObject {
 
             //Check if the entity collides with any walls or entities.
             //Pass an iterator to this object in case it needs to remove itself from the list.
-            checkCollisionWall(gamedata.gameLevel.wallObjects, thisObject);
-            checkCollisionEntity(gamedata.entityList, thisObject);
+            checkCollisionWall(gamedata.gameLevel.wallObjects);
+            checkCollisionEntity(gamedata.entityList);
         }
     }
 
     //Check if this entity collides with any walls. If it does, pass the wall to the 'collide' method.
-    private void checkCollisionWall(ArrayList<Wall> wallList, ListIterator<Entity> thisObject) {
+    private void checkCollisionWall(ArrayList<Wall> wallList) {
         //The line of the wall rotated so that the ray is along the y axis.
         Line2D.Double rotatedLine;
         //Iterator for checking all of the walls.
@@ -76,19 +76,13 @@ public abstract class Entity extends GameObject {
             //Store the wall being checked.
             wall = collidedObject.next();
 
-            //Check for collisions with the wall if it is visible.
-            if(wall.getVisible()) {
+            //Check for collisions with the wall if it is collidable.
+            if(wall.getVisible() && ((this instanceof Player && wall.isCharacterCollidable()) || (this instanceof Projectile && wall.isProjectileCollidable()))) {
                 //Check if the entity hits the sides of the wall. If it does, call the 'collide' method.
                 if (FastMath.isPointInCircle(wall.getPoint1(), position, this.getHitCircleRadius()))
-                    if(wall instanceof UnbreakableWall)
-                        this.collide(wall.getPoint1(), thisObject, collidedObject);
-                    else
-                        this.collide(wall, thisObject, collidedObject);
+                    this.collide(wall.getPoint1());
                 else if(FastMath.isPointInCircle(wall.getPoint2(), position, this.getHitCircleRadius()))
-                    if(wall instanceof UnbreakableWall)
-                        this.collide(wall.getPoint2(), thisObject, collidedObject);
-                    else
-                        this.collide(wall, thisObject, collidedObject);
+                    this.collide(wall.getPoint2());
 
                 //Copy the line of the wall.
                 rotatedLine = wall.getLine();
@@ -101,14 +95,14 @@ public abstract class Entity extends GameObject {
                         && rotatedLine.y2 <= this.position.y) || (rotatedLine.y1 <= this.position.y
                         && rotatedLine.y2 >= this.position.y))) {
                     //Pass the iterator in case the entity needs to delete the wall.
-                    this.collide(wall, thisObject, collidedObject);
+                    this.collide(wall);
                 }
             }
         }
     }
 
     //Check if this entity collides with any other entities.  If it does, pass the other entity to the 'collide' method.
-    private void checkCollisionEntity(ArrayList<Entity> entityList, ListIterator<Entity> thisObject) {
+    private void checkCollisionEntity(ArrayList<Entity> entityList) {
         //The distance between the two entities squared.
         double actualDistSquared;
         //The distance where the two entities touch squared.
@@ -133,7 +127,7 @@ public abstract class Entity extends GameObject {
                 //If the entities collide, call the collide method of this entity.
                 if (actualDistSquared < minDistSquared)
                     //Pass the iterator in case this entity needs to delete the other.
-                    this.collide(entity, thisObject, collidedObject);
+                    this.collide(entity);
             }
         }
     }

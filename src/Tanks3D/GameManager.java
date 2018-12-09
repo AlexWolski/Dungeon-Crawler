@@ -76,6 +76,8 @@ public abstract class GameManager {
         InputManager.init(gameWindow.getPanel(), gameData.playerController);
         //Initialize the round object.
         Projectile.init(gameData.entityList);
+        //Initialize the garbage collector.
+        GarbageCollector.init(gameData.entityList, gameData.gameLevel.wallObjects);
 
         //Set the initial time.
         timeOfLastFrame = System.currentTimeMillis();
@@ -144,8 +146,11 @@ public abstract class GameManager {
 
         //Update the positions of all of the entities. Pass it the iterator in case the entity needs to remove itself from the list.
         while (iterator.hasNext())
-            iterator.next().update(gameData, deltaTime, iterator);
+            iterator.next().update(gameData, deltaTime);
 
+        //Remove any unneeded objects.
+        GarbageCollector.deleteObjects();
+        
         //Draw both players' screens and the minimap.
         gameWindow.draw();
 

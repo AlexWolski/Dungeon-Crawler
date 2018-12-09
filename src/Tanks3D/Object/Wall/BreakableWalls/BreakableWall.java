@@ -35,6 +35,12 @@ public abstract class BreakableWall extends Wall {
             damage++;
             //Set the texture to the next level of damage.
             super.setTexture(textures[damage], texturePixelData[damage]);
+
+            //If the wall is at maximum damage, disable collisions.
+            if(damage == textures.length  -1) {
+                characterCollidable = false;
+                projectileCollidable = false;
+            }
         }
     }
 }
