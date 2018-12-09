@@ -75,7 +75,7 @@ public abstract class Projectile extends Entity {
         //If the round hits a breakable wall, break it.
         if(object instanceof BreakableWall) {
             ((BreakableWall) object).breakWall();
-            collidedObject.remove();
+            //collidedObject.remove();
             removeRound(thisObject);
         }
         //If the round hits an unbreakable wall, destroy the round.

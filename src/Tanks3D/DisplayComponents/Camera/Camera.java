@@ -68,7 +68,7 @@ public class Camera {
                 pixelTable[i][j] = true;
     }
 
-    //
+    //Calculate the distance to the point on a wall that the player is looking at.
     private double getDistToWall(Line2D.Double line, double currentRay) {
         //Rotate the wall so that the ray is facing along the y axis.
         FastMath.rotate(line, cameraPosition, -cameraAngle.getValue() - currentRay);

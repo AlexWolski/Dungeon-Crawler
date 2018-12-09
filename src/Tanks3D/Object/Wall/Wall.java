@@ -44,8 +44,9 @@ public abstract class Wall extends GameObject {
     public BufferedImage getTexture() {
         return texture;
     }
-    protected void setTexture(BufferedImage texture) {
+    protected void setTexture(BufferedImage texture, byte[] texturePixelData) {
         this.texture = texture;
+        this.texturePixelData = texturePixelData;
     }
     public byte[] getTexturePixelData() {
         return texturePixelData;
