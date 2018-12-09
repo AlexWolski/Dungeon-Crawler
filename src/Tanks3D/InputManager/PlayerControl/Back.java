@@ -1,21 +1,21 @@
 package Tanks3D.InputManager.PlayerControl;
 
-import Tanks3D.Player;
+import Tanks3D.PlayerController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 public class Back extends AbstractAction {
-    private final Player player;
+    private final PlayerController playerController;
     private final boolean keyPressed;
 
-    public Back(Player player, boolean keyPressed) {
-        this.player = player;
+    public Back(PlayerController playerController, boolean keyPressed) {
+        this.playerController = playerController;
         this.keyPressed = keyPressed;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        player.back(keyPressed);
+        playerController.back(keyPressed);
     }
 }

@@ -2,7 +2,7 @@ package Tanks3D;
 
 import Tanks3D.DisplayComponents.Camera.Camera;
 import Tanks3D.DisplayComponents.HUD;
-import Tanks3D.Object.Entity.Tank;
+import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
 
@@ -10,12 +10,12 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
-//Manage the player's tank and screen. This extends 'Runnable' so that the draw function can be threaded.
-public class Player {
-    private final Tank myTank;
+//Manage the playerController's tank and screen. This extends 'Runnable' so that the draw function can be threaded.
+public class PlayerController {
+    private final Player myPlayer;
     //A camera for displaying the game world.
     private final Camera camera;
-    //The heads up display for the player.
+    //The heads up display for the playerController.
     private final HUD hud;
     //Remember what keys are being pressed. When the tank is created, it isn't moving or firing.
     private boolean forwardPressed, backPressed, leftPressed, rightPressed, firePressed = false;
@@ -26,11 +26,11 @@ public class Player {
     //Determine whether to display the 'You Win' or 'You Lose' images.
     private boolean win, lose = false;
 
-    public Player(GameData gameData, BufferedImage canvas, SpawnPoint spawnPoint, Color tankColor) {
+    public PlayerController(GameData gameData, BufferedImage canvas, SpawnPoint spawnPoint, Color tankColor) {
         //Create a new tank given the spawn-point and add it to the entity list.
-        myTank = new Tank(spawnPoint.getPosition(), spawnPoint.getAngle(), tankColor);
+        myPlayer = new Player(spawnPoint.getPosition(), spawnPoint.getAngle(), tankColor);
         //Add the new tank to the list of all entities.
-        gameData.entityList.add(myTank);
+        gameData.entityList.add(myPlayer);
 
         //Create a new camera given the spawn-point position and angle.
         camera = new Camera(gameData, canvas, getPosition(), getAngle());
@@ -39,19 +39,21 @@ public class Player {
         hud = new HUD(canvas, getColor());
     }
 
-    //Draw the player's screen.
+    //Draw the playerController's screen.
     public void draw() {
         //If the tank is alive, check if it has any lives left.
-        if(!myTank.isAlive()) {
+        if(!myPlayer.isAlive()) {
             //If it has lives left, respawn the tank and reset the controls.
-            if(myTank.getLives() > 0) {
-                myTank.respawn();
+            if(myPlayer.getLives() > 0) {
+                myPlayer.respawn();
                 forwardPressed = backPressed = leftPressed = rightPressed = false;
                 invertControls = 1;
             }
             //Otherwise, end the game.
-            else
-                GameManager.loseGame(this);
+            else {
+                GameManager.endGame();
+                lose = true;
+            }
 
         }
 
@@ -61,53 +63,46 @@ public class Player {
         //Draw the walls and entities.
         camera.draw();
         //Draw the HUD.
-        hud.draw(myTank.getMaxHealth(), myTank.getHealth(), myTank.getLives(), win, lose, myTank.isAlive());
+        hud.draw(myPlayer.getMaxHealth(), myPlayer.getHealth(), myPlayer.getLives(), win, lose, myPlayer.isAlive());
 
         //Indicate that the screen is finished drawing.
         drawing = false;
 
         //If the fire key was pressed while the screen was being drawn, fire the tank after drawing is finished.
         if(firePressed) {
-            myTank.fire();
+            myPlayer.fire();
             firePressed = false;
         }
     }
 
-    protected void lose() {
-        lose = true;
-    }
-    protected void win() {
-        win = true;
-    }
-
     protected void reset() {
         win = lose = false;
-        myTank.resetTank();
-        myTank.resetLives();
+        myPlayer.resetTank();
+        myPlayer.resetLives();
     }
 
     public Color getColor() {
-        return myTank.getColor();
+        return myPlayer.getColor();
     }
     public Point2D.Double getPosition() {
-        return myTank.getPosition();
+        return myPlayer.getPosition();
     }
     public MutableDouble getAngle() {
-        return myTank.getAngle();
+        return myPlayer.getAngle();
     }
-    public Tank getTank() {
-        return myTank;
+    public Player getTank() {
+        return myPlayer;
     }
 
     //If the forward key has been pressed or released, update the tank's speed.
     public void forward(boolean keyPressed) {
-        //Only move the player if they are alive.
-        if(myTank.isAlive()) {
+        //Only move the playerController if they are alive.
+        if(myPlayer.isAlive()) {
             if (keyPressed && !forwardPressed) {
-                myTank.speed += myTank.getMaxSpeed();
+                myPlayer.speed += myPlayer.getMaxSpeed();
                 forwardPressed = true;
             } else if (!keyPressed && forwardPressed) {
-                myTank.speed -= myTank.getMaxSpeed();
+                myPlayer.speed -= myPlayer.getMaxSpeed();
                 forwardPressed = false;
             }
         }
@@ -115,21 +110,21 @@ public class Player {
 
     //If the back key has been pressed or released, update the tank's speed.
     public void back(boolean keyPressed) {
-        //Only move the player if they are alive.
-        if(myTank.isAlive()) {
+        //Only move the playerController if they are alive.
+        if(myPlayer.isAlive()) {
             if (keyPressed && !backPressed) {
-                myTank.speed -= myTank.getMaxSpeed();
+                myPlayer.speed -= myPlayer.getMaxSpeed();
                 backPressed = true;
 
                 //Invert the left and right controls.
-                myTank.rotationSpeed *= -1;
+                myPlayer.rotationSpeed *= -1;
                 invertControls *= -1;
             } else if (!keyPressed && backPressed) {
-                myTank.speed += myTank.getMaxSpeed();
+                myPlayer.speed += myPlayer.getMaxSpeed();
                 backPressed = false;
 
                 //Revert the left and right controls.
-                myTank.rotationSpeed *= -1;
+                myPlayer.rotationSpeed *= -1;
                 invertControls *= -1;
             }
         }
@@ -137,13 +132,13 @@ public class Player {
 
     //If the left key has been pressed or released, update the tank's rotation.
     public void left(boolean keyPressed) {
-        //Only move the player if they are alive.
-        if(myTank.isAlive()) {
+        //Only move the playerController if they are alive.
+        if(myPlayer.isAlive()) {
             if (keyPressed && !leftPressed) {
-                myTank.rotationSpeed -= myTank.getMaxRotationSpeed() * invertControls;
+                myPlayer.rotationSpeed -= myPlayer.getMaxRotationSpeed() * invertControls;
                 leftPressed = true;
             } else if (!keyPressed && leftPressed) {
-                myTank.rotationSpeed += myTank.getMaxRotationSpeed() * invertControls;
+                myPlayer.rotationSpeed += myPlayer.getMaxRotationSpeed() * invertControls;
                 leftPressed = false;
             }
         }
@@ -151,13 +146,13 @@ public class Player {
 
     //If the right key has been pressed or released, update the tank's rotation.
     public void right(boolean keyPressed) {
-        //Only move the player if they are alive.
-        if(myTank.isAlive()) {
+        //Only move the playerController if they are alive.
+        if(myPlayer.isAlive()) {
             if (keyPressed && !rightPressed) {
-                myTank.rotationSpeed += myTank.getMaxRotationSpeed() * invertControls;
+                myPlayer.rotationSpeed += myPlayer.getMaxRotationSpeed() * invertControls;
                 rightPressed = true;
             } else if (!keyPressed && rightPressed) {
-                myTank.rotationSpeed -= myTank.getMaxRotationSpeed() * invertControls;
+                myPlayer.rotationSpeed -= myPlayer.getMaxRotationSpeed() * invertControls;
                 rightPressed = false;
             }
         }
@@ -165,11 +160,11 @@ public class Player {
 
     //If the fire key was pressed, tell the tank to fire.
     public void fire() {
-        //If the player is alive, fire.
-        if(myTank.isAlive())
+        //If the playerController is alive, fire.
+        if(myPlayer.isAlive())
             //If the screen isn't currently being drawn, fire the tank now.
             if(!drawing)
-                myTank.fire();
+                myPlayer.fire();
             //If the screen is being drawn, indicate to fire the tank after it's done.
             else
                 firePressed = true;

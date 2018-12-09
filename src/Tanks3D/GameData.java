@@ -9,11 +9,11 @@ import java.util.ArrayList;
 public final class GameData {
     //The 'Level' object stores all of the data for the game world and draws it to the screen.
     public Level gameLevel;
-    //A list of entities in the game. The first index is always player 1 and the second index is always player 2.
+    //A list of entities in the game. The first index is always playerController 1 and the second index is always playerController 2.
     public ArrayList<Entity> entityList;
 
-    //The object that controls the player's input and displays their screen.
-    public Player player;
+    //The object that controls the playerController's input and displays their screen.
+    public PlayerController playerController;
     //The object that controls the minimap
     public Minimap minimap;
 }

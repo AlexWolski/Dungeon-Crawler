@@ -3,6 +3,7 @@ package Tanks3D.Object.Entity;
 import Tanks3D.GameData;
 import Tanks3D.Object.Entity.Round.Projectile;
 import Tanks3D.Object.Wall.*;
+import Tanks3D.Object.Wall.BreakableWalls.BreakableWall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
@@ -12,7 +13,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ListIterator;
 
-public class Tank extends Entity {
+public class Player extends Entity {
     //How many units the tank can move per second.
     public final static double maxSpeed = 40;
     //How many degrees the tank can rotate per second.
@@ -33,7 +34,7 @@ public class Tank extends Entity {
     private final static int respawnCooldown = 2000;
     //The time when the tank started to respawn.
     private long respawnStartTime;
-    //Determines if the player is dead, alive, or re-spawning.
+    //Determines if the playerController is dead, alive, or re-spawning.
     private boolean alive;
     private boolean respawning;
 
@@ -65,7 +66,7 @@ public class Tank extends Entity {
         playerIcon = Image.load("resources/HUD/Player Icon.png");
     }
 
-    public Tank(Point2D.Double spawnPoint, double spawnAngle, Color tankColor) {
+    public Player(Point2D.Double spawnPoint, double spawnAngle, Color tankColor) {
         super(hitCircleRadius, new Point2D.Double(spawnPoint.x, spawnPoint.y), spawnAngle, 0);
         this.spawnPoint = spawnPoint;
         this.spawnAngle = spawnAngle;
@@ -142,15 +143,15 @@ public class Tank extends Entity {
                 this.position.y -= (hitCircleRadius + xDistance) * FastMath.sin(lineAngle);
             }
         }
-        else if(object instanceof Tank) {
-            Tank tank = (Tank)object;
+        else if(object instanceof Player) {
+            Player player = (Player)object;
 
             //Calculate the angle between the centers of the two tanks.
-            double angle = Math.toDegrees(Math.atan2(tank.position.x - position.x, tank.position.y - position.y));
+            double angle = Math.toDegrees(Math.atan2(player.position.x - position.x, player.position.y - position.y));
 
-            //Move this tank by half of the distance.
-            this.position.x = tank.position.x -  2 * hitCircleRadius * FastMath.sin(angle);
-            this.position.y = tank.position.y - 2 * hitCircleRadius * FastMath.cos(angle);
+            //Move this player by half of the distance.
+            this.position.x = player.position.x -  2 * hitCircleRadius * FastMath.sin(angle);
+            this.position.y = player.position.y - 2 * hitCircleRadius * FastMath.cos(angle);
         }
     }
 

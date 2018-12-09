@@ -2,8 +2,11 @@ package Tanks3D;
 
 import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Pickup.Health;
+import Tanks3D.Object.Entity.Pickup.Key;
 import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Object.Wall.*;
+import Tanks3D.Object.Wall.BreakableWalls.BreakableBrick;
+import Tanks3D.Object.Wall.BreakableWalls.BreakableWall;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -19,7 +22,7 @@ public final class Level {
     private int floorColor;
     private int ceilColor;
 
-    //Read the data file and translate it into objects. Save the player spawn-points to construct the player objects.
+    //Read the data file and translate it into objects. Save the playerController spawn-points to construct the playerController objects.
     public Level(String levelFile, ArrayList<Entity> entityList) {
         //Read the data file and create all of the map objects.
         parseDataFile(levelFile, entityList);
@@ -35,23 +38,23 @@ public final class Level {
         ceilColor = Color.darkGray.darker().getRGB();
 
         //Map border
-        wallObjects.add(new UnbreakableWall(new Point2D.Double(-100, 0), new Point2D.Double(-50, 86.6025403784), Color.green.darker()));
-        wallObjects.add(new UnbreakableWall(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(50, 86.6025403784), Color.green.darker()));
-        wallObjects.add(new UnbreakableWall(new Point2D.Double(50, 86.6025403784), new Point2D.Double(100, 0), Color.green.darker()));
-        wallObjects.add(new UnbreakableWall(new Point2D.Double(100, 0), new Point2D.Double(50, -86.6025403784), Color.blue));
-        wallObjects.add(new UnbreakableWall(new Point2D.Double(50, -86.6025403784), new Point2D.Double(-50, -86.6025403784), Color.blue));
-        wallObjects.add(new UnbreakableWall(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(-100, 0), Color.blue));
+        wallObjects.add(new UnbreakableWall(new Point2D.Double(-100, 0), new Point2D.Double(-50, 86.6025403784), null));
+        wallObjects.add(new UnbreakableWall(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(50, 86.6025403784), null));
+        wallObjects.add(new UnbreakableWall(new Point2D.Double(50, 86.6025403784), new Point2D.Double(100, 0), null));
+        wallObjects.add(new UnbreakableWall(new Point2D.Double(100, 0), new Point2D.Double(50, -86.6025403784), null));
+        wallObjects.add(new UnbreakableWall(new Point2D.Double(50, -86.6025403784), new Point2D.Double(-50, -86.6025403784), null));
+        wallObjects.add(new UnbreakableWall(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(-100, 0), null));
 
         //Breakable walls
-        wallObjects.add(new BreakableWall(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableWall(new Point2D.Double(50, 86.6025403784), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableWall(new Point2D.Double(100, 0), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableWall(new Point2D.Double(50, -86.6025403784), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableWall(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableWall(new Point2D.Double(-100, 0), new Point2D.Double(0, 0), null));
+        wallObjects.add(new BreakableBrick(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(0, 0), null));
+        wallObjects.add(new BreakableBrick(new Point2D.Double(50, 86.6025403784), new Point2D.Double(0, 0), null));
+        wallObjects.add(new BreakableBrick(new Point2D.Double(100, 0), new Point2D.Double(0, 0), null));
+        wallObjects.add(new BreakableBrick(new Point2D.Double(50, -86.6025403784), new Point2D.Double(0, 0), null));
+        wallObjects.add(new BreakableBrick(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(0, 0), null));
+        wallObjects.add(new BreakableBrick(new Point2D.Double(-100, 0), new Point2D.Double(0, 0), null));
 
         //Health crates
-        entityList.add(new Health(new Point2D.Double(-50, 43.3012701892)));
+        entityList.add(new Key(new Point2D.Double(-50, 43.3012701892)));
         entityList.add(new Health(new Point2D.Double(50, 43.3012701892)));
         entityList.add(new Health(new Point2D.Double(-50, -43.3012701892)));
         entityList.add(new Health(new Point2D.Double(50, -43.3012701892)));

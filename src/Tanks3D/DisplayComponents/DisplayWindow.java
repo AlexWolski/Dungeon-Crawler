@@ -35,13 +35,13 @@ public class DisplayWindow extends JFrame {
 
     //Return the JPanel
     public JPanel getPanel() { return panel; }
-    //Return the buffers for the player's screen and the minimap.
+    //Return the buffers for the playerController's screen and the minimap.
     public BufferedImage getScreenBuffer() { return panel.getScreenBuffer(); }
     public BufferedImage getMinimapBuffer() { return panel.getMinimapBuffer(); }
 
     //Draw the two screens and the minimap to buffers, then paint them on the display.
     public void draw() {
-        gameData.player.draw();
+        gameData.playerController.draw();
         gameData.minimap.draw();
 
         //Paint all three buffers on the display. 'paintImmediately' is used to prevent the buffers being modified before painting is complete.

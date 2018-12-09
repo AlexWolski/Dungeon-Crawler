@@ -1,6 +1,6 @@
 package Tanks3D.Object.Entity.Round;
 
-import Tanks3D.Object.Entity.Tank;
+import Tanks3D.Object.Entity.Player;
 import Tanks3D.Utilities.Image;
 
 import java.awt.*;
@@ -19,7 +19,7 @@ public class PingPongBall extends Projectile {
         sprites[0] = Image.load("resources/Rounds/Armor Piercing.png");
     }
 
-    public PingPongBall(Point2D.Double position, int zPos, double angle, Tank owner) {
+    public PingPongBall(Point2D.Double position, int zPos, double angle, Player owner) {
         super(position, zPos, angle, speed, damage, sprites, imageColor, owner);
     }
 }

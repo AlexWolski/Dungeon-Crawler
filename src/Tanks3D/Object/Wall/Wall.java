@@ -15,10 +15,13 @@ public abstract class Wall extends GameObject {
     private Line2D.Double line;
     private double length;
     private double angle;
+    protected boolean seeThrough;
+    protected boolean characterCollidable;
+    protected boolean projectileCollidable;
     private final static double height = 20;
 
     //Constructor that takes two points.
-    Wall(Point2D.Double point1, Point2D.Double point2, BufferedImage texture, Color textureColor) {
+    protected Wall(Point2D.Double point1, Point2D.Double point2, BufferedImage texture, Color textureColor) {
         //Set the texture of the wall.
         this.texture = texture;
         this.textureColor = textureColor;
@@ -31,10 +34,18 @@ public abstract class Wall extends GameObject {
         length = Math.sqrt(Math.pow(line.x1 - line.x2, 2) + Math.pow(line.y1 - line.y2, 2));
         //Modified equation for spherical coordinates.
         angle = Math.toDegrees(Math.atan2(line.x2-line.x1, line.y2-line.y1));
+
+        //By default, walls aren't see through and collide with everything.
+        seeThrough = false;
+        characterCollidable = true;
+        projectileCollidable = true;
     }
 
     public BufferedImage getTexture() {
         return texture;
+    }
+    protected void setTexture(BufferedImage texture) {
+        this.texture = texture;
     }
     public byte[] getTexturePixelData() {
         return texturePixelData;
@@ -57,5 +68,14 @@ public abstract class Wall extends GameObject {
     public static double defaultWallHeight() { return height; }
     public double getAngle() {
         return angle;
+    }
+    public boolean isSeeThrough() {
+        return seeThrough;
+    }
+    public boolean isCharacterCollidable() {
+        return characterCollidable;
+    }
+    public boolean isProjectileCollidable() {
+        return projectileCollidable;
     }
 }

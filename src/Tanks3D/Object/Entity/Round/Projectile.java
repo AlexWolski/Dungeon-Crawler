@@ -2,8 +2,8 @@ package Tanks3D.Object.Entity.Round;
 
 import Tanks3D.GameData;
 import Tanks3D.Object.Entity.Entity;
-import Tanks3D.Object.Entity.Tank;
-import Tanks3D.Object.Wall.BreakableWall;
+import Tanks3D.Object.Entity.Player;
+import Tanks3D.Object.Wall.BreakableWalls.BreakableWall;
 import Tanks3D.Object.Wall.UnbreakableWall;
 
 import java.awt.*;
@@ -27,7 +27,7 @@ public abstract class Projectile extends Entity {
     private final int damage;
 
     //The tank that shot this round.
-    private Tank owner;
+    private Player owner;
 
     //The distance the round has traveled since being fired
     private double distTraveled;
@@ -46,7 +46,7 @@ public abstract class Projectile extends Entity {
             ArmorPiercingPool.add(new PingPongBall(new Point2D.Double(0, 0), 0, 0, null));
     }
 
-    public Projectile(Point2D.Double position, int zPos, double angle, int speed, int damage, BufferedImage[] sprites, Color imageColor, Tank owner) {
+    public Projectile(Point2D.Double position, int zPos, double angle, int speed, int damage, BufferedImage[] sprites, Color imageColor, Player owner) {
         super(hitCircleRadius, position, angle, speed);
         //Set the sprites for the round.
         setSprites(sprites, (int)(sprites[0].getWidth() * scale), (int)(sprites[0].getHeight() * scale));
@@ -83,14 +83,14 @@ public abstract class Projectile extends Entity {
             removeRound(thisObject);
         }
         //If the round hits a tank other than the tank firing the round, damage it and remove the round.
-        else if(object instanceof Tank && object != owner) {
-            ((Tank) object).damage(damage);
+        else if(object instanceof Player && object != owner) {
+            ((Player) object).damage(damage);
             removeRound(thisObject);
         }
     }
 
     //Add a round from the given pool to the entity list.
-    public static void addFromPool(ArrayList<Projectile> projectilePool, double x, double y, int zPos, double angle, Tank owner) {
+    public static void addFromPool(ArrayList<Projectile> projectilePool, double x, double y, int zPos, double angle, Player owner) {
         if(!projectilePool.isEmpty()) {
             //Temporarily hold the first round in the pool and remove it.
             Projectile tempProjectile = projectilePool.get(0);
@@ -110,7 +110,7 @@ public abstract class Projectile extends Entity {
     }
 
     //Create a new round and add it to the entity list
-    public static void newArmorPiercing(double x, double y, int zPos, double angle, Tank owner) {
+    public static void newArmorPiercing(double x, double y, int zPos, double angle, Player owner) {
         addFromPool(ArmorPiercingPool, x, y, zPos, angle, owner);
     }
 

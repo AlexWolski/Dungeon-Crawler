@@ -68,12 +68,12 @@ public abstract class GameManager {
         //Create and configure the JFrame. This JFrame will have three panels: the two players screens and a minimap.
         gameWindow = new DisplayWindow(gameData, "Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
 
-        //Initialize the 'Player' objects. Get the initial positions for both players and indicate which side of the screen the HUD icons are on.
-        gameData.player = new Player(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayerSpawn(), Color.cyan);
+        //Initialize the 'PlayerController' objects. Get the initial positions for both players and indicate which side of the screen the HUD icons are on.
+        gameData.playerController = new PlayerController(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayerSpawn(), Color.cyan);
         gameData.minimap = new Minimap(gameData, gameWindow.getMinimapBuffer());
 
-        //Link the controls for each player.
-        InputManager.init(gameWindow.getPanel(), gameData.player);
+        //Link the controls for each playerController.
+        InputManager.init(gameWindow.getPanel(), gameData.playerController);
         //Initialize the round object.
         Projectile.init(gameData.entityList);
 
@@ -90,14 +90,14 @@ public abstract class GameManager {
         gameData.gameLevel = new Level(levelFile, gameData.entityList);
         //Reset the entity list.
         gameData.entityList.clear();
-        gameData.entityList.add(gameData.player.getTank());
-        gameData.entityList.add(gameData.player.getTank());
+        gameData.entityList.add(gameData.playerController.getTank());
+        gameData.entityList.add(gameData.playerController.getTank());
         //Rest the round pool.
         Projectile.init(gameData.entityList);
 
         //Reset the tanks.
-        gameData.player.reset();
-        gameData.player.reset();
+        gameData.playerController.reset();
+        gameData.playerController.reset();
     }
 
     //Get the current time, calculate the time elapsed since the last frame, and store it in 'deltaTime;.
@@ -154,12 +154,9 @@ public abstract class GameManager {
         frames++;
     }
 
-    public static void loseGame(Player player) {
+    public static void endGame() {
         //If the game is not already restarting, restart it.
         if(!restarting) {
-            //Display 'You Lose' on the screen of the player who lost.
-            player.lose();
-
             //Save the current time and start counting down until the restart.
             timeOfGameEnd = System.currentTimeMillis();
             restarting = true;

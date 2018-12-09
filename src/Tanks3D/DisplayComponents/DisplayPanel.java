@@ -21,7 +21,7 @@ public class DisplayPanel extends JPanel {
         minimapBuffer = new BufferedImage(panelSize.height/3, panelSize.height/3, BufferedImage.TYPE_INT_RGB);
     }
 
-    //Return the buffers for each player's screen and the minimap.
+    //Return the buffers for each playerController's screen and the minimap.
     public BufferedImage getScreenBuffer() { return screenBuffer; }
     public BufferedImage getMinimapBuffer() { return minimapBuffer; }
 

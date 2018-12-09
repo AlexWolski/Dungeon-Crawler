@@ -21,14 +21,8 @@ public class ObjectSlice {
     public Color imageColor;
     //How far along the wall the ray intersected. Between 0 and 1.
     public double intersectRatio;
-    //Determine if the variables of the slice were set.
-    public boolean empty;
 
-    public void ObjectSlice() {
-        empty = true;
-    }
-
-    public void setData(GameObject wall, double distToCamera, double zPos, BufferedImage image, byte[] imagePixelData, Color imageColor, double intersectRatio) {
+    public ObjectSlice (GameObject wall, double distToCamera, double zPos, BufferedImage image, byte[] imagePixelData, Color imageColor, double intersectRatio) {
         this.object = wall;
         this.distToCamera = distToCamera;
         this.zPos = zPos;
@@ -36,13 +30,5 @@ public class ObjectSlice {
         this.imagePixelData = imagePixelData;
         this.imageColor = imageColor;
         this.intersectRatio = intersectRatio;
-        this.empty = false;
-    }
-
-    public boolean isEmpty() {
-        return empty;
-    }
-    public void reset() {
-        empty = true;
     }
 }
