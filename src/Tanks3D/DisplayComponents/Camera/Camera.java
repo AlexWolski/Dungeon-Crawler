@@ -230,15 +230,6 @@ public class Camera {
         }
     }
 
-    //Draw see-through wall slices to the wall buffer.
-    private void drawSeeThroughWalls() {
-        //Iterate through the wall slices and draw them.
-        for(int i = 0; i < canvas.getWidth(); i++) {
-            for(int j = 0; j < wallBuffer.get(i).size() - 1; j++)
-                drawSlice(wallBuffer.get(i).get(j), i);
-        }
-    }
-
     //Draw solid wall slices to the wall buffer.
     private void drawSolidWalls() {
         //Iterate through the wall slices and draw them.
@@ -265,7 +256,7 @@ public class Camera {
     }
 
     //Draw the entities, comparing their distance to the wall buffer.
-    private void drawEntities() {
+    private void drawEntitiesAndSeeThrough() {
         //The angle between each ray.
         double rayAngle = FOV /wallBuffer.size();
         //The angle of the first ray.
@@ -330,9 +321,26 @@ public class Camera {
                 }
             }
 
-            //Draw all of the entities in the array list in order from nearest to farthest.
-            for(ObjectSlice slice : visibleEntities)
+            //The current position in the list of see through walls.
+            int j = 0;
+            //An ArrayList containing the see through walls.
+            ArrayList<ObjectSlice> wallList = wallBuffer.get(i);
+
+            //Draw all of the entities and see through walls in order from nearest to farthest.
+            for(ObjectSlice slice : visibleEntities) {
+                //Draw all of the see through walls in front of the entity.
+                while(j < wallList.size() - 1 && wallList.get(j).distToCamera < slice.distToCamera) {
+                    drawSlice(wallList.get(j), i);
+                    j++;
+                }
+
+                //Draw the entity.
                 drawSlice(slice, i);
+            }
+
+            //Draw the remaining see through walls behind all of the entities.
+            for(; j < wallList.size() - 1; j++)
+                drawSlice(wallList.get(j), i);
 
             //Move on to the next ray.
             currentRay += rayAngle;
@@ -345,8 +353,7 @@ public class Camera {
         clearPixelTable();
 
         calculateWallBuffer();
-        drawSeeThroughWalls();
-        drawEntities();
+        drawEntitiesAndSeeThrough();
         drawSolidWalls();
         drawBackground();
     }
