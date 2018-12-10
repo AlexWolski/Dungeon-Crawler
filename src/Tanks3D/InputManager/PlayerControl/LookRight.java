@@ -17,5 +17,6 @@ public class LookRight extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         playerController.lookRight(keyPressed);
+        playerController.updateDirection();
     }
 }
