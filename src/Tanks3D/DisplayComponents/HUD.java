@@ -5,7 +5,7 @@ import Tanks3D.Utilities.Image;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-//A Heads Up Display that shows the playerController's tank, health, and lives.
+//A Heads Up Display that shows the player's health, and lives.
 public class HUD {
     //An buffer that get written to, then displayed on the screen.
     private final BufferedImage canvas;
@@ -69,7 +69,7 @@ public class HUD {
         endGameImagePos.y = canvas.getHeight()/2 - endGameImageDim.height/2;
     }
 
-    //Draw the playerController's tank and status.
+    //Draw the player's status.
     public void draw(int maxHealth, int health, int lives, boolean win, boolean lose, boolean alive) {
         Graphics2D graphic = canvas.createGraphics();
 

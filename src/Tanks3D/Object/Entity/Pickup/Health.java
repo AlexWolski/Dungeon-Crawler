@@ -26,7 +26,7 @@ public class Health extends Pickup {
 
     public void collide(Object object) {
         if(object instanceof Player) {
-            //Repair the tank.
+            //Heal the player.
             ((Player) object).repair(health);
 
             //Remove the round.

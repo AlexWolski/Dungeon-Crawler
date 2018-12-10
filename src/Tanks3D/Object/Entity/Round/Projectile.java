@@ -23,10 +23,10 @@ public abstract class Projectile extends Entity {
     private static final int poolSize = 10;
     //A pool to store projectiles before they are used.
     private static ArrayList<Projectile> ArmorPiercingPool;
-    //The damage the round does when it hits a tank directly.
+    //The damage the round does when it hits a player directly.
     private final int damage;
 
-    //The tank that shot this round.
+    //The player that shot this round.
     private Player owner;
 
     //The distance the round has traveled since being fired
@@ -81,7 +81,7 @@ public abstract class Projectile extends Entity {
         else if(object instanceof UnbreakableWall) {
             removeRound();
         }
-        //If the round hits a tank other than the tank firing the round, damage it and remove the round.
+        //If the round hits a player other than the player firing the round, damage it and remove the round.
         else if(object instanceof Player && object != owner) {
             ((Player) object).damage(damage);
             removeRound();

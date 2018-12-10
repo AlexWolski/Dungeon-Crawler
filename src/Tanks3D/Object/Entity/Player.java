@@ -156,7 +156,7 @@ public class Player extends Entity {
             reloading = true;
 
             //Calculate the distance to spawn the round.
-            double distance = hitCircleRadius;
+            double distance = 5;
             //Calculate the x and y position to spawn the round based on the tank's position and angle.
             double xPos = position.x + distance * FastMath.sin(angle.getValue());
             double yPos = position.y + distance * FastMath.cos(angle.getValue());
@@ -200,10 +200,10 @@ public class Player extends Entity {
         }
         //If the tank is re-spawning, check if the respawn time is up. If it is, respawn the tank.
         else if(System.currentTimeMillis() >= respawnStartTime + respawnCooldown)
-            resetTank();
+            resetPlayer();
     }
 
-    public void resetTank() {
+    public void resetPlayer() {
         position.setLocation(spawnPoint);
         angle.setValue(spawnAngle);
         entityColor = new Color(defaultColor.getRGB());

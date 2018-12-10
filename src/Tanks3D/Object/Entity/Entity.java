@@ -13,7 +13,6 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 public abstract class Entity extends GameObject {
     //The radius of the hit circle of the entity.
@@ -66,16 +65,9 @@ public abstract class Entity extends GameObject {
     private void checkCollisionWall(ArrayList<Wall> wallList) {
         //The line of the wall rotated so that the ray is along the y axis.
         Line2D.Double rotatedLine;
+
         //Iterator for checking all of the walls.
-
-        //A temporary wall object to reference the wall being checked.
-        Wall wall;
-
-        //Iterate through the array of walls and check if the entity collides with it.
-        for(ListIterator<Wall> collidedObject = wallList.listIterator(); collidedObject.hasNext();) {
-            //Store the wall being checked.
-            wall = collidedObject.next();
-
+        for(Wall wall : wallList) {
             //Check for collisions with the wall if it is collidable.
             if(wall.getVisible() && ((this instanceof Player && wall.isCharacterCollidable()) || (this instanceof Projectile && wall.isProjectileCollidable()))) {
                 //Check if the entity hits the sides of the wall. If it does, call the 'collide' method.
@@ -108,16 +100,8 @@ public abstract class Entity extends GameObject {
         //The distance where the two entities touch squared.
         double minDistSquared;
 
-        //Iterator for checking all of the entities.
-        ListIterator<Entity> collidedObject = entityList.listIterator();
-        //A temporary entity object to reference the entity being checked.
-        Entity entity;
-
         //Iterate through the array of entities and check if the entity collides with it.
-        while(collidedObject.hasNext()) {
-            //Store the wall being checked.
-            entity = collidedObject.next();
-
+        for(Entity entity : entityList) {
             //Prevent collisions between an entity and itself.
             if(this != entity) {
                 //Calculate the two distances.
@@ -162,7 +146,7 @@ public abstract class Entity extends GameObject {
 
     //Given the angle of the camera, return the appropriate image.
     public BufferedImage getSprite(double viewerAngle) {
-        //Get the difference in angle between the tank and the viewer.
+        //Get the difference in angle between the entity and the viewer.
         viewerAngle = FastMath.formatAngle(this.angle.getValue() - viewerAngle - 540.0/ sprites.length);
         //Map the angle to one of the sprites and return it.
         return sprites[(int)(viewerAngle * sprites.length/360)];
@@ -170,7 +154,7 @@ public abstract class Entity extends GameObject {
 
     //Given the angle of the camera, return the pixel data corresponding to the appropriate image.
     public byte[] getSpritePixelData(double viewerAngle) {
-        //Get the difference in angle between the tank and the viewer.
+        //Get the difference in angle between the player and the viewer.
         viewerAngle = FastMath.formatAngle(this.angle.getValue() - viewerAngle - 540.0/ sprites.length);
         //Map the angle to one of the sprites and return it.
         return spritePixelData[(int)(viewerAngle * sprites.length/360)];

@@ -40,7 +40,7 @@ public final class Image {
         transform.translate(x, y);
         //Rotate the transform.
         transform.rotate(Math.toRadians(angle), width/2.0, height/2.0);
-        //Draw the tank.
+        //Draw the player.
         graphic.setTransform(transform);
         graphic.drawImage(image, 0, 0, width, height, null);
     }

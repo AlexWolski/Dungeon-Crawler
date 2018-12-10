@@ -68,7 +68,7 @@ public class Minimap {
         for(Entity entity : gameData.entityList) {
             iconSize = (int) (entity.getHitCircleRadius()/gameData.gameLevel.getMapWidth() * 2 * canvas.getWidth());
 
-            //Get the position of the first tank.
+            //Get the position of the player.
             entityPos = gameToMiniMap(entity.position);
             //Center it by subtracting half of the image size.
             entityPos.x -= iconSize / 2.0;
@@ -92,7 +92,7 @@ public class Minimap {
             if(wall.getVisible())
                 drawWall(graphic, wall);
 
-        //Draw the tanks.
+        //Draw the player and entities.
         drawEntities(graphic);
 
         //Delete the graphics object.

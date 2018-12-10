@@ -8,7 +8,6 @@ import Tanks3D.Object.Entity.Round.Projectile;
 
 import java.awt.*;
 import java.util.ArrayList;
-import java.util.ListIterator;
 
 //Controls the entire game. The program enters from this class, which is an abstract.
 public abstract class GameManager {
@@ -92,8 +91,8 @@ public abstract class GameManager {
         gameData.gameLevel = new Level(levelFile, gameData.entityList);
         //Reset the entity list.
         gameData.entityList.clear();
-        gameData.entityList.add(gameData.playerController.getTank());
-        gameData.entityList.add(gameData.playerController.getTank());
+        gameData.entityList.add(gameData.playerController.getPlayer());
+        gameData.entityList.add(gameData.playerController.getPlayer());
         //Rest the round pool.
         Projectile.init(gameData.entityList);
 
@@ -141,12 +140,9 @@ public abstract class GameManager {
             frames = 0;
         }
 
-        //Iterator for checking all of the entities. An iterator is used to prevent concurrent modification exceptions.
-        ListIterator<Entity> iterator = gameData.entityList.listIterator();
-
         //Update the positions of all of the entities. Pass it the iterator in case the entity needs to remove itself from the list.
-        while (iterator.hasNext())
-            iterator.next().update(gameData, deltaTime);
+        for(Entity entity : gameData.entityList)
+            entity.update(gameData, deltaTime);
 
         //Remove any unneeded objects.
         GarbageCollector.deleteObjects();
