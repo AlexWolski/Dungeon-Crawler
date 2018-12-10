@@ -6,7 +6,6 @@ import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.GameData;
 import Tanks3D.Utilities.Image;
-import Tanks3D.Utilities.Wrappers.MutableDouble;
 
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -31,13 +30,13 @@ public abstract class Entity extends GameObject {
     //The entity's data in 3d space.
     protected int zPos;
     public Point2D.Double position;
-    public MutableDouble angle;
+    public double directionAngle;
     public double speed;
 
-    public Entity(int hitCircleRadius, Point2D.Double position, double angle, double speed) {
+    public Entity(int hitCircleRadius, Point2D.Double position, double directionAngle, double speed) {
         this.hitCircleRadius = hitCircleRadius;
         this.position = position;
-        this.angle = new MutableDouble(angle);
+        this.directionAngle = directionAngle;
         this.speed = speed;
     }
 
@@ -47,12 +46,12 @@ public abstract class Entity extends GameObject {
 
     public void update(GameData gamedata, double deltaTime) {
         if(this.visible) {
-            //Move the entity based on its angle and speed.
+            //Move the entity based on its directionAngle and speed.
             double distMoved = speed * deltaTime / 1000;
-            //Equivalent of cos(angle-90)
-            position.x += distMoved * FastMath.sin(angle.getValue());
-            //Equivalent of sin(angle-90)
-            position.y += distMoved * FastMath.cos(angle.getValue());
+            //Equivalent of cos(directionAngle-90)
+            position.x += distMoved * FastMath.sin(directionAngle);
+            //Equivalent of sin(directionAngle-90)
+            position.y += distMoved * FastMath.cos(directionAngle);
 
             //Check if the entity collides with any walls or entities.
             //Pass an iterator to this object in case it needs to remove itself from the list.
@@ -144,19 +143,19 @@ public abstract class Entity extends GameObject {
         this.icon = icon;
     }
 
-    //Given the angle of the camera, return the appropriate image.
+    //Given the directionAngle of the camera, return the appropriate image.
     public BufferedImage getSprite(double viewerAngle) {
-        //Get the difference in angle between the entity and the viewer.
-        viewerAngle = FastMath.formatAngle(this.angle.getValue() - viewerAngle - 540.0/ sprites.length);
-        //Map the angle to one of the sprites and return it.
+        //Get the difference in directionAngle between the entity and the viewer.
+        viewerAngle = FastMath.formatAngle(this.directionAngle - viewerAngle - 540.0/ sprites.length);
+        //Map the directionAngle to one of the sprites and return it.
         return sprites[(int)(viewerAngle * sprites.length/360)];
     }
 
-    //Given the angle of the camera, return the pixel data corresponding to the appropriate image.
+    //Given the directionAngle of the camera, return the pixel data corresponding to the appropriate image.
     public byte[] getSpritePixelData(double viewerAngle) {
-        //Get the difference in angle between the player and the viewer.
-        viewerAngle = FastMath.formatAngle(this.angle.getValue() - viewerAngle - 540.0/ sprites.length);
-        //Map the angle to one of the sprites and return it.
+        //Get the difference in directionAngle between the player and the viewer.
+        viewerAngle = FastMath.formatAngle(this.directionAngle - viewerAngle - 540.0/ sprites.length);
+        //Map the directionAngle to one of the sprites and return it.
         return spritePixelData[(int)(viewerAngle * sprites.length/360)];
     }
 

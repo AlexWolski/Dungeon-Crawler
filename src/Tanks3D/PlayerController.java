@@ -4,6 +4,7 @@ import Tanks3D.DisplayComponents.Camera.Camera;
 import Tanks3D.DisplayComponents.HUD;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.SpawnPoint;
+import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
 
 import java.awt.*;
@@ -18,9 +19,7 @@ public class PlayerController {
     //The heads up display for the playerController.
     private final HUD hud;
     //Remember what keys are being pressed. When the player is created, it isn't moving or firing.
-    private boolean forwardPressed, backPressed, leftPressed, rightPressed, firePressed = false;
-    //An in that determines if the controls are inverted or not. Either -1 or 1.
-    private int invertControls = 1;
+    private boolean moveForward, moveBackward, moveLeft, moveRight, lookLeft, lookRight, fire = false;
     //Determine if the game is drawing to the screen to prevent a concurrent modification exception.
     private boolean drawing = false;
     //Determine whether to display the 'You Win' or 'You Lose' images.
@@ -32,7 +31,7 @@ public class PlayerController {
         //Add the new player to the list of all entities.
         gameData.entityList.add(myPlayer);
 
-        //Create a new camera given the spawn-point position and angle.
+        //Create a new camera given the spawn-point position and directionAngle.
         camera = new Camera(gameData, canvas, getPosition(), getAngle());
 
         //Create a new HUD object with the player's color.
@@ -46,8 +45,7 @@ public class PlayerController {
             //If it has lives left, respawn the player and reset the controls.
             if(myPlayer.getLives() > 0) {
                 myPlayer.respawn();
-                forwardPressed = backPressed = leftPressed = rightPressed = false;
-                invertControls = 1;
+                moveForward = moveBackward = moveLeft = moveRight = false;
             }
             //Otherwise, end the game.
             else {
@@ -69,9 +67,9 @@ public class PlayerController {
         drawing = false;
 
         //If the fire key was pressed while the screen was being drawn, fire the player after drawing is finished.
-        if(firePressed) {
+        if(fire) {
             myPlayer.fire();
-            firePressed = false;
+            fire = false;
         }
     }
 
@@ -94,16 +92,54 @@ public class PlayerController {
         return myPlayer;
     }
 
+    //Update the direction the player is moving based on what keys are pressed.
+    public void updateDirection() {
+        //The angle of direction perpendicular to the camera and parallel to the camera.
+        double xAngle = -1, yAngle = -1;
+
+        //Get the direction perpendicular to the camera.
+        if(moveForward && !moveBackward)
+            yAngle = 0;
+        else if(moveBackward && !moveForward)
+            yAngle = 180;
+
+        //Get the direction parallel to the camera.
+        if(moveRight && !moveLeft)
+            xAngle = 90;
+        else if(moveLeft && !moveRight)
+            xAngle = -90;
+
+        //If the player isn't moving, exit.
+        if(xAngle == -1 && yAngle == -1) {
+            myPlayer.speed = 0;
+            return;
+        }
+
+        //If the player is only moving in the x or y direction, add it to the player's camera and set the entity direction.
+        else if(xAngle == -1)
+            myPlayer.directionAngle = myPlayer.getViewAngle().getValue() + yAngle;
+        else if(yAngle == -1)
+            myPlayer.directionAngle = myPlayer.getViewAngle().getValue() + xAngle;
+        //Otherwise, get the average between the x and y directions, and add it to the entity direction.
+        else {
+            if(yAngle - xAngle > 180)
+                yAngle -= 360;
+
+            myPlayer.directionAngle = FastMath.formatAngle(myPlayer.getViewAngle().getValue() + (xAngle + yAngle)/2);
+        }
+
+        //Set the speed of the player.
+        myPlayer.speed = myPlayer.getMaxSpeed();
+    }
+
     //If the forward key has been pressed or released, update the player's speed.
     public void forward(boolean keyPressed) {
         //Only move the playerController if they are alive.
         if(myPlayer.isAlive()) {
-            if (keyPressed && !forwardPressed) {
-                myPlayer.speed += myPlayer.getMaxSpeed();
-                forwardPressed = true;
-            } else if (!keyPressed && forwardPressed) {
-                myPlayer.speed -= myPlayer.getMaxSpeed();
-                forwardPressed = false;
+            if (keyPressed && !moveForward) {
+                moveForward = true;
+            } else if (!keyPressed && moveForward) {
+                moveForward = false;
             }
         }
     }
@@ -112,20 +148,10 @@ public class PlayerController {
     public void back(boolean keyPressed) {
         //Only move the playerController if they are alive.
         if(myPlayer.isAlive()) {
-            if (keyPressed && !backPressed) {
-                myPlayer.speed -= myPlayer.getMaxSpeed();
-                backPressed = true;
-
-                //Invert the left and right controls.
-                myPlayer.rotationSpeed *= -1;
-                invertControls *= -1;
-            } else if (!keyPressed && backPressed) {
-                myPlayer.speed += myPlayer.getMaxSpeed();
-                backPressed = false;
-
-                //Revert the left and right controls.
-                myPlayer.rotationSpeed *= -1;
-                invertControls *= -1;
+            if (keyPressed && !moveBackward) {
+                moveBackward = true;
+            } else if (!keyPressed && moveBackward) {
+                moveBackward = false;
             }
         }
     }
@@ -134,12 +160,10 @@ public class PlayerController {
     public void left(boolean keyPressed) {
         //Only move the playerController if they are alive.
         if(myPlayer.isAlive()) {
-            if (keyPressed && !leftPressed) {
-                myPlayer.rotationSpeed -= myPlayer.getMaxRotationSpeed() * invertControls;
-                leftPressed = true;
-            } else if (!keyPressed && leftPressed) {
-                myPlayer.rotationSpeed += myPlayer.getMaxRotationSpeed() * invertControls;
-                leftPressed = false;
+            if (keyPressed && !moveLeft) {
+                moveLeft = true;
+            } else if (!keyPressed && moveLeft) {
+                moveLeft = false;
             }
         }
     }
@@ -148,12 +172,38 @@ public class PlayerController {
     public void right(boolean keyPressed) {
         //Only move the playerController if they are alive.
         if(myPlayer.isAlive()) {
-            if (keyPressed && !rightPressed) {
-                myPlayer.rotationSpeed += myPlayer.getMaxRotationSpeed() * invertControls;
-                rightPressed = true;
-            } else if (!keyPressed && rightPressed) {
-                myPlayer.rotationSpeed -= myPlayer.getMaxRotationSpeed() * invertControls;
-                rightPressed = false;
+            if (keyPressed && !moveRight) {
+                moveRight = true;
+            } else if (!keyPressed && moveRight) {
+                moveRight = false;
+            }
+        }
+    }
+
+    //If the look left key has been pressed or released, update the player's rotation.
+    public void lookLeft(boolean keyPressed) {
+        //Only move the player if they are alive.
+        if(myPlayer.isAlive()) {
+            if (keyPressed && !lookLeft) {
+                myPlayer.rotationSpeed -= myPlayer.getMaxRotationSpeed();
+                lookLeft = true;
+            } else if (!keyPressed && lookLeft) {
+                myPlayer.rotationSpeed += myPlayer.getMaxRotationSpeed();
+                lookLeft = false;
+            }
+        }
+    }
+
+    //If the look right key has been pressed or released, update the player's rotation.
+    public void lookRight(boolean keyPressed) {
+        //Only move the player if they are alive.
+        if(myPlayer.isAlive()) {
+            if (keyPressed && !lookRight) {
+                myPlayer.rotationSpeed += myPlayer.getMaxRotationSpeed();
+                lookRight = true;
+            } else if (!keyPressed && lookRight) {
+                myPlayer.rotationSpeed -= myPlayer.getMaxRotationSpeed();
+                lookRight = false;
             }
         }
     }
@@ -167,6 +217,6 @@ public class PlayerController {
                 myPlayer.fire();
             //If the screen is being drawn, indicate to fire the player after it's done.
             else
-                firePressed = true;
+                fire = true;
     }
 }

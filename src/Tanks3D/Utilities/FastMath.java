@@ -20,7 +20,7 @@ public final class FastMath {
             sinTable[i] = Math.sin(Math.toRadians(i));
     }
 
-    //Restrict the angle between 0 and 360 degrees
+    //Restrict the directionAngle between 0 and 360 degrees
     public static double formatAngle(double angle) {
         if(angle < -360 || angle > 360)
             angle %= 360;
@@ -34,9 +34,9 @@ public final class FastMath {
         return angle;
     }
 
-    //Look up the angle in the sin table.
+    //Look up the directionAngle in the sin table.
     public static double sin(double angle) {
-        //Restrict the angle to between 0 and 360 degrees.
+        //Restrict the directionAngle to between 0 and 360 degrees.
         angle = formatAngle(angle);
 
         //Use linear interpolation to guess the values in-between two known values
@@ -46,7 +46,7 @@ public final class FastMath {
         return ((angle-Math.floor(angle)) * (nextVal-prevVal)) + prevVal;
     }
 
-    //Add 90 to the angle to convert sin to cos and look up the value in the sin table.
+    //Add 90 to the directionAngle to convert sin to cos and look up the value in the sin table.
     public static double cos(double angle) {
         return sin(angle + 90.0);
     }
@@ -61,7 +61,7 @@ public final class FastMath {
         point1.y -= point2.y;
     }
 
-    //Rotate a point around a pivot by some angle.
+    //Rotate a point around a pivot by some directionAngle.
     public static void rotate(Point2D.Double point, Point2D.Double pivot, double angle) {
         subtract(point, pivot);
 
@@ -73,7 +73,7 @@ public final class FastMath {
         point.setLocation(newX + pivot.x, newY + pivot.y);
     }
 
-    //Rotate a line round a pivot by some angle.
+    //Rotate a line round a pivot by some directionAngle.
     public static void rotate(Line2D.Double line, Point2D.Double pivot, double angle) {
         Point2D.Double point1 = new Point2D.Double(line.x1, line.y1);
         Point2D.Double point2 = new Point2D.Double(line.x2, line.y2);

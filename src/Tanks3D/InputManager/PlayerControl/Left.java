@@ -17,5 +17,6 @@ public class Left extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         playerController.left(keyPressed);
+        playerController.updateDirection();
     }
 }

@@ -17,5 +17,6 @@ public class Right extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         playerController.right(keyPressed);
+        playerController.updateDirection();
     }
 }

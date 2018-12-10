@@ -11,7 +11,7 @@ public abstract class Pickup extends Entity {
     private final static double scale = 0.02;
 
     public Pickup(Point2D.Double position, BufferedImage[] sprites, BufferedImage icon, Color imageColor) {
-        //Construct the entity with no angle or speed. Use the size of the image for the hitcircle size.
+        //Construct the entity with no directionAngle or speed. Use the size of the image for the hitcircle size.
         super((int)(sprites[0].getWidth() * scale / 2), position, 0, 0);
         //Set the images of the sprites.
         super.setSprites(sprites, (int)(sprites[0].getWidth() * scale), (int)(sprites[0].getHeight() * scale));

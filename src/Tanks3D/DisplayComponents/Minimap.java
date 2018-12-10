@@ -2,6 +2,7 @@ package Tanks3D.DisplayComponents;
 
 import Tanks3D.GameData;
 import Tanks3D.Object.Entity.Entity;
+import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.Image;
 
@@ -68,13 +69,24 @@ public class Minimap {
         for(Entity entity : gameData.entityList) {
             iconSize = (int) (entity.getHitCircleRadius()/gameData.gameLevel.getMapWidth() * 2 * canvas.getWidth());
 
-            //Get the position of the player.
+            //Get the position of the entity.
             entityPos = gameToMiniMap(entity.position);
             //Center it by subtracting half of the image size.
             entityPos.x -= iconSize / 2.0;
             entityPos.y += iconSize / 2.0;
-            //Draw it rotated.
-            Image.drawRotated(graphic, entity.getIcon(), entity.angle.getValue(), (int) entityPos.x, canvas.getHeight() - (int) entityPos.y, iconSize, iconSize);
+
+            //The angle that the entity is facing.
+            double angle;
+
+            //If the entity is a player, get the direction the player is viewing.
+            if(entity instanceof Player)
+                angle = ((Player) entity).getViewAngle().getValue();
+            //Otherwise, get the direction the entity is moving.
+            else
+                angle = entity.directionAngle;
+
+            //Draw the entity rotated.
+            Image.drawRotated(graphic, entity.getIcon(), angle, (int) entityPos.x, canvas.getHeight() - (int) entityPos.y, iconSize, iconSize);
         }
     }
 

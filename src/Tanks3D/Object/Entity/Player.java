@@ -18,9 +18,11 @@ public class Player extends Entity {
     public final static double maxRotationSpeed = 180;
     public double rotationSpeed;
 
-    //The tank's position and angle when it is spawned.
+    //The tank's position and directionAngle when it is spawned.
     private final Point2D.Double spawnPoint;
     private final double spawnAngle;
+    //The angle that the player is facing.
+    private final MutableDouble viewAngle;
     //The default color of the tank.
     private final Color defaultColor;
 
@@ -37,7 +39,7 @@ public class Player extends Entity {
     private boolean respawning;
 
     //The number of milliseconds it takes before the tank can fire again.
-    private static final int shotCooldown = 1000;
+    private static final int shotCooldown = 100;
     //The last time the tank fired.
     private long shotTime;
     //Determines if the tank can fire again or not.
@@ -71,6 +73,9 @@ public class Player extends Entity {
         this.rotationSpeed = 0;
         this.defaultColor = tankColor;
 
+        //Set the angle that the player is facing.
+        viewAngle = new MutableDouble(spawnAngle);
+
         //The tank is alive.
         alive = true;
         respawning = false;
@@ -97,9 +102,9 @@ public class Player extends Entity {
         if(alive && health <= 0)
             die();
         else {
-            //Update the angle and position of the tank.
-            angle.add(rotationSpeed * deltaTime / 1000);
-            angle.setValue(FastMath.formatAngle(angle.getValue()));
+            //Update the directionAngle and position of the tank.
+            viewAngle.add(rotationSpeed * deltaTime / 1000);
+            viewAngle.setValue(FastMath.formatAngle(viewAngle.getValue()));
             super.update(data, deltaTime);
         }
     }
@@ -109,7 +114,7 @@ public class Player extends Entity {
         if(object instanceof Point2D.Double) {
             Point2D.Double point = (Point2D.Double)object;
 
-            //Calculate the angle between the tank and the hit circle.
+            //Calculate the directionAngle between the tank and the hit circle.
             double angle = Math.toDegrees(Math.atan2(point.x - position.x, point.y - position.y));
 
             //Move the tank.
@@ -118,7 +123,7 @@ public class Player extends Entity {
         }
         //If the tank hits a wall, fix its position.
         else if(object instanceof Wall) {
-            //Get the angle of the line.
+            //Get the directionAngle of the line.
             double lineAngle = ((Wall) object).getAngle();
             //Copy the first point of the wall.
             Point2D.Double linePoint1 = ((Wall) object).getPoint1();
@@ -139,7 +144,7 @@ public class Player extends Entity {
         else if(object instanceof Player) {
             Player player = (Player)object;
 
-            //Calculate the angle between the centers of the two tanks.
+            //Calculate the directionAngle between the centers of the two tanks.
             double angle = Math.toDegrees(Math.atan2(player.position.x - position.x, player.position.y - position.y));
 
             //Move this player by half of the distance.
@@ -157,11 +162,11 @@ public class Player extends Entity {
 
             //Calculate the distance to spawn the round.
             double distance = 5;
-            //Calculate the x and y position to spawn the round based on the tank's position and angle.
-            double xPos = position.x + distance * FastMath.sin(angle.getValue());
-            double yPos = position.y + distance * FastMath.cos(angle.getValue());
+            //Calculate the x and y position to spawn the round based on the tank's position and directionAngle.
+            double xPos = position.x + distance * FastMath.sin(viewAngle.getValue());
+            double yPos = position.y + distance * FastMath.cos(viewAngle.getValue());
             //Create the round and add it to the entity list.
-            Projectile.newArmorPiercing(xPos, yPos, gunHeight, angle.getValue(), this);
+            Projectile.newArmorPiercing(xPos, yPos, gunHeight, viewAngle.getValue(), this);
         }
         //If the tank is reloading, check if the reload time is up. If it is, set reloading to false.
         else if(System.currentTimeMillis() >= shotTime + shotCooldown) {
@@ -205,7 +210,7 @@ public class Player extends Entity {
 
     public void resetPlayer() {
         position.setLocation(spawnPoint);
-        angle.setValue(spawnAngle);
+        viewAngle.setValue(spawnAngle);
         entityColor = new Color(defaultColor.getRGB());
         health = maxHealth;
         alive = true;
@@ -216,6 +221,9 @@ public class Player extends Entity {
         lives = maxLives;
     }
 
+    public MutableDouble getViewAngle() {
+        return viewAngle;
+    }
     public double getMaxSpeed() {
         return maxSpeed;
     }
@@ -229,7 +237,7 @@ public class Player extends Entity {
         return position;
     }
     public MutableDouble getAngle() {
-        return super.angle;
+        return viewAngle;
     }
     public int getMaxHealth() {
         return maxHealth;

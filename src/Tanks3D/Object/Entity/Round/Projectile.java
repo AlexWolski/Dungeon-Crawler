@@ -101,7 +101,7 @@ public abstract class Projectile extends Entity {
             //Modify the variables of the round.
             tempProjectile.position.setLocation(x, y);
             tempProjectile.zPos = zPos;
-            tempProjectile.angle.setValue(angle);
+            tempProjectile.directionAngle = angle;
             tempProjectile.distTraveled = 0;
             tempProjectile.owner = owner;
         }

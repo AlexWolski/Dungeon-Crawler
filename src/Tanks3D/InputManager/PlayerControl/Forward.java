@@ -17,5 +17,6 @@ public class Forward extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         playerController.forward(keyPressed);
+        playerController.updateDirection();
     }
 }

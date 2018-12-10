@@ -29,7 +29,7 @@ public class Camera {
     private final static double FOV = 60;
     //The cameraPosition of the camera.
     private final Point2D.Double cameraPosition;
-    //The angle of the camera.
+    //The directionAngle of the camera.
     private final MutableDouble cameraAngle;
     //The distance from the camera to the projection plane.
     private final double distProjectionPlane;
@@ -52,7 +52,7 @@ public class Camera {
         for(int i = 0; i < canvas.getWidth(); i++)
             wallBuffer.add(new ArrayList<>());
 
-        //Store the cameraPosition and angle of the playerController.
+        //Store the cameraPosition and directionAngle of the playerController.
         this.cameraPosition = position;
         this.cameraAngle = angle;
         //Get the floor and ceiling color.
@@ -144,9 +144,9 @@ public class Camera {
 
     //Fill the given buffer with the slices of wall that needs to be drawn.
     private void calculateWallBuffer() {
-        //The angle between each ray.
+        //The directionAngle between each ray.
         double rayAngle = FOV /wallBuffer.size();
-        //The angle of the first ray.
+        //The directionAngle of the first ray.
         double currentRay = -FOV /2;
 
         //Variables for calculating the intersection ratio of the wall texture.
@@ -257,9 +257,9 @@ public class Camera {
 
     //Draw the entities, comparing their distance to the wall buffer.
     private void drawEntitiesAndSeeThrough() {
-        //The angle between each ray.
+        //The directionAngle between each ray.
         double rayAngle = FOV /wallBuffer.size();
-        //The angle of the first ray.
+        //The directionAngle of the first ray.
         double currentRay = -FOV /2;
         //A line representing the entity's location and the width of its image.
         Line2D.Double rotatedLine = new Line2D.Double();
@@ -277,7 +277,7 @@ public class Camera {
             for(Entity entity : gameData.entityList) {
                 //Scan the entity if it is visible.
                 if (entity.getVisible()) {
-                    //The angle between the camera and the entity.
+                    //The directionAngle between the camera and the entity.
                     double entityAngle = Math.toDegrees(Math.atan2(entity.position.x - cameraPosition.x, entity.position.y - cameraPosition.y));
 
                     //Create a line at the entity's position with the same width. It is horizontal.

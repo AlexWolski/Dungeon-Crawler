@@ -29,6 +29,10 @@ public final class InputManager {
         inputMap.put(KeyStroke.getKeyStroke(VK_A, 0, true), "a released");
         inputMap.put(KeyStroke.getKeyStroke(VK_D, 0, false), "d pressed");
         inputMap.put(KeyStroke.getKeyStroke(VK_D, 0, true), "d released");
+        inputMap.put(KeyStroke.getKeyStroke(VK_LEFT, 0, false), "left pressed");
+        inputMap.put(KeyStroke.getKeyStroke(VK_LEFT, 0, true), "left released");
+        inputMap.put(KeyStroke.getKeyStroke(VK_RIGHT, 0, false), "right pressed");
+        inputMap.put(KeyStroke.getKeyStroke(VK_RIGHT, 0, true), "right released");
         inputMap.put(KeyStroke.getKeyStroke(VK_SPACE, 0, false), "space pressed");
 
         //Map the classes for the playerController's controls.
@@ -40,6 +44,10 @@ public final class InputManager {
         actionMap.put("a released", new Left(playerController, false));
         actionMap.put("d pressed", new Right(playerController, true));
         actionMap.put("d released", new Right(playerController, false));
+        actionMap.put("left pressed", new LookLeft(playerController, true));
+        actionMap.put("left released", new LookLeft(playerController, false));
+        actionMap.put("right pressed", new LookRight(playerController, true));
+        actionMap.put("right released", new LookRight(playerController, false));
         actionMap.put("space pressed", new Fire(playerController));
     }
 }
