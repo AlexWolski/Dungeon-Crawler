@@ -81,7 +81,7 @@ public class Camera {
     //Draw a slice of an image.
     private void drawSlice(ObjectSlice slice, int canvasX) {
         //The y coordinate of the image where it will start being drawn.
-        int imageStart = 0;
+        double imageStart = 0;
         //The height of the image that actually gets drawn.
         int sliceHeight = (int) (slice.object.getHeight() / slice.distToCamera * distProjectionPlane);
 
@@ -110,7 +110,7 @@ public class Camera {
         else {
             //If the slice is larger than the screen, set the image height and reset the onscreen height.
             if (sliceHeight > canvas.getHeight())
-                imageStart = (int) ((sliceHeight - canvas.getHeight()) / 2.0 / sliceHeight * slice.image.getHeight());
+                imageStart = (sliceHeight - canvas.getHeight()) / 2.0 / sliceHeight * slice.image.getHeight();
 
             //The column of the image that will be drawn.
             int imageX = (int) (slice.intersectRatio * slice.image.getWidth());
@@ -122,7 +122,7 @@ public class Camera {
                 //If the pixel hasn't been written to yet, draw the pixel.
                 if (pixelTable[canvasX][canvasY].equals(true)) {
                     //Get the color of the pixel at the current point in the image if the color is valid.
-                    int pixelColor = Image.getABGRPixel(slice.imagePixelData, slice.image.getWidth(), imageX, imageStart + (int) (imageY / (double) sliceHeight * slice.image.getHeight()));
+                    int pixelColor = Image.getABGRPixel(slice.imagePixelData, slice.image.getWidth(), imageX, (int)Math.round(imageStart + imageY / (double)sliceHeight * slice.image.getHeight()));
 
                     //If the pixel is not transparent, draw the pixel.
                     if ((pixelColor >> 24) != 0x00) {
@@ -234,7 +234,8 @@ public class Camera {
     private void drawSolidWalls() {
         //Iterate through the wall slices and draw them.
         for(int i = 0; i < canvas.getWidth(); i++)
-            drawSlice(wallBuffer.get(i).get(wallBuffer.get(i).size() -  1), i);
+            if(!wallBuffer.get(i).isEmpty())
+                drawSlice(wallBuffer.get(i).get(wallBuffer.get(i).size() -  1), i);
     }
 
     private void drawBackground() {
