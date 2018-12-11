@@ -1,7 +1,9 @@
 package Tanks3D.Object.Entity;
 
 import Tanks3D.GameData;
+import Tanks3D.GameManager;
 import Tanks3D.Object.Entity.Round.Projectile;
+import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Object.Wall.*;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
@@ -18,9 +20,8 @@ public class Player extends Entity {
     public final static double maxRotationSpeed = 180;
     public double rotationSpeed;
 
-    //The tank's position and directionAngle when it is spawned.
-    private final Point2D.Double spawnPoint;
-    private final double spawnAngle;
+    //The player's position and directionAngle when it is spawned.
+    private final SpawnPoint spawnPoint;
     //The angle that the player is facing.
     private final MutableDouble viewAngle;
     //The direction the player is moving relative to the camera.
@@ -32,13 +33,8 @@ public class Player extends Entity {
     private final static BufferedImage[] sprites;
     private final static BufferedImage playerIcon;
 
-    //The number of milliseconds it takes to respawn.
-    private final static int respawnCooldown = 2000;
-    //The time when the tank started to respawn.
-    private long respawnStartTime;
     //Determines if the playerController is dead, alive, or re-spawning.
     private boolean alive;
-    private boolean respawning;
 
     //The number of milliseconds it takes before the tank can fire again.
     private static final int shotCooldown = 100;
@@ -56,8 +52,6 @@ public class Player extends Entity {
     //Stats of the tank.
     private final static int maxHealth = 100;
     private int health = maxHealth;
-    private final static int maxLives = 3;
-    private int lives = maxLives;
 
     //Load the images for the tank.
     static {
@@ -68,22 +62,19 @@ public class Player extends Entity {
         playerIcon = Image.load("resources/HUD/Player Icon.png");
     }
 
-    public Player(Point2D.Double spawnPoint, double spawnAngle) {
-        super(hitCircleRadius, new Point2D.Double(spawnPoint.x, spawnPoint.y), spawnAngle, 0);
+    public Player(SpawnPoint spawnPoint) {
+        super(hitCircleRadius, new Point2D.Double(spawnPoint.getPosition().x, spawnPoint.getPosition().y), spawnPoint.getAngle(), 0);
         this.spawnPoint = spawnPoint;
-        this.spawnAngle = spawnAngle;
         this.rotationSpeed = 0;
 
         //Set the angle that the player is facing.
-        viewAngle = new MutableDouble(spawnAngle);
+        viewAngle = new MutableDouble(spawnPoint.getAngle());
         //By default, the player is moving forward.
         controlAngle = 0;
 
         //The player is alive.
         alive = true;
-        respawning = false;
-
-        //
+        //The player has no color.
         entityColor = null;
 
         //Pass the sprites to the parent class.
@@ -183,7 +174,7 @@ public class Player extends Entity {
     }
 
     //Repair the tank.
-    public void repair(int health) {
+    public void heal(int health) {
         this.health += health;
 
         //If the new health is above the maximum, set it to the maximum.
@@ -192,36 +183,20 @@ public class Player extends Entity {
     }
 
     public void die() {
-        entityColor = Color.GRAY;
         alive = false;
-        lives--;
         speed = 0;
         rotationSpeed = 0;
-    }
 
-    //Respawn the tank.
-    public void respawn() {
-        //If the tank hasn't started re-spawning yet, start the timer.
-        if(!respawning) {
-            respawnStartTime = System.currentTimeMillis();
-            respawning = true;
-        }
-        //If the tank is re-spawning, check if the respawn time is up. If it is, respawn the tank.
-        else if(System.currentTimeMillis() >= respawnStartTime + respawnCooldown)
-            resetPlayer();
+        GameManager.endGame(false);
     }
 
     public void resetPlayer() {
-        position.setLocation(spawnPoint);
-        viewAngle.setValue(spawnAngle);
+        position.setLocation(spawnPoint.getPosition());
+        viewAngle.setValue(spawnPoint.getAngle());
         health = maxHealth;
         alive = true;
-        respawning = false;
     }
 
-    public void resetLives() {
-        lives = maxLives;
-    }
     public MutableDouble getViewAngle() {
         return viewAngle;
     }
@@ -237,17 +212,17 @@ public class Player extends Entity {
     public double getMaxRotationSpeed() {
         return maxRotationSpeed;
     }
-    public Color getColor() {
-        return entityColor;
+    public int getMaxHealth() {
+        return maxHealth;
+    }
+    public int getHealth() {
+        return health;
     }
     public Point2D.Double getPosition() {
         return position;
     }
     public MutableDouble getAngle() {
         return viewAngle;
-    }
-    public int getLives() {
-        return lives;
     }
     public boolean isAlive() {
         return alive;

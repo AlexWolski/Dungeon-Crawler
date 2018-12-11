@@ -8,13 +8,10 @@ import java.awt.image.BufferedImage;
 
 //Draws both players' screens and the minimap to the display.
 public class DisplayWindow extends JFrame {
-    private final GameData gameData;
     private final DisplayPanel panel;
 
-    public DisplayWindow(GameData gameData, String s, Dimension panelSize, int titleBarHeight) {
+    public DisplayWindow(String s, Dimension panelSize, int titleBarHeight) {
         super(s);
-
-        this.gameData = gameData;
 
         //Set the settings for the JFrame.
         setLayout(new BorderLayout());
@@ -41,11 +38,7 @@ public class DisplayWindow extends JFrame {
 
     //Draw the two screens and the minimap to buffers, then paint them on the display.
     public void draw() {
-        gameData.playerController.draw();
-        //gameData.hud.draw(gameData.playerController.getMaxHealth(), gameData.playerController.getHealth(), gameData.playerController.getLives());
-        gameData.minimap.draw();
-
-        //Paint all three buffers on the display. 'paintImmediately' is used to prevent the buffers being modified before painting is complete.
+        //Paint the finished frame. 'paintImmediately' is used to prevent the buffers being modified before painting is complete.
         panel.paintImmediately(panel.getBounds());
     }
 }

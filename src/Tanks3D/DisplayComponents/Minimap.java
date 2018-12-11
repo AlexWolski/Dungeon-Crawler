@@ -90,7 +90,7 @@ public class Minimap {
         }
     }
 
-    void draw() {
+    public void draw() {
         //Draw a background.
         for(int i = 0; i < canvas.getWidth(); i++)
             for (int j = 0; j < canvas.getHeight(); j++)

@@ -1,10 +1,13 @@
 package Tanks3D;
 
+import Tanks3D.DisplayComponents.Camera.Camera;
+import Tanks3D.DisplayComponents.HUD;
 import Tanks3D.DisplayComponents.Minimap;
 import Tanks3D.DisplayComponents.DisplayWindow;
 import Tanks3D.InputManager.KeyboardManager;
 import Tanks3D.InputManager.MouseManager;
 import Tanks3D.Object.Entity.Entity;
+import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.Entity.Round.Projectile;
 
 import java.awt.*;
@@ -68,16 +71,21 @@ public abstract class GameManager {
         gameData.gameLevel = new Level(levelFile, gameData.entityList);
 
         //Create and configure the JFrame. This JFrame will have three panels: the two players screens and a minimap.
-        gameWindow = new DisplayWindow(gameData, "Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
+        gameWindow = new DisplayWindow("Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
 
-        //Initialize the 'player' objects.
-        gameData.playerController = new PlayerController(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayerSpawn());
+        //Initialize the game data elements.
+        gameData.player = new Player(gameData.gameLevel.getPlayerSpawn());
+        gameData.entityList.add(gameData.player);
+        gameData.camera = new Camera(gameData, gameWindow.getScreenBuffer(), gameData.player.getPosition(), gameData.player.getzPos(), gameData.player.getAngle());
+        gameData.hud = new HUD(gameWindow.getScreenBuffer());
         gameData.minimap = new Minimap(gameData, gameWindow.getMinimapBuffer());
 
+        //A playerController object that controls the player.
+        PlayerController playerController = new PlayerController(gameData.player);
         //Link the keyboard controls to the window.
-        KeyboardManager.init(gameWindow.getPanel(), gameData.playerController);
+        KeyboardManager.init(gameWindow.getPanel(), playerController);
         //Link the mouse controls to the window.
-        MouseManager.init(gameWindow, gameData.playerController);
+        MouseManager.init(gameWindow, playerController);
 
         //The game is not paused by default.
         paused = false;
@@ -100,14 +108,12 @@ public abstract class GameManager {
         gameData.gameLevel = new Level(levelFile, gameData.entityList);
         //Reset the entity list.
         gameData.entityList.clear();
-        gameData.entityList.add(gameData.playerController.getPlayer());
-        gameData.entityList.add(gameData.playerController.getPlayer());
+        gameData.entityList.add(gameData.player);
         //Rest the round pool.
         Projectile.init(gameData.entityList);
 
-        //Reset the tanks.
-        gameData.playerController.reset();
-        gameData.playerController.reset();
+        //Reset the player.
+        gameData.player.resetPlayer();
     }
 
     //Get the current time, calculate the time elapsed since the last frame, and store it in 'deltaTime;.
@@ -150,6 +156,10 @@ public abstract class GameManager {
             GarbageCollector.deleteObjects();
         }
 
+        gameData.camera.draw();
+        gameData.hud.draw(gameData.player.getMaxHealth(), gameData.player.getHealth());
+        gameData.minimap.draw();
+
         //Draw the player's screen and the minimap.
         gameWindow.draw();
 
@@ -171,17 +181,19 @@ public abstract class GameManager {
             //Save the current time and start counting down until the restart.
             timeOfGameEnd = System.currentTimeMillis();
             restarting = true;
+            gameData.hud.setWin(win);
         }
     }
 
     public static void pause() {
         paused = true;
         MouseManager.pause();
-
+        gameData.hud.setPaused(true);
     }
 
     public static void unPause() {
         paused = false;
-        MouseManager.unpause();
+        MouseManager.unPause();
+        gameData.hud.setPaused(false);
     }
 }

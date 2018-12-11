@@ -1,80 +1,15 @@
 package Tanks3D;
 
-import Tanks3D.DisplayComponents.Camera.Camera;
 import Tanks3D.Object.Entity.Player;
-import Tanks3D.Object.SpawnPoint;
-import Tanks3D.Utilities.Wrappers.MutableDouble;
-
-import java.awt.*;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 
 //Manage the player and the screen. This extends 'Runnable' so that the draw function can be threaded.
 public class PlayerController {
     private final Player myPlayer;
-    //A camera for displaying the game world.
-    private final Camera camera;
     //Remember what keys are being pressed. When the player is created, it isn't moving or firing.
-    private boolean moveForward, moveBackward, moveLeft, moveRight, lookLeft, lookRight, firePressed, fire = false;
-    //Determine if the game is drawing to the screen to prevent a concurrent modification exception.
-    private boolean drawing = false;
+    private boolean moveForward, moveBackward, moveLeft, moveRight, lookLeft, lookRight, firePressed = false;
 
-    public PlayerController(GameData gameData, BufferedImage canvas, SpawnPoint spawnPoint) {
-        //Create a new player given the spawn-point and add it to the entity list.
-        myPlayer = new Player(spawnPoint.getPosition(), spawnPoint.getAngle());
-        //Add the new player to the list of all entities.
-        gameData.entityList.add(myPlayer);
-
-        //Create a new camera given the spawn-point position and directionAngle.
-        camera = new Camera(gameData, canvas, getPosition(), myPlayer.getzPos(), getAngle());
-    }
-
-    //Draw the playerController's screen.
-    public void draw() {
-        //If the player is alive, check if they has any lives left.
-        if(!myPlayer.isAlive()) {
-            //If it has lives left, respawn the player and reset the controls.
-            if(myPlayer.getLives() > 0) {
-                myPlayer.respawn();
-                moveForward = moveBackward = moveLeft = moveRight = false;
-            }
-            //Otherwise, end the game.
-            else
-                GameManager.endGame(false);
-        }
-
-        //Indicate that the screen is being drawn.
-        drawing = true;
-
-        //Draw the walls and entities.
-        camera.draw();
-
-        //Indicate that the screen is finished drawing.
-        drawing = false;
-
-        //If the fire key was pressed while the screen was being drawn, fire the player after drawing is finished.
-        if(fire) {
-            myPlayer.fire();
-            fire = false;
-        }
-    }
-
-    protected void reset() {
-        myPlayer.resetPlayer();
-        myPlayer.resetLives();
-    }
-
-    public Color getColor() {
-        return myPlayer.getColor();
-    }
-    public Point2D.Double getPosition() {
-        return myPlayer.getPosition();
-    }
-    public MutableDouble getAngle() {
-        return myPlayer.getAngle();
-    }
-    public Player getPlayer() {
-        return myPlayer;
+    public PlayerController(Player player) {
+        myPlayer = player;
     }
 
     //Update the direction the player is moving based on what keys are pressed.
@@ -199,12 +134,7 @@ public class PlayerController {
         if(myPlayer.isAlive()) {
             if (keyPressed && !firePressed) {
                 //If the screen isn't currently being drawn, fire the player now.
-                if (!drawing)
-                    myPlayer.fire();
-                    //If the screen is being drawn, indicate to fire the player after it's done.
-                else
-                    fire = true;
-
+                myPlayer.fire();
                 firePressed = true;
             }
             else if(!keyPressed && firePressed)

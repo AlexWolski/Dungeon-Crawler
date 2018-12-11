@@ -67,8 +67,9 @@ public class MouseManager extends MouseAdapter {
         paused = true;
     }
 
-    public static void unpause() {
+    public static void unPause() {
         window.setCursor(hiddenCursor);
+        robot.mouseMove(location.x + dimension.width / 2, location.y + dimension.height / 2);
         paused = false;
     }
 
