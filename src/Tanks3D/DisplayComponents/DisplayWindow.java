@@ -42,6 +42,7 @@ public class DisplayWindow extends JFrame {
     //Draw the two screens and the minimap to buffers, then paint them on the display.
     public void draw() {
         gameData.playerController.draw();
+        //gameData.hud.draw(gameData.playerController.getMaxHealth(), gameData.playerController.getHealth(), gameData.playerController.getLives());
         gameData.minimap.draw();
 
         //Paint all three buffers on the display. 'paintImmediately' is used to prevent the buffers being modified before painting is complete.

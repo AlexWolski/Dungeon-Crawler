@@ -1,7 +1,6 @@
 package Tanks3D;
 
 import Tanks3D.DisplayComponents.Camera.Camera;
-import Tanks3D.DisplayComponents.HUD;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
@@ -15,31 +14,24 @@ public class PlayerController {
     private final Player myPlayer;
     //A camera for displaying the game world.
     private final Camera camera;
-    //The heads up display for the playerController.
-    private final HUD hud;
     //Remember what keys are being pressed. When the player is created, it isn't moving or firing.
     private boolean moveForward, moveBackward, moveLeft, moveRight, lookLeft, lookRight, firePressed, fire = false;
     //Determine if the game is drawing to the screen to prevent a concurrent modification exception.
     private boolean drawing = false;
-    //Determine whether to display the 'You Win' or 'You Lose' images.
-    private boolean win, lose = false;
 
-    public PlayerController(GameData gameData, BufferedImage canvas, SpawnPoint spawnPoint, Color playerColor) {
+    public PlayerController(GameData gameData, BufferedImage canvas, SpawnPoint spawnPoint) {
         //Create a new player given the spawn-point and add it to the entity list.
-        myPlayer = new Player(spawnPoint.getPosition(), spawnPoint.getAngle(), playerColor);
+        myPlayer = new Player(spawnPoint.getPosition(), spawnPoint.getAngle());
         //Add the new player to the list of all entities.
         gameData.entityList.add(myPlayer);
 
         //Create a new camera given the spawn-point position and directionAngle.
         camera = new Camera(gameData, canvas, getPosition(), myPlayer.getzPos(), getAngle());
-
-        //Create a new HUD object with the player's color.
-        hud = new HUD(canvas, getColor());
     }
 
     //Draw the playerController's screen.
     public void draw() {
-        //If the player is alive, check if it has any lives left.
+        //If the player is alive, check if they has any lives left.
         if(!myPlayer.isAlive()) {
             //If it has lives left, respawn the player and reset the controls.
             if(myPlayer.getLives() > 0) {
@@ -47,11 +39,8 @@ public class PlayerController {
                 moveForward = moveBackward = moveLeft = moveRight = false;
             }
             //Otherwise, end the game.
-            else {
-                GameManager.endGame();
-                lose = true;
-            }
-
+            else
+                GameManager.endGame(false);
         }
 
         //Indicate that the screen is being drawn.
@@ -59,8 +48,6 @@ public class PlayerController {
 
         //Draw the walls and entities.
         camera.draw();
-        //Draw the HUD.
-        hud.draw(myPlayer.getMaxHealth(), myPlayer.getHealth(), myPlayer.getLives(), win, lose, myPlayer.isAlive());
 
         //Indicate that the screen is finished drawing.
         drawing = false;
@@ -73,7 +60,6 @@ public class PlayerController {
     }
 
     protected void reset() {
-        win = lose = false;
         myPlayer.resetPlayer();
         myPlayer.resetLives();
     }

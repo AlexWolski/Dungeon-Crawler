@@ -9,8 +9,6 @@ import java.awt.image.BufferedImage;
 public class HUD {
     //An buffer that get written to, then displayed on the screen.
     private final BufferedImage canvas;
-    //The gradient used for the health bar.
-    private final GradientPaint gradient;
     //The uncolored images for the HUD.
     private static BufferedImage defaultHealthIcon, defaultLifeIcon;
     //The images that are displayed when the game is over.
@@ -31,29 +29,27 @@ public class HUD {
     private static final int iconGap = 20;
     //The distance between each life icon. Can be positive or negative depending on if its on the left or right.
     private final int lifeIconGap;
+    //Booleans to control messages displayed during different states of the game.
+    private boolean win, lose, paused;
+
 
     static {
         defaultHealthIcon = Image.load("resources/HUD/Health Icon.png");
         defaultLifeIcon = Image.load("resources/HUD/Life Icon.png");
 
         //Load the messages for when the game is won or lost.
-        winImage = Image.load("resources/Game End/Win.png");
-        loseImage = Image.load("resources/Game End/Lose.png");
+        winImage = Image.load("resources/HUD/Win.png");
+        loseImage = Image.load("resources/HUD/Lose.png");
     }
 
-    public HUD(BufferedImage canvas, Color hudColor) {
+    public HUD(BufferedImage canvas) {
         this.canvas = canvas;
         this.healthBarDim = new Dimension(canvas.getWidth()/2, canvas.getWidth()/15);
 
         healthIcon = Image.copy(defaultHealthIcon);
         lifeIcon = Image.copy(defaultLifeIcon);
 
-        //Color the images.
-        Tanks3D.Utilities.Image.tintImage(healthIcon, hudColor);
-        Tanks3D.Utilities.Image.tintImage(lifeIcon, hudColor);
-
         //Calculate the position of the health and life.
-        gradient = new GradientPaint(0, 0, Color.darkGray, 500, 0, hudColor);
         healthIconPos = new Point(iconGap, iconGap);
         healthBarPos = new Point(healthIconPos.x + iconGap + iconSize, healthIconPos.y + (iconSize - healthBarDim.height)/2);
         lifeIconPos = new Point(iconGap, 2*iconGap + iconSize);
@@ -67,10 +63,13 @@ public class HUD {
         endGameImagePos = new Point();
         endGameImagePos.x = canvas.getWidth()/2 - endGameImageDim.width/2;
         endGameImagePos.y = canvas.getHeight()/2 - endGameImageDim.height/2;
+
+        //By default, the game is in a normal state.
+        win = lose = paused = false;
     }
 
     //Draw the player's status.
-    public void draw(int maxHealth, int health, int lives, boolean win, boolean lose, boolean alive) {
+    public void draw(int maxHealth, int health, int lives) {
         Graphics2D graphic = canvas.createGraphics();
 
         //Draw the health icon.
@@ -87,8 +86,8 @@ public class HUD {
         graphic.setPaint(Color.darkGray);
         graphic.fillRect(healthBarPos.x, healthBarPos.y, healthBarDim.width, healthBarDim.height);
 
-        //Set the gradient for the health bar.
-        graphic.setPaint(gradient);
+        //Set the color for the health bar.
+        graphic.setPaint(Color.RED);
 
         graphic.fillRect(healthBarPos.x + (healthBarDim.width - healthWidth), healthBarPos.y, healthWidth, healthBarDim.height);
 
@@ -103,5 +102,16 @@ public class HUD {
         //If the playerController lost the game, display the losing message.
         else if(lose)
             graphic.drawImage(loseImage, endGameImagePos.x, endGameImagePos.y, endGameImageDim.width, endGameImageDim.height, null);
+    }
+
+    //Set the states of the game.
+    public void setWin(boolean win) {
+        this.win = win;
+    }
+    public void setLose(boolean lose) {
+        this.lose = lose;
+    }
+    public void setPaused(boolean paused) {
+        this.paused = paused;
     }
 }

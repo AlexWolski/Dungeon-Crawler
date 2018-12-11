@@ -1,6 +1,6 @@
 package Tanks3D.InputManager;
 
-import Tanks3D.InputManager.PlayerControl.*;
+import Tanks3D.InputManager.KeyboardControls.*;
 import Tanks3D.PlayerController;
 
 import javax.swing.*;
@@ -20,7 +20,7 @@ public final class KeyboardManager {
         //Get the action map from the window, which maps a string to a class.
         ActionMap actionMap = window.getActionMap();
 
-        //Key bindings for the first playerController.
+        //Key bindings for the controls.
         inputMap.put(KeyStroke.getKeyStroke(VK_W, 0, false), "w pressed");
         inputMap.put(KeyStroke.getKeyStroke(VK_W, 0, true), "w released");
         inputMap.put(KeyStroke.getKeyStroke(VK_S, 0, false), "s pressed");
@@ -35,8 +35,9 @@ public final class KeyboardManager {
         inputMap.put(KeyStroke.getKeyStroke(VK_RIGHT, 0, true), "right released");
         inputMap.put(KeyStroke.getKeyStroke(VK_SPACE, 0, false), "space pressed");
         inputMap.put(KeyStroke.getKeyStroke(VK_SPACE, 0, true), "space released");
+        inputMap.put(KeyStroke.getKeyStroke(VK_ESCAPE, 0, false), "escape pressed");
 
-        //Map the classes for the playerController's controls.
+        //Map the classes to the controls.
         actionMap.put("w pressed", new Forward(playerController, true));
         actionMap.put("w released", new Forward(playerController, false));
         actionMap.put("s pressed", new Back(playerController, true));
@@ -51,5 +52,6 @@ public final class KeyboardManager {
         actionMap.put("right released", new LookRight(playerController, false));
         actionMap.put("space pressed", new Fire(playerController, true));
         actionMap.put("space released", new Fire(playerController, false));
+        actionMap.put("escape pressed", new Pause());
     }
 }

@@ -1,5 +1,6 @@
 package Tanks3D;
 
+import Tanks3D.DisplayComponents.HUD;
 import Tanks3D.DisplayComponents.Minimap;
 import Tanks3D.Object.Entity.Entity;
 
@@ -14,6 +15,8 @@ public final class GameData {
 
     //The object that controls the playerController's input and displays their screen.
     public PlayerController playerController;
-    //The object that controls the minimap
+    //Draws information on the screen.
+    public HUD hud;
+    //Draws the world in 2D.
     public Minimap minimap;
 }

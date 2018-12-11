@@ -1,21 +1,22 @@
-package Tanks3D.InputManager.PlayerControl;
+package Tanks3D.InputManager.KeyboardControls;
 
 import Tanks3D.PlayerController;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
-public class Fire extends AbstractAction {
+public class Left extends AbstractAction {
     private final PlayerController playerController;
     private final boolean keyPressed;
 
-    public Fire(PlayerController playerController, boolean keyPressed) {
+    public Left(PlayerController playerController, boolean keyPressed) {
         this.playerController = playerController;
         this.keyPressed = keyPressed;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        playerController.fire(keyPressed);
+        playerController.left(keyPressed);
+        playerController.updateDirection();
     }
 }

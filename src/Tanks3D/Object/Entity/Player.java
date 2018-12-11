@@ -27,8 +27,6 @@ public class Player extends Entity {
     private double controlAngle;
     //The default height of the player.
     private final double height = 10;
-    //The default color of the tank.
-    private final Color defaultColor;
 
     //Images for the tank in game and on the minimap.
     private final static BufferedImage[] sprites;
@@ -70,25 +68,23 @@ public class Player extends Entity {
         playerIcon = Image.load("resources/HUD/Player Icon.png");
     }
 
-    public Player(Point2D.Double spawnPoint, double spawnAngle, Color tankColor) {
+    public Player(Point2D.Double spawnPoint, double spawnAngle) {
         super(hitCircleRadius, new Point2D.Double(spawnPoint.x, spawnPoint.y), spawnAngle, 0);
         this.spawnPoint = spawnPoint;
         this.spawnAngle = spawnAngle;
         this.rotationSpeed = 0;
-        this.defaultColor = tankColor;
 
         //Set the angle that the player is facing.
         viewAngle = new MutableDouble(spawnAngle);
         //By default, the player is moving forward.
         controlAngle = 0;
 
-        //The tank is alive.
+        //The player is alive.
         alive = true;
         respawning = false;
 
-        //Set the current color to the default color.
-        tankColor = new Color(defaultColor.getRGB());
-        entityColor = tankColor;
+        //
+        entityColor = null;
 
         //Pass the sprites to the parent class.
         setSprites(sprites, (int)(sprites[0].getWidth() * scale), (int)(sprites[0].getHeight() * scale));
@@ -218,7 +214,6 @@ public class Player extends Entity {
     public void resetPlayer() {
         position.setLocation(spawnPoint);
         viewAngle.setValue(spawnAngle);
-        entityColor = new Color(defaultColor.getRGB());
         health = maxHealth;
         alive = true;
         respawning = false;
@@ -227,7 +222,6 @@ public class Player extends Entity {
     public void resetLives() {
         lives = maxLives;
     }
-
     public MutableDouble getViewAngle() {
         return viewAngle;
     }
@@ -251,12 +245,6 @@ public class Player extends Entity {
     }
     public MutableDouble getAngle() {
         return viewAngle;
-    }
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-    public int getHealth() {
-        return health;
     }
     public int getLives() {
         return lives;

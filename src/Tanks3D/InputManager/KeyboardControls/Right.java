@@ -1,4 +1,4 @@
-package Tanks3D.InputManager.PlayerControl;
+package Tanks3D.InputManager.KeyboardControls;
 
 import Tanks3D.PlayerController;
 

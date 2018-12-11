@@ -31,6 +31,8 @@ public abstract class GameManager {
     private static long timeOfGameEnd;
     //How long it takes for the game to reset.
     private final static long restartTime = 3000;
+    //Determine if the game is paused or not.
+    private static boolean paused;
 
     //Store the time that the last frame was drawn so that 'deltaTime' can be calculated.
     private static long timeOfLastFrame;
@@ -68,14 +70,17 @@ public abstract class GameManager {
         //Create and configure the JFrame. This JFrame will have three panels: the two players screens and a minimap.
         gameWindow = new DisplayWindow(gameData, "Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
 
-        //Initialize the 'player' objects. Get the initial positions for both players and indicate which side of the screen the HUD icons are on.
-        gameData.playerController = new PlayerController(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayerSpawn(), Color.cyan);
+        //Initialize the 'player' objects.
+        gameData.playerController = new PlayerController(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayerSpawn());
         gameData.minimap = new Minimap(gameData, gameWindow.getMinimapBuffer());
 
         //Link the keyboard controls to the window.
         KeyboardManager.init(gameWindow.getPanel(), gameData.playerController);
         //Link the mouse controls to the window.
         MouseManager.init(gameWindow, gameData.playerController);
+
+        //The game is not paused by default.
+        paused = false;
 
         //Initialize the round object.
         Projectile.init(gameData.entityList);
@@ -130,41 +135,53 @@ public abstract class GameManager {
         updateDeltaTime();
 
         //If the game is restarting and the restart time has passed, restart the game.
-        if(restarting && currentTime - timeOfGameEnd > restartTime) {
+        if (restarting && currentTime - timeOfGameEnd > restartTime) {
             restarting = false;
             reset();
         }
 
+        //Run the game if its not paused.
+        if(!paused) {
+            //Update the positions of all of the entities. Pass it the iterator in case the entity needs to remove itself from the list.
+            for (Entity entity : gameData.entityList)
+                entity.update(gameData, deltaTime);
+
+            //Remove any unneeded objects.
+            GarbageCollector.deleteObjects();
+        }
+
+        //Draw the player's screen and the minimap.
+        gameWindow.draw();
+
         //Remove
         //Print the FPS every second.
-        if(currentTime - time > 1000)
-        {
+        if (currentTime - time > 1000) {
             System.out.println(frames);
             time = System.currentTimeMillis();
             frames = 0;
         }
 
-        //Update the positions of all of the entities. Pass it the iterator in case the entity needs to remove itself from the list.
-        for(Entity entity : gameData.entityList)
-            entity.update(gameData, deltaTime);
-
-        //Remove any unneeded objects.
-        GarbageCollector.deleteObjects();
-        
-        //Draw both players' screens and the minimap.
-        gameWindow.draw();
-
-        //remove
         //Increment the frame count for the FPS.
         frames++;
     }
 
-    public static void endGame() {
+    public static void endGame(boolean win) {
         //If the game is not already restarting, restart it.
         if(!restarting) {
             //Save the current time and start counting down until the restart.
             timeOfGameEnd = System.currentTimeMillis();
             restarting = true;
         }
+    }
+
+    public static void pause() {
+        paused = true;
+        MouseManager.pause();
+
+    }
+
+    public static void unPause() {
+        paused = false;
+        MouseManager.unpause();
     }
 }
