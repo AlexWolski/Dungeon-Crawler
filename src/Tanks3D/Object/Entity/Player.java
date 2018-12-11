@@ -23,6 +23,8 @@ public class Player extends Entity {
     private final double spawnAngle;
     //The angle that the player is facing.
     private final MutableDouble viewAngle;
+    //The direction the player is moving relative to the camera.
+    private double controlAngle;
     //The default color of the tank.
     private final Color defaultColor;
 
@@ -75,6 +77,8 @@ public class Player extends Entity {
 
         //Set the angle that the player is facing.
         viewAngle = new MutableDouble(spawnAngle);
+        //By default, the player is moving forward.
+        controlAngle = 0;
 
         //The tank is alive.
         alive = true;
@@ -105,6 +109,7 @@ public class Player extends Entity {
             //Update the directionAngle and position of the tank.
             viewAngle.add(rotationSpeed * deltaTime / 1000);
             viewAngle.setValue(FastMath.formatAngle(viewAngle.getValue()));
+            directionAngle = FastMath.formatAngle(viewAngle.getValue() + controlAngle);
             super.update(data, deltaTime);
         }
     }
@@ -223,6 +228,9 @@ public class Player extends Entity {
 
     public MutableDouble getViewAngle() {
         return viewAngle;
+    }
+    public void setControlAngle(double controlAngle) {
+        this.controlAngle = controlAngle;
     }
     public double getMaxSpeed() {
         return maxSpeed;

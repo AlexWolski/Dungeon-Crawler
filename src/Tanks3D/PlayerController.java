@@ -117,15 +117,15 @@ public class PlayerController {
 
         //If the player is only moving in the x or y direction, add it to the player's camera and set the entity direction.
         else if(xAngle == -1)
-            myPlayer.directionAngle = myPlayer.getViewAngle().getValue() + yAngle;
+            myPlayer.setControlAngle(yAngle);
         else if(yAngle == -1)
-            myPlayer.directionAngle = myPlayer.getViewAngle().getValue() + xAngle;
+            myPlayer.setControlAngle(xAngle);
         //Otherwise, get the average between the x and y directions, and add it to the entity direction.
         else {
             if(yAngle - xAngle > 180)
                 yAngle -= 360;
 
-            myPlayer.directionAngle = FastMath.formatAngle(myPlayer.getViewAngle().getValue() + (xAngle + yAngle)/2);
+            myPlayer.setControlAngle((xAngle + yAngle)/2);
         }
 
         //Set the speed of the player.
