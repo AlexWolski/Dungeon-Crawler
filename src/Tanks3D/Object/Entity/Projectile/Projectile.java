@@ -1,7 +1,7 @@
-package Tanks3D.Object.Entity.Round;
+package Tanks3D.Object.Entity.Projectile;
 
 import Tanks3D.GameData;
-import Tanks3D.GarbageCollector;
+import Tanks3D.ObjectManager;
 import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.Wall.BreakableWalls.BreakableWall;
@@ -94,7 +94,7 @@ public abstract class Projectile extends Entity {
             //Temporarily hold the first round in the pool.
             Projectile tempProjectile = projectilePool.get(0);
             //Add the modified round to the entity list.
-            entityList.add(tempProjectile);
+            ObjectManager.add(tempProjectile);
             //Remove it from the round pool.
             projectilePool.remove(0);
 
@@ -114,7 +114,7 @@ public abstract class Projectile extends Entity {
 
     private void removeRound() {
         //Remove this round from the entity list.
-        GarbageCollector.remove(this);
+        ObjectManager.remove(this);
 
         //Determine what type this round is and get the corresponding round pool.
         ArrayList<Projectile> projectilePool;

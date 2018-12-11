@@ -1,6 +1,6 @@
 package Tanks3D.Object.Entity;
 
-import Tanks3D.Object.Entity.Round.Projectile;
+import Tanks3D.Object.Entity.Projectile.Projectile;
 import Tanks3D.Object.GameObject;
 import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.FastMath;

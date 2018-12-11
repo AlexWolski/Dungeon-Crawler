@@ -1,4 +1,4 @@
-package Tanks3D.Object.Entity.Round;
+package Tanks3D.Object.Entity.Projectile;
 
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Utilities.Image;

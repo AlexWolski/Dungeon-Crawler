@@ -12,11 +12,13 @@ public class HUD {
     //The uncolored images for the HUD.
     private static BufferedImage defaultHealthIcon;
     //The images that are displayed when the game is over.
-    private static BufferedImage winImage, loseImage;
+    private static BufferedImage winImage, loseImage, pausedImage;
+    //The color the screen will be tinted when the game is paused.
+    private static Color pausedColor;
     //The colored images.
     private BufferedImage healthIcon;
     //The position and dimensions of the image displayed when the game ends.
-    private final Point endGameImagePos;
+    private final Point messagePos;
     private final Dimension endGameImageDim;
     //The position of the status images.
     private final Point healthIconPos;
@@ -33,10 +35,12 @@ public class HUD {
 
     static {
         defaultHealthIcon = Image.load("resources/HUD/Health Icon.png");
+        pausedColor = new Color(0, 0, 0, 100);
 
         //Load the messages for when the game is won or lost.
         winImage = Image.load("resources/HUD/Win.png");
         loseImage = Image.load("resources/HUD/Lose.png");
+        pausedImage = Image.load("resources/HUD/Paused.png");
     }
 
     public HUD(BufferedImage canvas) {
@@ -53,10 +57,10 @@ public class HUD {
         endGameImageDim = new Dimension();
         endGameImageDim.width = (int)(canvas.getWidth() * 0.75);
         endGameImageDim.height = (int)((double)winImage.getHeight()/winImage.getWidth() * endGameImageDim.width);
-        //Calculate the position of the end of game message.
-        endGameImagePos = new Point();
-        endGameImagePos.x = canvas.getWidth()/2 - endGameImageDim.width/2;
-        endGameImagePos.y = canvas.getHeight()/2 - endGameImageDim.height/2;
+        //Calculate the position where messages will be drawn.
+        messagePos = new Point();
+        messagePos.x = canvas.getWidth()/2 - endGameImageDim.width/2;
+        messagePos.y = canvas.getHeight()/2 - endGameImageDim.height/2;
 
         //By default, the game is in a normal state.
         win = lose = paused = false;
@@ -64,9 +68,10 @@ public class HUD {
 
     //Draw the player's status.
     public void draw(int maxHealth, int health) {
-        if(!paused) {
-            Graphics2D graphic = canvas.createGraphics();
+        Graphics2D graphic = canvas.createGraphics();
 
+        //If the game is not paused, draw the player's stats.
+        if(!paused) {
             //Draw the health icon.
             graphic.drawImage(healthIcon, healthIconPos.x, healthIconPos.y, iconSize, iconSize, null);
 
@@ -89,13 +94,19 @@ public class HUD {
 
             //If the playerController won the game, display the winning message.
             if (win)
-                graphic.drawImage(winImage, endGameImagePos.x, endGameImagePos.y, endGameImageDim.width, endGameImageDim.height, null);
+                graphic.drawImage(winImage, messagePos.x, messagePos.y, endGameImageDim.width, endGameImageDim.height, null);
                 //If the playerController lost the game, display the losing message.
             else if (lose)
-                graphic.drawImage(loseImage, endGameImagePos.x, endGameImagePos.y, endGameImageDim.width, endGameImageDim.height, null);
+                graphic.drawImage(loseImage, messagePos.x, messagePos.y, endGameImageDim.width, endGameImageDim.height, null);
         }
+        //If the game is paused, draw a dark rectangle and the paused message.
         else {
+            //Draw the dark rectangle.
+            graphic.setColor(pausedColor);
+            graphic.fillRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
+            //Draw the 'paused' message.
+            graphic.drawImage(pausedImage, messagePos.x, messagePos.y, endGameImageDim.width, endGameImageDim.height, null);
         }
     }
 

@@ -1,6 +1,6 @@
 package Tanks3D.Object.Entity.Pickup;
 
-import Tanks3D.GarbageCollector;
+import Tanks3D.ObjectManager;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Utilities.Image;
 
@@ -30,7 +30,7 @@ public class Health extends Pickup {
             ((Player) object).heal(health);
 
             //Remove the round.
-            GarbageCollector.remove(this);
+            ObjectManager.remove(this);
         }
     }
 }

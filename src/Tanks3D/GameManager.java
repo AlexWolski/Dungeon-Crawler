@@ -8,7 +8,7 @@ import Tanks3D.InputManager.KeyboardManager;
 import Tanks3D.InputManager.MouseManager;
 import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Player;
-import Tanks3D.Object.Entity.Round.Projectile;
+import Tanks3D.Object.Entity.Projectile.Projectile;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public abstract class GameManager {
         gameData.entityList.add(gameData.player);
         gameData.camera = new Camera(gameData, gameWindow.getScreenBuffer(), gameData.player.getPosition(), gameData.player.getzPos(), gameData.player.getAngle());
         gameData.hud = new HUD(gameWindow.getScreenBuffer());
-        gameData.minimap = new Minimap(gameData, gameWindow.getMinimapBuffer());
+        gameData.minimap = new Minimap(gameData, gameWindow.getScreenBuffer(), new Dimension(gameWindow.getHeight()/3, gameWindow.getHeight()/3));
 
         //A playerController object that controls the player.
         PlayerController playerController = new PlayerController(gameData.player);
@@ -93,7 +93,7 @@ public abstract class GameManager {
         //Initialize the round object.
         Projectile.init(gameData.entityList);
         //Initialize the garbage collector.
-        GarbageCollector.init(gameData.entityList, gameData.gameLevel.wallObjects);
+        ObjectManager.init(gameData.entityList, gameData.gameLevel.wallObjects);
 
         //Set the initial time.
         timeOfLastFrame = System.currentTimeMillis();
@@ -152,13 +152,16 @@ public abstract class GameManager {
             for (Entity entity : gameData.entityList)
                 entity.update(gameData, deltaTime);
 
-            //Remove any unneeded objects.
-            GarbageCollector.deleteObjects();
+            //Remove or add any objects.
+            ObjectManager.update();
         }
 
         gameData.camera.draw();
         gameData.hud.draw(gameData.player.getMaxHealth(), gameData.player.getHealth());
-        gameData.minimap.draw();
+
+        //Only draw the minimap if the game is not paused.
+        if(!paused)
+            gameData.minimap.draw();
 
         //Draw the player's screen and the minimap.
         gameWindow.draw();

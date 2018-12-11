@@ -2,7 +2,7 @@ package Tanks3D.Object.Entity;
 
 import Tanks3D.GameData;
 import Tanks3D.GameManager;
-import Tanks3D.Object.Entity.Round.Projectile;
+import Tanks3D.Object.Entity.Projectile.Projectile;
 import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Object.Wall.*;
 import Tanks3D.Utilities.FastMath;
@@ -155,7 +155,7 @@ public class Player extends Entity {
             reloading = true;
 
             //Calculate the distance to spawn the round.
-            double distance = 5;
+            double distance = 6;
             //Calculate the x and y position to spawn the round based on the tank's position and directionAngle.
             double xPos = position.x + distance * FastMath.sin(viewAngle.getValue());
             double yPos = position.y + distance * FastMath.cos(viewAngle.getValue());

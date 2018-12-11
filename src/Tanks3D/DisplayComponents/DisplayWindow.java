@@ -1,7 +1,5 @@
 package Tanks3D.DisplayComponents;
 
-import Tanks3D.GameData;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -34,7 +32,6 @@ public class DisplayWindow extends JFrame {
     public JPanel getPanel() { return panel; }
     //Return the buffers for the playerController's screen and the minimap.
     public BufferedImage getScreenBuffer() { return panel.getScreenBuffer(); }
-    public BufferedImage getMinimapBuffer() { return panel.getMinimapBuffer(); }
 
     //Draw the two screens and the minimap to buffers, then paint them on the display.
     public void draw() {

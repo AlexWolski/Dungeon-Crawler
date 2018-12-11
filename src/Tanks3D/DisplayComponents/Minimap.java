@@ -14,39 +14,41 @@ import java.awt.image.BufferedImage;
 public class Minimap {
     private final GameData gameData;
     private final BufferedImage canvas;
+    private final BufferedImage tempImage;
     //The raw, live pixel data of the canvas.
-    private int[] canvasPixelData;
+    private int[] tempPixelData;
     private double mapSizeRatio;
     private int backgroundColor;
 
-    public Minimap(GameData gameData, BufferedImage canvas) {
+    public Minimap(GameData gameData, BufferedImage canvas, Dimension dimension) {
         this.gameData = gameData;
         this.canvas = canvas;
+        tempImage =  new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_RGB);
 
         //Get the pixel data from the canvas.
-        canvasPixelData = Image.getRGBColorData(canvas);
+        tempPixelData = Image.getRGBColorData(tempImage);
         backgroundColor = Color.darkGray.getRGB();
 
         //Determine how the game world should be mapped to the minimap based on their sizes.
         if(gameData.gameLevel.getMapWidth() > gameData.gameLevel.getMapHeight()) {
-            if (canvas.getWidth() > canvas.getHeight())
-                mapSizeRatio = gameData.gameLevel.getMapWidth() / (canvas.getHeight() - 1);
+            if (tempImage.getWidth() > tempImage.getHeight())
+                mapSizeRatio = gameData.gameLevel.getMapWidth() / (tempImage.getHeight() - 1);
             else
-                mapSizeRatio = gameData.gameLevel.getMapWidth() / (canvas.getWidth() - 1);
+                mapSizeRatio = gameData.gameLevel.getMapWidth() / (tempImage.getWidth() - 1);
         }
         else
         {
-            if (canvas.getWidth() > canvas.getHeight())
-                mapSizeRatio = gameData.gameLevel.getMapHeight() / (canvas.getHeight() - 1);
+            if (tempImage.getWidth() > tempImage.getHeight())
+                mapSizeRatio = gameData.gameLevel.getMapHeight() / (tempImage.getHeight() - 1);
             else
-                mapSizeRatio = gameData.gameLevel.getMapHeight() / (canvas.getWidth() - 1);
+                mapSizeRatio = gameData.gameLevel.getMapHeight() / (tempImage.getWidth() - 1);
         }
     }
 
     //Transform a point from the map dimensions to the minimap dimensions.
     private Point2D.Double gameToMiniMap(Point2D.Double coordinate) {
-        return new Point2D.Double((coordinate.x - gameData.gameLevel.getMapCenterX())/ mapSizeRatio + canvas.getWidth()/2.0,
-                                  (coordinate.y - gameData.gameLevel.getMapCenterY())/ mapSizeRatio + canvas.getHeight()/2.0);
+        return new Point2D.Double((coordinate.x - gameData.gameLevel.getMapCenterX())/ mapSizeRatio + tempImage.getWidth()/2.0,
+                                  (coordinate.y - gameData.gameLevel.getMapCenterY())/ mapSizeRatio + tempImage.getHeight()/2.0);
     }
 
     //Get the two points of a wall, convert them to ints, and draw them.
@@ -56,7 +58,7 @@ public class Minimap {
         Point2D.Double p2 = gameToMiniMap(wall.getPoint2());
 
         //Draw the points. The y coordinates are subtracted from the canvas height because the y axis is inverse.
-        graphic.drawLine((int)p1.x, canvas.getHeight()-(int)p1.y-1, (int)p2.x, canvas.getHeight()-(int)p2.y-1);
+        graphic.drawLine((int)p1.x, tempImage.getHeight()-(int)p1.y-1, (int)p2.x, tempImage.getHeight()-(int)p2.y-1);
     }
 
     //Rotate the icons for the entities and draw them.
@@ -67,7 +69,7 @@ public class Minimap {
         Point2D.Double entityPos;
 
         for(Entity entity : gameData.entityList) {
-            iconSize = (int) (entity.getHitCircleRadius()/gameData.gameLevel.getMapWidth() * 2 * canvas.getWidth());
+            iconSize = (int) (entity.getHitCircleRadius()/gameData.gameLevel.getMapWidth() * 2 * tempImage.getWidth());
 
             //Get the position of the entity.
             entityPos = gameToMiniMap(entity.position);
@@ -86,18 +88,18 @@ public class Minimap {
                 angle = entity.directionAngle;
 
             //Draw the entity rotated.
-            Image.drawRotated(graphic, entity.getIcon(), angle, (int) entityPos.x, canvas.getHeight() - (int) entityPos.y, iconSize, iconSize);
+            Image.drawRotated(graphic, entity.getIcon(), angle, (int) entityPos.x, tempImage.getHeight() - (int) entityPos.y, iconSize, iconSize);
         }
     }
 
     public void draw() {
         //Draw a background.
-        for(int i = 0; i < canvas.getWidth(); i++)
-            for (int j = 0; j < canvas.getHeight(); j++)
-                Image.setRGBPixel(canvasPixelData, canvas.getWidth(), i, j, backgroundColor);
+        for(int i = 0; i < tempImage.getWidth(); i++)
+            for (int j = 0; j < tempImage.getHeight(); j++)
+                Image.setRGBPixel(tempPixelData, tempImage.getWidth(), i, j, backgroundColor);
 
         //Create a graphic so that shapes can be drawn to the buffered image.
-        Graphics2D graphic = canvas.createGraphics();
+        Graphics2D graphic = tempImage.createGraphics();
 
         //Draw the walls if they are visible.
         for(Wall wall : gameData.gameLevel.wallObjects)
@@ -107,7 +109,8 @@ public class Minimap {
         //Draw the player and entities.
         drawEntities(graphic);
 
-        //Delete the graphics object.
-        graphic.dispose();
+        //Draw the minimap onto the canvas.
+        graphic = canvas.createGraphics();
+        graphic.drawImage(tempImage, canvas.getWidth() - tempImage.getWidth(), 0, null);
     }
 }
