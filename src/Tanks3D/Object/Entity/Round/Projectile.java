@@ -89,7 +89,7 @@ public abstract class Projectile extends Entity {
     }
 
     //Add a round from the given pool to the entity list.
-    private static void addFromPool(ArrayList<Projectile> projectilePool, double x, double y, int zPos, double angle, Player owner) {
+    private static void addFromPool(ArrayList<Projectile> projectilePool, double x, double y, double zPos, double angle, Player owner) {
         if(!projectilePool.isEmpty()) {
             //Temporarily hold the first round in the pool.
             Projectile tempProjectile = projectilePool.get(0);
@@ -108,7 +108,7 @@ public abstract class Projectile extends Entity {
     }
 
     //Create a new round and add it to the entity list
-    public static void newArmorPiercing(double x, double y, int zPos, double angle, Player owner) {
+    public static void newArmorPiercing(double x, double y, double zPos, double angle, Player owner) {
         addFromPool(ArmorPiercingPool, x, y, zPos, angle, owner);
     }
 

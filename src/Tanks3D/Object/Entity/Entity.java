@@ -28,7 +28,7 @@ public abstract class Entity extends GameObject {
     //The color each image will be tinted.
     public Color entityColor;
     //The entity's data in 3d space.
-    protected int zPos;
+    protected double zPos;
     public Point2D.Double position;
     public double directionAngle;
     public double speed;

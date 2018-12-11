@@ -25,6 +25,8 @@ public class Player extends Entity {
     private final MutableDouble viewAngle;
     //The direction the player is moving relative to the camera.
     private double controlAngle;
+    //The default height of the player.
+    private final double height = 10;
     //The default color of the tank.
     private final Color defaultColor;
 
@@ -51,8 +53,8 @@ public class Player extends Entity {
     private final static int hitCircleRadius = 10;
     //How much to scale the images when drawn to the screen.
     private final static double scale = 0.04;
-    //How high above the center tank the bullets are fired from.
-    private final int gunHeight;
+    //How high projectiles are fired.
+    private final double weaponHeight;
     //Stats of the tank.
     private final static int maxHealth = 100;
     private int health = maxHealth;
@@ -95,10 +97,10 @@ public class Player extends Entity {
         Image.tintImage(playerIcon, Color.RED);
         setIcon(playerIcon);
 
-        //Set the height of the tank.
-        zPos = (int)Wall.defaultWallHeight()/2;
+        //Set the zPos to the default zPos.
+        zPos = height;
         //Set the height of the gun.
-        gunHeight = zPos;
+        weaponHeight = zPos;
     }
 
     public void update(GameData data, double deltaTime) {
@@ -171,7 +173,7 @@ public class Player extends Entity {
             double xPos = position.x + distance * FastMath.sin(viewAngle.getValue());
             double yPos = position.y + distance * FastMath.cos(viewAngle.getValue());
             //Create the round and add it to the entity list.
-            Projectile.newArmorPiercing(xPos, yPos, gunHeight, viewAngle.getValue(), this);
+            Projectile.newArmorPiercing(xPos, yPos, weaponHeight, viewAngle.getValue(), this);
         }
         //If the tank is reloading, check if the reload time is up. If it is, set reloading to false.
         else if(System.currentTimeMillis() >= shotTime + shotCooldown) {

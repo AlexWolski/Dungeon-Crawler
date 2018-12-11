@@ -4,7 +4,6 @@ import Tanks3D.DisplayComponents.Camera.Camera;
 import Tanks3D.DisplayComponents.HUD;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.SpawnPoint;
-import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
 
 import java.awt.*;
@@ -32,7 +31,7 @@ public class PlayerController {
         gameData.entityList.add(myPlayer);
 
         //Create a new camera given the spawn-point position and directionAngle.
-        camera = new Camera(gameData, canvas, getPosition(), getAngle());
+        camera = new Camera(gameData, canvas, getPosition(), myPlayer.getzPos(), getAngle());
 
         //Create a new HUD object with the player's color.
         hud = new HUD(canvas, getColor());

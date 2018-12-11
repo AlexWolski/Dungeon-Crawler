@@ -19,24 +19,28 @@ public class Camera {
     private final GameData gameData;
     //An buffer that get written to, then displayed on the screen.
     private final BufferedImage canvas;
+
+    //The horizontal and vertical field of view of the camera.
+    private final static double FOV = 60;
+    //The cameraPosition of the camera.
+    private final Point2D.Double cameraPosition;
+    //The height of the camera in the game world.
+    private final double zPos;
+    //The directionAngle of the camera.
+    private final MutableDouble cameraAngle;
+    //The distance from the camera to the projection plane.
+    private final double distProjectionPlane;
+
     //The raw, live pixel data of the canvas.
     private int[] canvasPixelData;
     //An array containing the slices of the walls that need to be drawn.
     private final ArrayList<ArrayList<ObjectSlice>> wallBuffer;
     //An array full of booleans indicating whether a pixel has been written to or not.
     private Boolean[][] pixelTable;
-    //The horizontal and vertical field of view of the camera.
-    private final static double FOV = 60;
-    //The cameraPosition of the camera.
-    private final Point2D.Double cameraPosition;
-    //The directionAngle of the camera.
-    private final MutableDouble cameraAngle;
-    //The distance from the camera to the projection plane.
-    private final double distProjectionPlane;
     //The color of the floor and ceiling.
     private final int floorColor, ceilColor;
 
-    public Camera(GameData gameData, BufferedImage canvas, Point2D.Double position, MutableDouble angle) {
+    public Camera(GameData gameData, BufferedImage canvas, Point2D.Double position, double zPos, MutableDouble angle) {
         this.canvas = canvas;
         this.gameData = gameData;
 
@@ -52,8 +56,9 @@ public class Camera {
         for(int i = 0; i < canvas.getWidth(); i++)
             wallBuffer.add(new ArrayList<>());
 
-        //Store the cameraPosition and directionAngle of the playerController.
+        //Store the camera position and angle.
         this.cameraPosition = position;
+        this.zPos = zPos;
         this.cameraAngle = angle;
         //Get the floor and ceiling color.
         this.floorColor = gameData.gameLevel.getFloorColor();
@@ -86,11 +91,11 @@ public class Camera {
         int sliceHeight = (int) (slice.object.getHeight() / slice.distToCamera * distProjectionPlane);
 
         //The y cameraPosition where the image will be drawn.
-        int zPos = (int) Math.round(canvas.getHeight() / 2.0 + ((Wall.defaultWallHeight() / slice.distToCamera * distProjectionPlane) / 2) - (slice.zPos / slice.distToCamera * distProjectionPlane));
+        int yPos = (int) Math.round(canvas.getHeight() / 2.0 + (zPos / slice.distToCamera * distProjectionPlane) - (slice.zPos / slice.distToCamera * distProjectionPlane));
 
         //Calculate the y positions where the wall starts and stops on the screen.
-        int wallStart = (int) (zPos - sliceHeight / 2.0);
-        int wallEnd = (int) (zPos + sliceHeight / 2.0);
+        int wallStart = (int) (yPos - sliceHeight / 2.0);
+        int wallEnd = (int) (yPos + sliceHeight / 2.0);
 
         if (wallStart < 0)
             wallStart = 0;
