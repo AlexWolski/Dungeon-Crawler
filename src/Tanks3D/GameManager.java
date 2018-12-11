@@ -75,7 +75,7 @@ public abstract class GameManager {
         //Link the keyboard controls to the window.
         KeyboardManager.init(gameWindow.getPanel(), gameData.playerController);
         //Link the mouse controls to the window.
-        MouseManager.init(gameWindow.getPanel(), gameData.playerController);
+        MouseManager.init(gameWindow, gameData.playerController);
 
         //Initialize the round object.
         Projectile.init(gameData.entityList);

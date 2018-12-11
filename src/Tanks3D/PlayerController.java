@@ -225,4 +225,9 @@ public class PlayerController {
                 firePressed = false;
         }
     }
+
+    //Rotate the player by the given amount.
+    public void rotatePlayer(double angle) {
+        myPlayer.setViewAngle(myPlayer.getViewAngle().getValue() + angle);
+    }
 }

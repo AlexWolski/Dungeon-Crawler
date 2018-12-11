@@ -231,6 +231,9 @@ public class Player extends Entity {
     public MutableDouble getViewAngle() {
         return viewAngle;
     }
+    public void setViewAngle(double angle) {
+        viewAngle.setValue(angle);
+    }
     public void setControlAngle(double controlAngle) {
         this.controlAngle = controlAngle;
     }
