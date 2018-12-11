@@ -18,7 +18,7 @@ public class PlayerController {
     //The heads up display for the playerController.
     private final HUD hud;
     //Remember what keys are being pressed. When the player is created, it isn't moving or firing.
-    private boolean moveForward, moveBackward, moveLeft, moveRight, lookLeft, lookRight, fire = false;
+    private boolean moveForward, moveBackward, moveLeft, moveRight, lookLeft, lookRight, firePressed, fire = false;
     //Determine if the game is drawing to the screen to prevent a concurrent modification exception.
     private boolean drawing = false;
     //Determine whether to display the 'You Win' or 'You Lose' images.
@@ -208,14 +208,21 @@ public class PlayerController {
     }
 
     //If the fire key was pressed, tell the player to fire.
-    public void fire() {
+    public void fire(boolean keyPressed) {
         //If the playerController is alive, fire.
-        if(myPlayer.isAlive())
-            //If the screen isn't currently being drawn, fire the player now.
-            if(!drawing)
-                myPlayer.fire();
-            //If the screen is being drawn, indicate to fire the player after it's done.
-            else
-                fire = true;
+        if(myPlayer.isAlive()) {
+            if (keyPressed && !firePressed) {
+                //If the screen isn't currently being drawn, fire the player now.
+                if (!drawing)
+                    myPlayer.fire();
+                    //If the screen is being drawn, indicate to fire the player after it's done.
+                else
+                    fire = true;
+
+                firePressed = true;
+            }
+            else if(!keyPressed && firePressed)
+                firePressed = false;
+        }
     }
 }

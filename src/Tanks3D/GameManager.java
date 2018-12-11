@@ -2,7 +2,8 @@ package Tanks3D;
 
 import Tanks3D.DisplayComponents.Minimap;
 import Tanks3D.DisplayComponents.DisplayWindow;
-import Tanks3D.InputManager.InputManager;
+import Tanks3D.InputManager.KeyboardManager;
+import Tanks3D.InputManager.MouseManager;
 import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Round.Projectile;
 
@@ -67,12 +68,15 @@ public abstract class GameManager {
         //Create and configure the JFrame. This JFrame will have three panels: the two players screens and a minimap.
         gameWindow = new DisplayWindow(gameData, "Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
 
-        //Initialize the 'PlayerController' objects. Get the initial positions for both players and indicate which side of the screen the HUD icons are on.
+        //Initialize the 'player' objects. Get the initial positions for both players and indicate which side of the screen the HUD icons are on.
         gameData.playerController = new PlayerController(gameData, gameWindow.getScreenBuffer(), gameData.gameLevel.getPlayerSpawn(), Color.cyan);
         gameData.minimap = new Minimap(gameData, gameWindow.getMinimapBuffer());
 
-        //Link the controls for each playerController.
-        InputManager.init(gameWindow.getPanel(), gameData.playerController);
+        //Link the keyboard controls to the window.
+        KeyboardManager.init(gameWindow.getPanel(), gameData.playerController);
+        //Link the mouse controls to the window.
+        MouseManager.init(gameWindow.getPanel(), gameData.playerController);
+
         //Initialize the round object.
         Projectile.init(gameData.entityList);
         //Initialize the garbage collector.

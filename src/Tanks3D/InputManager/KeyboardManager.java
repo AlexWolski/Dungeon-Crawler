@@ -9,9 +9,9 @@ import static java.awt.event.KeyEvent.*;
 import static javax.swing.JComponent.*;
 
 //Handles keyboard inputs.
-public final class InputManager {
+public final class KeyboardManager {
     //This class is non-instantiable
-    private InputManager() {
+    private KeyboardManager() {
     }
 
     public static void init(JComponent window, PlayerController playerController) {
@@ -34,6 +34,7 @@ public final class InputManager {
         inputMap.put(KeyStroke.getKeyStroke(VK_RIGHT, 0, false), "right pressed");
         inputMap.put(KeyStroke.getKeyStroke(VK_RIGHT, 0, true), "right released");
         inputMap.put(KeyStroke.getKeyStroke(VK_SPACE, 0, false), "space pressed");
+        inputMap.put(KeyStroke.getKeyStroke(VK_SPACE, 0, true), "space released");
 
         //Map the classes for the playerController's controls.
         actionMap.put("w pressed", new Forward(playerController, true));
@@ -48,6 +49,7 @@ public final class InputManager {
         actionMap.put("left released", new LookLeft(playerController, false));
         actionMap.put("right pressed", new LookRight(playerController, true));
         actionMap.put("right released", new LookRight(playerController, false));
-        actionMap.put("space pressed", new Fire(playerController));
+        actionMap.put("space pressed", new Fire(playerController, true));
+        actionMap.put("space released", new Fire(playerController, false));
     }
 }

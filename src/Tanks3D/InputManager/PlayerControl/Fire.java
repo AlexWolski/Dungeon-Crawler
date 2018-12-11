@@ -7,13 +7,15 @@ import java.awt.event.ActionEvent;
 
 public class Fire extends AbstractAction {
     private final PlayerController playerController;
+    private final boolean keyPressed;
 
-    public Fire(PlayerController playerController) {
+    public Fire(PlayerController playerController, boolean keyPressed) {
         this.playerController = playerController;
+        this.keyPressed = keyPressed;
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        playerController.fire();
+        playerController.fire(keyPressed);
     }
 }
