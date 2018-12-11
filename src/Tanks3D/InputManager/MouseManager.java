@@ -8,13 +8,17 @@ import java.awt.event.MouseEvent;
 
 //Handles mouse inputs.
 public class MouseManager extends MouseAdapter {
+    private final PlayerController playerController;
+
     //Create a MouseManager object.
     public static void init(JComponent window, PlayerController playerController) {
-        MouseManager mouseManager = new MouseManager(window, playerController);
+        new MouseManager(window, playerController);
     }
 
     //MouseManager is a singleton class.
     private MouseManager(JComponent window, PlayerController playerController) {
+        //Save the player controller.
+        this.playerController = playerController;
         //Add this mouse manager to the window.
         window.addMouseListener(this);
         window.addMouseMotionListener(this);
@@ -22,7 +26,12 @@ public class MouseManager extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent event) {
-        System.out.println("pressed");
+        playerController.fire(true);
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent event) {
+        playerController.fire(false);
     }
 
     @Override
@@ -38,9 +47,6 @@ public class MouseManager extends MouseAdapter {
     //Unused methods.
     @Override
     public void mouseClicked(MouseEvent event) {
-    }
-    @Override
-    public void mouseReleased(MouseEvent event) {
     }
     @Override
     public void mouseEntered(MouseEvent event) {
