@@ -2,6 +2,7 @@ package Tanks3D.Object.Entity;
 
 import Tanks3D.GameData;
 import Tanks3D.GameManager;
+import Tanks3D.Item.Item;
 import Tanks3D.Object.Entity.Projectile.Projectile;
 import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Object.Wall.*;
@@ -9,10 +10,12 @@ import Tanks3D.SoundManager;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
+import Tanks3D.Weapon.Weapon;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 public class Player extends Entity {
     //How many units the tank can move per second.
@@ -61,11 +64,15 @@ public class Player extends Entity {
     private final static int maxHealth = 100;
     private int health = maxHealth;
 
+    //The weapons that the player has.
+    private final ArrayList<Weapon> weapons;
+    //The items that the player has.
+    private final ArrayList<Item> items;
+
     //Load the images for the tank.
     static {
         //Load a blank buffered image as a placeholder.
         sprites = new BufferedImage[] { new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB) };
-
         //Load the default icon.
         playerIcon = Image.load("resources/HUD/Player Icon.png");
 
@@ -99,6 +106,10 @@ public class Player extends Entity {
         zPos = height;
         //Set the height of the gun.
         weaponHeight = zPos;
+
+        //Initialize the item and weapon array lists.
+        weapons = new ArrayList<>();
+        items = new ArrayList<>();
     }
 
     public void update(GameData data, double deltaTime) {
@@ -250,5 +261,11 @@ public class Player extends Entity {
     }
     public boolean isAlive() {
         return alive;
+    }
+    public void addWeapon(Weapon newWeapon) {
+        weapons.add(newWeapon);
+    }
+    public void addItem(Item newItem) {
+        items.add(newItem);
     }
 }
