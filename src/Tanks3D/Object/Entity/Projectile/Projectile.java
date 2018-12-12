@@ -22,7 +22,7 @@ public abstract class Projectile extends Entity {
     //How many rounds each pool will hold.
     private static final int poolSize = 10;
     //A pool to store projectiles before they are used.
-    private static ArrayList<Projectile> ArmorPiercingPool;
+    private static ArrayList<Projectile> bolts;
     //The damage the round does when it hits a player directly.
     private final int damage;
 
@@ -39,11 +39,11 @@ public abstract class Projectile extends Entity {
         entityList = EntityList;
 
         //Initialize the three pools of rounds
-        ArmorPiercingPool = new ArrayList<>();
+        bolts = new ArrayList<>();
 
         //Populate each pool with rounds that are not visible.
         for(int i = 0; i < poolSize; i++)
-            ArmorPiercingPool.add(new PingPongBall(new Point2D.Double(0, 0), 0, 0, null));
+            bolts.add(new CrossBowBolt(new Point2D.Double(0, 0), 0, 0, null));
     }
 
     public Projectile(Point2D.Double position, int zPos, double angle, int speed, int damage, BufferedImage[] sprites, Color imageColor, Player owner) {
@@ -109,7 +109,7 @@ public abstract class Projectile extends Entity {
 
     //Create a new round and add it to the entity list
     public static void newArmorPiercing(double x, double y, double zPos, double angle, Player owner) {
-        addFromPool(ArmorPiercingPool, x, y, zPos, angle, owner);
+        addFromPool(bolts, x, y, zPos, angle, owner);
     }
 
     private void removeRound() {
@@ -119,8 +119,8 @@ public abstract class Projectile extends Entity {
         //Determine what type this round is and get the corresponding round pool.
         ArrayList<Projectile> projectilePool;
 
-        if(this instanceof PingPongBall)
-            projectilePool = ArmorPiercingPool;
+        if(this instanceof CrossBowBolt)
+            projectilePool = bolts;
         else
             return;
 

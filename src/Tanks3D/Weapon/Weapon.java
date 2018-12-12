@@ -5,9 +5,9 @@ import Tanks3D.Object.Entity.Player;
 import java.awt.image.BufferedImage;
 
 public abstract class Weapon {
-    protected final Player owner;
+    final Player owner;
 
-    public Weapon(Player owner) {
+    Weapon(Player owner) {
         this.owner = owner;
     }
 
