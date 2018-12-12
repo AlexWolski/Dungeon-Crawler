@@ -5,6 +5,7 @@ import Tanks3D.GameManager;
 import Tanks3D.Object.Entity.Projectile.Projectile;
 import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Object.Wall.*;
+import Tanks3D.SoundManager;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
@@ -20,6 +21,11 @@ public class Player extends Entity {
     public final static double maxRotationSpeed = 180;
     public double rotationSpeed;
 
+    //How far the player moves before making a footstep.
+    private final static double strideLength = 15;
+    //The distance traveled since the last footstep.
+    private double distanceSinceLastStep = 0;
+
     //The player's position and directionAngle when it is spawned.
     private final SpawnPoint spawnPoint;
     //The angle that the player is facing.
@@ -32,6 +38,8 @@ public class Player extends Entity {
     //Images for the tank in game and on the minimap.
     private final static BufferedImage[] sprites;
     private final static BufferedImage playerIcon;
+    //The different sounds for the footstep.
+    private final static String[] footstepSounds;
 
     //Determines if the playerController is dead, alive, or re-spawning.
     private boolean alive;
@@ -60,6 +68,9 @@ public class Player extends Entity {
 
         //Load the default icon.
         playerIcon = Image.load("resources/HUD/Player Icon.png");
+
+        //Populate the array of footstep sounds.
+        footstepSounds = new String[] { "Footstep 1", "Footstep 2", "Footstep 3", "Footstep 4", "Footstep 5" };
     }
 
     public Player(SpawnPoint spawnPoint) {
@@ -100,6 +111,15 @@ public class Player extends Entity {
             viewAngle.setValue(FastMath.formatAngle(viewAngle.getValue()));
             directionAngle = FastMath.formatAngle(viewAngle.getValue() + controlAngle);
             super.update(data, deltaTime);
+
+            //Add the distance moved to the distance since the last step.
+            distanceSinceLastStep += speed * deltaTime / 1000;
+
+            if(distanceSinceLastStep >= strideLength) {
+                //Play a random footstep sound.
+                SoundManager.playSound(footstepSounds[FastMath.random(0, footstepSounds.length - 1)]);
+                distanceSinceLastStep = 0;
+            }
         }
     }
 
