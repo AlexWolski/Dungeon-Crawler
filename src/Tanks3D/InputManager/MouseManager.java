@@ -73,7 +73,7 @@ public class MouseManager extends MouseAdapter {
 
     @Override
     public void mousePressed(MouseEvent event) {
-        //Only fire if the left mouse button was pressed.
+        //Only attack if the left mouse button was pressed.
         if(SwingUtilities.isLeftMouseButton(event))
             playerController.fire(true);
     }

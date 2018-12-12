@@ -33,7 +33,7 @@ public class CrossbowPickup extends Pickup {
             //Remove the key pickup.
             ObjectManager.remove(this);
             //Give the player a crossbow.
-            ((Player)object).addWeapon(new Crossbow());
+            ((Player)object).addWeapon(new Crossbow(((Player)object)));
         }
     }
 }

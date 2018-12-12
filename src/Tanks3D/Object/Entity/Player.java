@@ -47,13 +47,6 @@ public class Player extends Entity {
     //Determines if the playerController is dead, alive, or re-spawning.
     private boolean alive;
 
-    //The number of milliseconds it takes before the tank can fire again.
-    private static final int shotCooldown = 100;
-    //The last time the tank fired.
-    private long shotTime;
-    //Determines if the tank can fire again or not.
-    private boolean reloading;
-
     //The size of the hit circle around the tank.
     private final static int hitCircleRadius = 10;
     //How much to scale the images when drawn to the screen.
@@ -182,25 +175,10 @@ public class Player extends Entity {
         }
     }
 
-    public void fire() {
-        //If the tank is not reloading, fire.
-        if(!reloading) {
-            //Set the last time the tank fired.
-            shotTime = System.currentTimeMillis();
-            reloading = true;
-
-            //Calculate the distance to spawn the round.
-            double distance = 10;
-            //Calculate the x and y position to spawn the round based on the tank's position and directionAngle.
-            double xPos = position.x + distance * FastMath.sin(viewAngle.getValue());
-            double yPos = position.y + distance * FastMath.cos(viewAngle.getValue());
-            //Create the round and add it to the entity list.
-            Projectile.newArmorPiercing(xPos, yPos, weaponHeight, viewAngle.getValue(), this);
-        }
-        //If the tank is reloading, check if the reload time is up. If it is, set reloading to false.
-        else if(System.currentTimeMillis() >= shotTime + shotCooldown) {
-            reloading = false;
-        }
+    public void attack() {
+        //If there is a weapon, attack with it.
+        if(!weapons.isEmpty())
+            weapons.get(0).attack();
     }
 
     //Deal damage to the tank.
@@ -258,6 +236,9 @@ public class Player extends Entity {
     }
     public MutableDouble getAngle() {
         return viewAngle;
+    }
+    public double getWeaponHeight() {
+        return weaponHeight;
     }
     public boolean isAlive() {
         return alive;

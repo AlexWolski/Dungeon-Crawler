@@ -54,7 +54,8 @@ public final class Level {
         wallObjects.add(new CrackedBrick(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(0, 0), null));
         wallObjects.add(new CrackedBrick(new Point2D.Double(-100, 0), new Point2D.Double(0, 0), null));
 
-        //Health crates
+        //Pickups
+        entityList.add(new CrossbowPickup(new Point2D.Double(0, -40)));
         entityList.add(new Key(new Point2D.Double(-50, 43.3012701892)));
         entityList.add(new CrossbowPickup(new Point2D.Double(50, 43.3012701892)));
         entityList.add(new Health(new Point2D.Double(-50, -43.3012701892)));

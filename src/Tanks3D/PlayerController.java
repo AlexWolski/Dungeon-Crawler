@@ -128,13 +128,13 @@ public class PlayerController {
         }
     }
 
-    //If the fire key was pressed, tell the player to fire.
+    //If the attack key was pressed, tell the player to attack.
     public void fire(boolean keyPressed) {
-        //If the playerController is alive, fire.
+        //If the playerController is alive, attack.
         if(myPlayer.isAlive()) {
             if (keyPressed && !firePressed) {
-                //If the screen isn't currently being drawn, fire the player now.
-                myPlayer.fire();
+                //If the screen isn't currently being drawn, attack the player now.
+                myPlayer.attack();
                 firePressed = true;
             }
             else if(!keyPressed && firePressed)
