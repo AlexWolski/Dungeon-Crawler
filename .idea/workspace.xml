@@ -7,30 +7,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ee0992c8-61b3-4767-b2a8-a386d8d1bb00" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/Tanks3D/Object/Wall/BreakableWalls/BlockedHole.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/DisplayComponents/Camera/Camera.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/DisplayComponents/Camera/Camera.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Level.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Level.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Object/Entity/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Object/Entity/Player.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Object/Wall/BreakableWalls/BreakableBrick.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Object/Wall/BreakableWalls/BreakableWall.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Object/Wall/BreakableWalls/BreakableWall.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/SoundManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/SoundManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Utilities/FastMath.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Utilities/FastMath.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Textures/Breakable Brick/Brick Damage 0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Textures/Breakable Brick/Brick Damage 1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Textures/Breakable Brick/Brick Damage 2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Textures/Breakable Brick/Brick Damage 3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/Textures/Breakable Brick/Brick Damage 0.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/Textures/Breakable Brick/Brick Damage 1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/Textures/Breakable Brick/Brick Damage 2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/resources/Textures/Breakable Brick/Brick Damage 3.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/Level.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/Level.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/Object/Entity/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/Object/Entity/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/Object/Wall/BreakableWalls/BreakableBrick.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/Object/Wall/BreakableWalls/CrackedBrick.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/Object/Wall/BreakableWalls/BreakableWall.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/Object/Wall/BreakableWalls/BreakableWall.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/SoundManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/SoundManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/Utilities/FastMath.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/Utilities/FastMath.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -62,14 +40,14 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="dummy" value="7" />
-          <entry key="java" value="6000" />
-          <entry key="txt" value="220" />
+          <entry key="java" value="6030" />
+          <entry key="txt" value="319" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="6000" />
-          <entry key="PLAIN_TEXT" value="227" />
+          <entry key="JAVA" value="6030" />
+          <entry key="PLAIN_TEXT" value="326" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -92,8 +70,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="175">
-              <caret line="59" selection-start-line="59" selection-end-line="59" />
+            <state relative-caret-position="124">
+              <caret line="56" column="12" selection-start-line="56" selection-start-column="12" selection-end-line="56" selection-end-column="17" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -116,8 +94,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="375">
-              <caret line="230" column="32" selection-start-line="230" selection-start-column="32" selection-end-line="230" selection-end-column="32" />
+            <state relative-caret-position="277">
+              <caret line="230" column="70" selection-start-line="230" selection-start-column="70" selection-end-line="230" selection-end-column="70" />
             </state>
           </provider>
         </entry>
@@ -330,7 +308,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/Alex Wolski/Desktop/School/Fall/CSC 413/Assignment 3 (Tank Game)/csc413-tankgame-AlexWolski/src/Tanks3D/Player.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544597176419" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544597608613" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -459,13 +437,6 @@
       <workItem from="1544359640194" duration="3844000" />
       <workItem from="1544395762533" duration="3025000" />
       <workItem from="1544409359799" duration="30519000" />
-    </task>
-    <task id="LOCAL-00011" summary="Fixed bugs in camera and minimap">
-      <created>1541328568959</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1541328568959</updated>
     </task>
     <task id="LOCAL-00012" summary="Better tank rotation in minimap">
       <created>1541366986219</created>
@@ -803,7 +774,14 @@
       <option name="project" value="LOCAL" />
       <updated>1544574496349</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="Added sound effects for walls, added blocked hole, and fixed bug with unbreakable walls">
+      <created>1544597254744</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1544597254744</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -887,7 +865,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Simplified collision with the corners of walls" />
     <MESSAGE value="Removed unnecessary square roots." />
     <MESSAGE value="Updated Pickup Images" />
     <MESSAGE value="Pickups displayed on the minimap" />
@@ -912,7 +889,8 @@
     <MESSAGE value="In the process of moving player logic from Player to PlayerController" />
     <MESSAGE value="Moved logic out of PlayerController and moved hud out of player" />
     <MESSAGE value="Sound Manager can play sounds" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sound Manager can play sounds" />
+    <MESSAGE value="Added sound effects for walls, added blocked hole, and fixed bug with unbreakable walls" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added sound effects for walls, added blocked hole, and fixed bug with unbreakable walls" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -953,61 +931,8 @@
           <properties />
           <option name="timeStamp" value="21" />
         </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java</url>
-          <line>219</line>
-          <properties />
-          <option name="timeStamp" value="53" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java</url>
-          <line>222</line>
-          <properties />
-          <option name="timeStamp" value="54" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java</url>
-          <line>223</line>
-          <properties />
-          <option name="timeStamp" value="55" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java</url>
-          <line>224</line>
-          <properties />
-          <option name="timeStamp" value="56" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java</url>
-          <line>227</line>
-          <properties />
-          <option name="timeStamp" value="57" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java</url>
-          <line>228</line>
-          <properties />
-          <option name="timeStamp" value="58" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java</url>
-          <line>233</line>
-          <properties />
-          <option name="timeStamp" value="59" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java</url>
-          <line>236</line>
-          <properties />
-          <option name="timeStamp" value="60" />
-        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
-    <watches-manager>
-      <configuration name="Application">
-        <watch expression="visibleWalls" />
-      </configuration>
-    </watches-manager>
   </component>
   <component name="antWorkspaceConfiguration">
     <option name="IS_AUTOSCROLL_TO_SOURCE" value="false" />
@@ -1311,16 +1236,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="175">
-          <caret line="59" selection-start-line="59" selection-end-line="59" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Tanks3D/Utilities/Image.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
@@ -1419,10 +1334,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="56" column="12" selection-start-line="56" selection-start-column="12" selection-end-line="56" selection-end-column="17" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Tanks3D/DisplayComponents/Camera/Camera.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="375">
-          <caret line="230" column="32" selection-start-line="230" selection-start-column="32" selection-end-line="230" selection-end-column="32" />
+        <state relative-caret-position="277">
+          <caret line="230" column="70" selection-start-line="230" selection-start-column="70" selection-end-line="230" selection-end-column="70" />
         </state>
       </provider>
     </entry>

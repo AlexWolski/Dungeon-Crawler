@@ -226,12 +226,9 @@ public class Camera {
                             }
 
                             if(j == -1)
-                                j = 0;
-
-                            j++;
-
-                            //Insert the new slice.
-                            visibleWalls.add(j, currentSlice);
+                                visibleWalls.add(currentSlice);
+                            else
+                                visibleWalls.add(j + 1, currentSlice);
 
                             //Set its distance as the farthest distance.
                             furthestWall = dist;
