@@ -3,17 +3,17 @@ package Tanks3D.Utilities;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 
-//A class for fast trigonometric functions
+//A class for fast trigonometric functions.
 public final class FastMath {
     //A table to store the pre-calculated values of sin. This is also used for cos.
-    private static final double sinTable[];
+    private static double sinTable[];
 
-    //This class is non-instantiable
+    //This class is non-instantiable.
     private FastMath() {
     }
 
     //When the object is first called, fill the table with the sin of angles between 0 and 360.
-    static {
+    public static void init() {
         sinTable = new double[361];
 
         for(int i = 0; i < 361; i++)

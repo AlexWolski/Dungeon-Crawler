@@ -9,6 +9,7 @@ import Tanks3D.InputManager.MouseManager;
 import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.Entity.Projectile.Projectile;
+import Tanks3D.Utilities.FastMath;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -63,6 +64,11 @@ public abstract class GameManager {
 
     //Initialize variables. The constructor is private to prevent any classes extending it and creating a new instance.
     static {
+        //Initialize the math class.
+        FastMath.init();
+        //Initialize the sound class.
+        SoundManager.init();
+
         //Instantiate local objects.
         gameData = new GameData();
         //Create the entity list.
@@ -87,13 +93,13 @@ public abstract class GameManager {
         //Link the mouse controls to the window.
         MouseManager.init(gameWindow, playerController);
 
-        //The game is not paused by default.
-        paused = false;
-
         //Initialize the round object.
         Projectile.init(gameData.entityList);
         //Initialize the garbage collector.
         ObjectManager.init(gameData.entityList, gameData.gameLevel.wallObjects);
+
+        //The game is not paused by default.
+        paused = false;
 
         //Set the initial time.
         timeOfLastFrame = System.currentTimeMillis();

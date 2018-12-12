@@ -35,7 +35,7 @@ public class HUD {
 
     static {
         defaultHealthIcon = Image.load("resources/HUD/Health Icon.png");
-        pausedColor = new Color(0, 0, 0, 100);
+        pausedColor = new Color(0, 0, 0, 150);
 
         //Load the messages for when the game is won or lost.
         winImage = Image.load("resources/HUD/Win.png");
