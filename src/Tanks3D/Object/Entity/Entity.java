@@ -12,14 +12,8 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public abstract class Entity extends GameObject {
-    //A hash map that maps sprite names to the corresponding image file.
-    private static final HashMap<String, BufferedImage> spriteImageList;
-    //A hash map that maps icon names ot the corresponding image file.
-    private static final HashMap<String, BufferedImage> iconImageList;
-
     //The radius of the hit circle of the entity.
     private final int hitCircleRadius;
     //An array containing the sprites for the entity at different angles.
@@ -38,21 +32,6 @@ public abstract class Entity extends GameObject {
     public Point2D.Double position;
     public double directionAngle;
     public double speed;
-
-    //Load all of the sprites.
-    static {
-        //Instantiate the sprite and image hash maps.
-        spriteImageList = new HashMap<>();
-        iconImageList = new HashMap<>();
-
-        //Load the image files for the sprites and icons.
-        spriteImageList.put("Health", Image.load("resources/Pickups/Health Crate.png"));
-        iconImageList.put("Health", Image.load("resources/Minimap Icons/Health.png"));
-        spriteImageList.put("Key", Image.load("resources/Pickups/Key.png"));
-        iconImageList.put("Key", Image.load("resources/Minimap Icons/Key.png"));
-        spriteImageList.put("Crossbow", Image.load("resources/Pickups/Crossbow.png"));
-        iconImageList.put("Crossbow", Image.load("resources/Minimap Icons/Crossbow.png"));
-    }
 
     public Entity(int hitCircleRadius, Point2D.Double position, double directionAngle, double speed) {
         this.hitCircleRadius = hitCircleRadius;
@@ -134,15 +113,6 @@ public abstract class Entity extends GameObject {
                     this.collide(entity);
             }
         }
-    }
-
-    //Get the image file for the given sprite.
-    public static BufferedImage getSpriteImage(String spriteName) {
-        return spriteImageList.get(spriteName);
-    }
-    //Get the image file for the given icon.
-    public static BufferedImage getIconImage(String iconName) {
-        return iconImageList.get(iconName);
     }
 
     public int getHitCircleRadius() {

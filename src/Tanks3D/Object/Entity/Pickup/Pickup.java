@@ -15,6 +15,6 @@ public abstract class Pickup extends Entity {
         super.setIcon(icon);
         entityColor = imageColor;
 
-        super.zPos = (int)getHeight()/2;
+        super.zPos = getHeight()/2;
     }
 }

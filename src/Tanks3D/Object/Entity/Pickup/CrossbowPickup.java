@@ -1,9 +1,9 @@
 package Tanks3D.Object.Entity.Pickup;
 
-import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.ObjectManager;
 import Tanks3D.SoundManager;
+import Tanks3D.Utilities.Image;
 import Tanks3D.Weapon.Crossbow;
 
 import java.awt.geom.Point2D;
@@ -18,8 +18,8 @@ public class CrossbowPickup extends Pickup {
     //Load the images for the pickup.
     static {
         sprites = new BufferedImage[1];
-        sprites[0] = Entity.getSpriteImage("Crossbow");
-        icon = Entity.getIconImage("Crossbow");
+        sprites[0] = Image.load("resources/Pickups/Crossbow.png");
+        icon = Image.load("resources/Minimap Icons/Crossbow.png");
     }
 
     public CrossbowPickup(Point2D.Double position) {

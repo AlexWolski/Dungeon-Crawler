@@ -1,9 +1,9 @@
 package Tanks3D.Object.Entity.Pickup;
 
-import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.ObjectManager;
 import Tanks3D.SoundManager;
+import Tanks3D.Utilities.Image;
 
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
@@ -17,8 +17,8 @@ public class Key extends Pickup {
     //Load the images for the pickup.
     static {
         sprites = new BufferedImage[1];
-        sprites[0] = Entity.getSpriteImage("Key");
-        icon = Entity.getIconImage("Key");
+        sprites[0] = Image.load("resources/Pickups/Key.png");
+        icon = Image.load("resources/Minimap Icons/Key.png");
     }
 
     public Key(Point2D.Double position) {
