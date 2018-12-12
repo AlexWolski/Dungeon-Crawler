@@ -2,6 +2,7 @@ package Tanks3D.Object.Entity.Pickup;
 
 import Tanks3D.ObjectManager;
 import Tanks3D.Object.Entity.Player;
+import Tanks3D.SoundManager;
 import Tanks3D.Utilities.Image;
 
 import java.awt.geom.Point2D;
@@ -28,10 +29,11 @@ public class Health extends Pickup {
 
     public void collide(Object object) {
         if(object instanceof Player) {
+            //Play the health sound effect.
+            SoundManager.playSound("Health");
             //Heal the player.
             ((Player) object).heal(health);
-
-            //Remove the round.
+            //Remove the health pickup.
             ObjectManager.remove(this);
         }
     }

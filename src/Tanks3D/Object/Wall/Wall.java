@@ -41,6 +41,15 @@ public class Wall extends GameObject {
         textureImageList.put("Fence", Image.load("resources/Textures/Fence.png"));
         textureDataList.put("Fence", Image.getABGRColorData(textureImageList.get("Fence")));
 
+        textureImageList.put("Brick Damage 0", Image.load("resources/Textures/Cracked Brick/Brick Damage 0.png"));
+        textureDataList.put("Brick Damage 0", Image.getABGRColorData(textureImageList.get("Brick Damage 0")));
+        textureImageList.put("Brick Damage 1", Image.load("resources/Textures/Cracked Brick/Brick Damage 1.png"));
+        textureDataList.put("Brick Damage 1", Image.getABGRColorData(textureImageList.get("Brick Damage 1")));
+        textureImageList.put("Brick Damage 2", Image.load("resources/Textures/Cracked Brick/Brick Damage 2.png"));
+        textureDataList.put("Brick Damage 2", Image.getABGRColorData(textureImageList.get("Brick Damage 2")));
+        textureImageList.put("Brick Damage 3", Image.load("resources/Textures/Cracked Brick/Brick Damage 3.png"));
+        textureDataList.put("Brick Damage 3", Image.getABGRColorData(textureImageList.get("Brick Damage 3")));
+
         textureImageList.put("Hole Damage 0", Image.load("resources/Textures/Blocked Hole/Hole Damage 0.png"));
         textureDataList.put("Hole Damage 0", Image.getABGRColorData(textureImageList.get("Hole Damage 0")));
         textureImageList.put("Hole Damage 1", Image.load("resources/Textures/Blocked Hole/Hole Damage 1.png"));
@@ -50,14 +59,10 @@ public class Wall extends GameObject {
         textureImageList.put("Hole Damage 3", Image.load("resources/Textures/Blocked Hole/Hole Damage 3.png"));
         textureDataList.put("Hole Damage 3", Image.getABGRColorData(textureImageList.get("Hole Damage 3")));
 
-        textureImageList.put("Brick Damage 0", Image.load("resources/Textures/Cracked Brick/Brick Damage 0.png"));
-        textureDataList.put("Brick Damage 0", Image.getABGRColorData(textureImageList.get("Brick Damage 0")));
-        textureImageList.put("Brick Damage 1", Image.load("resources/Textures/Cracked Brick/Brick Damage 1.png"));
-        textureDataList.put("Brick Damage 1", Image.getABGRColorData(textureImageList.get("Brick Damage 1")));
-        textureImageList.put("Brick Damage 2", Image.load("resources/Textures/Cracked Brick/Brick Damage 2.png"));
-        textureDataList.put("Brick Damage 2", Image.getABGRColorData(textureImageList.get("Brick Damage 2")));
-        textureImageList.put("Brick Damage 3", Image.load("resources/Textures/Cracked Brick/Brick Damage 3.png"));
-        textureDataList.put("Brick Damage 3", Image.getABGRColorData(textureImageList.get("Brick Damage 3")));
+        textureImageList.put("Brick Stairs", Image.load("resources/Textures/Stairs/Brick Stairs.png"));
+        textureDataList.put("Brick Stairs", Image.getABGRColorData(textureImageList.get("Brick Stairs")));
+        textureImageList.put("Dirt Stairs", Image.load("resources/Textures/Stairs/Dirt Stairs.png"));
+        textureDataList.put("Dirt Stairs", Image.getABGRColorData(textureImageList.get("Dirt Stairs")));
     }
 
     //Get the image file for the given texture.

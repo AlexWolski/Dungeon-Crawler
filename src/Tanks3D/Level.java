@@ -39,7 +39,7 @@ public final class Level {
 
         //Map border
         wallObjects.add(new BlockedHole(new Point2D.Double(-100, 0), new Point2D.Double(-50, 86.6025403784), null));
-        wallObjects.add(new Wall(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(50, 86.6025403784), true, true, false, "Fence", null));
+        wallObjects.add(new Stairs(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(50, 86.6025403784), "Dirt Stairs", null));
         wallObjects.add(new Wall(new Point2D.Double(50, 86.6025403784), new Point2D.Double(100, 0), false, true, true, "Brick", null));
         wallObjects.add(new Wall(new Point2D.Double(100, 0), new Point2D.Double(50, -86.6025403784), false, true, true, "Dirt 1", null));
         wallObjects.add(new Wall(new Point2D.Double(50, -86.6025403784), new Point2D.Double(-50, -86.6025403784), false, true, true, "Dirt 2", null));

@@ -1,6 +1,8 @@
 package Tanks3D.Object.Entity.Pickup;
 
 import Tanks3D.Object.Entity.Player;
+import Tanks3D.ObjectManager;
+import Tanks3D.SoundManager;
 import Tanks3D.Utilities.Image;
 
 import java.awt.geom.Point2D;
@@ -25,7 +27,10 @@ public class Key extends Pickup {
 
     public void collide(Object object) {
         if(object instanceof Player) {
-
+            //Play the key sound effect.
+            SoundManager.playSound("Key");
+            //Remove the key.
+            ObjectManager.remove(this);
         }
     }
 }

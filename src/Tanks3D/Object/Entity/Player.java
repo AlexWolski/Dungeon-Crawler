@@ -135,8 +135,12 @@ public class Player extends Entity {
             this.position.x = point.x - hitCircleRadius * FastMath.sin(angle);
             this.position.y = point.y - hitCircleRadius * FastMath.cos(angle);
         }
-        //If the tank hits a wall, fix its position.
+        //If the player hits a wall, fix its position.
         else if(object instanceof Wall) {
+            //If the player goes up the stairs, call its action method.
+            if(object instanceof Stairs)
+                ((Stairs)object).action();
+
             //Get the directionAngle of the line.
             double lineAngle = ((Wall) object).getAngle();
             //Copy the first point of the wall.
