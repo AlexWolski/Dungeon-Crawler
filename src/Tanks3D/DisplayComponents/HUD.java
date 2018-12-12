@@ -45,7 +45,7 @@ public class HUD {
 
     public HUD(BufferedImage canvas) {
         this.canvas = canvas;
-        this.healthBarDim = new Dimension(canvas.getWidth()/2, canvas.getWidth()/15);
+        this.healthBarDim = new Dimension(canvas.getWidth()/3, canvas.getWidth()/25);
 
         healthIcon = Image.copy(defaultHealthIcon);
 

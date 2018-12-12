@@ -1,6 +1,7 @@
 package Tanks3D;
 
 import Tanks3D.Object.Entity.Entity;
+import Tanks3D.Object.Entity.Pickup.CrossbowPickup;
 import Tanks3D.Object.Entity.Pickup.Health;
 import Tanks3D.Object.Entity.Pickup.Key;
 import Tanks3D.Object.SpawnPoint;
@@ -55,7 +56,7 @@ public final class Level {
 
         //Health crates
         entityList.add(new Key(new Point2D.Double(-50, 43.3012701892)));
-        entityList.add(new Health(new Point2D.Double(50, 43.3012701892)));
+        entityList.add(new CrossbowPickup(new Point2D.Double(50, 43.3012701892)));
         entityList.add(new Health(new Point2D.Double(-50, -43.3012701892)));
         entityList.add(new Health(new Point2D.Double(50, -43.3012701892)));
 

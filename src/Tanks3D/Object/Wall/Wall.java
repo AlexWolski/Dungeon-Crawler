@@ -26,6 +26,7 @@ public class Wall extends GameObject {
     protected boolean projectileCollidable;
     private final static double height = 20;
 
+    //Load all of the textures.
     static {
         //Instantiate the file and data hash maps.
         textureImageList = new HashMap<>();

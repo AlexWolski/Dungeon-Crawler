@@ -35,12 +35,15 @@ public final class SoundManager {
 
         audioClips.put("Health", "resources/Sounds/Pickup/Health.wav");
         audioClips.put("Key", "resources/Sounds/Pickup/Key.wav");
+        audioClips.put("Crossbow", "resources/Sounds/Pickup/Crossbow.wav");
     }
 
     public static void playSound(String soundFile) {
         try {
-            AudioStream audioStream = new AudioStream(new FileInputStream(audioClips.get(soundFile)));
-            AudioPlayer.player.start(audioStream);
+            if(audioClips.containsKey(soundFile)) {
+                AudioStream audioStream = new AudioStream(new FileInputStream(audioClips.get(soundFile)));
+                AudioPlayer.player.start(audioStream);
+            }
         } catch (IOException e) {
             System.out.println(e.getMessage());
         }
