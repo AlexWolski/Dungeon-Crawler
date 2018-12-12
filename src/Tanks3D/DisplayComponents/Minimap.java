@@ -103,8 +103,14 @@ public class Minimap {
 
         //Draw the walls if they are visible.
         for(Wall wall : gameData.gameLevel.wallObjects)
-            if(wall.getVisible())
+            if(wall.getVisible()) {
+                if(wall.isCharacterCollidable())
+                    graphic.setColor(Color.white);
+                else
+                    graphic.setColor(Color.GRAY);
+
                 drawWall(graphic, wall);
+            }
 
         //Draw the player and entities.
         drawEntities(graphic);
