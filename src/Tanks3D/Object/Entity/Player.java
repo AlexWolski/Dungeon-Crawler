@@ -5,7 +5,6 @@ import Tanks3D.GameManager;
 import Tanks3D.Object.Entity.Projectile.Projectile;
 import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Object.Wall.*;
-import Tanks3D.SoundManager;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
 import Tanks3D.Utilities.Wrappers.MutableDouble;

@@ -2,6 +2,7 @@ package Tanks3D.DisplayComponents.Camera;
 
 import Tanks3D.GameData;
 import Tanks3D.Object.Entity.Entity;
+import Tanks3D.Object.Wall.UnbreakableWall;
 import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
@@ -127,7 +128,7 @@ public class Camera {
                 //If the pixel hasn't been written to yet, draw the pixel.
                 if (pixelTable[canvasX][canvasY].equals(true)) {
                     //Get the color of the pixel at the current point in the image if the color is valid.
-                    int pixelColor = Image.getABGRPixel(slice.imagePixelData, slice.image.getWidth(), imageX, (int)Math.round(imageStart + imageY / (double)sliceHeight * slice.image.getHeight()));
+                    int pixelColor = Image.getABGRPixel(slice.imagePixelData, slice.image.getWidth(), imageX, (int)Math.floor(imageStart + imageY / (double)sliceHeight * slice.image.getHeight()));
 
                     //If the pixel is not transparent, draw the pixel.
                     if ((pixelColor >> 24) != 0x00) {
@@ -165,7 +166,7 @@ public class Camera {
             //Clear the ArrayLIst.
             visibleWalls.clear();
 
-            //The distance of the last wall visible wall, which will be a solid wall.
+            //The furthest wall that the camera will render.
             double furthestWall = 0;
 
             //Iterate through each wall and determine which one to draw.
@@ -194,8 +195,13 @@ public class Camera {
                         ObjectSlice currentSlice = new ObjectSlice(wall, dist, wall.getHeight()/2, wall.getTexture(), wall.getTexturePixelData(), wall.getTextureColor(), (Math.abs(line.x1) % inGameImgWidth)/inGameImgWidth);
 
                         //If there are no walls in the ArrayList yet, add it.
-                        if(visibleWalls.isEmpty())
+                        if(visibleWalls.isEmpty()) {
                             visibleWalls.add(currentSlice);
+
+                            //If the wall is not see through, set its distance as the farthest distance.
+                            if(!wall.isSeeThrough())
+                                furthestWall = dist;
+                        }
                         //If the wall is see-through, insert in the ArrayList in order.
                         else if(wall.isSeeThrough()) {
                             //The location in the ArrayList where the new slice will be inserted.
@@ -219,12 +225,16 @@ public class Camera {
                                 j--;
                             }
 
-                            if(j == -1) {
-                                j++;
-                            }
+                            if(j == -1)
+                                j = 0;
+
+                            j++;
 
                             //Insert the new slice.
                             visibleWalls.add(j, currentSlice);
+
+                            //Set its distance as the farthest distance.
+                            furthestWall = dist;
                         }
                     }
                 }

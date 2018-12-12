@@ -5,8 +5,8 @@ import Tanks3D.Object.Entity.Pickup.Health;
 import Tanks3D.Object.Entity.Pickup.Key;
 import Tanks3D.Object.SpawnPoint;
 import Tanks3D.Object.Wall.*;
-import Tanks3D.Object.Wall.BreakableWalls.BreakableBrick;
-import Tanks3D.Object.Wall.BreakableWalls.BreakableWall;
+import Tanks3D.Object.Wall.BreakableWalls.BlockedHole;
+import Tanks3D.Object.Wall.BreakableWalls.CrackedBrick;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -38,7 +38,7 @@ public final class Level {
         ceilColor = Color.darkGray.darker().getRGB();
 
         //Map border
-        wallObjects.add(new UnbreakableWall(new Point2D.Double(-100, 0), new Point2D.Double(-50, 86.6025403784), null));
+        wallObjects.add(new BlockedHole(new Point2D.Double(-100, 0), new Point2D.Double(-50, 86.6025403784), null));
         wallObjects.add(new UnbreakableWall(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(50, 86.6025403784), null));
         wallObjects.add(new UnbreakableWall(new Point2D.Double(50, 86.6025403784), new Point2D.Double(100, 0), null));
         wallObjects.add(new UnbreakableWall(new Point2D.Double(100, 0), new Point2D.Double(50, -86.6025403784), null));
@@ -46,12 +46,12 @@ public final class Level {
         wallObjects.add(new UnbreakableWall(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(-100, 0), null));
 
         //Breakable walls
-        wallObjects.add(new BreakableBrick(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableBrick(new Point2D.Double(50, 86.6025403784), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableBrick(new Point2D.Double(100, 0), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableBrick(new Point2D.Double(50, -86.6025403784), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableBrick(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(0, 0), null));
-        wallObjects.add(new BreakableBrick(new Point2D.Double(-100, 0), new Point2D.Double(0, 0), null));
+        wallObjects.add(new BlockedHole(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(0, 0), null));
+        wallObjects.add(new CrackedBrick(new Point2D.Double(50, 86.6025403784), new Point2D.Double(0, 0), null));
+        wallObjects.add(new CrackedBrick(new Point2D.Double(100, 0), new Point2D.Double(0, 0), null));
+        wallObjects.add(new CrackedBrick(new Point2D.Double(50, -86.6025403784), new Point2D.Double(0, 0), null));
+        wallObjects.add(new CrackedBrick(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(0, 0), null));
+        wallObjects.add(new CrackedBrick(new Point2D.Double(-100, 0), new Point2D.Double(0, 0), null));
 
         //Health crates
         entityList.add(new Key(new Point2D.Double(-50, 43.3012701892)));

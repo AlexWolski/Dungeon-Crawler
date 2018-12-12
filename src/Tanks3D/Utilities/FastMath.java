@@ -2,9 +2,12 @@ package Tanks3D.Utilities;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.util.Random;
 
 //A class for fast trigonometric functions.
 public final class FastMath {
+    //An object to generate random integers.
+    private static Random random;
     //A table to store the pre-calculated values of sin. This is also used for cos.
     private static double sinTable[];
 
@@ -14,10 +17,17 @@ public final class FastMath {
 
     //When the object is first called, fill the table with the sin of angles between 0 and 360.
     public static void init() {
+        random = new Random();
+
         sinTable = new double[361];
 
         for(int i = 0; i < 361; i++)
             sinTable[i] = Math.sin(Math.toRadians(i));
+    }
+
+    //Generate a random integer in the given range.
+    public static int random(int min, int max) {
+        return random.nextInt((max - min) + 1) + min;
     }
 
     //Restrict the directionAngle between 0 and 360 degrees
