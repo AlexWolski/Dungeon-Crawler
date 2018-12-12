@@ -60,6 +60,14 @@ public abstract class Entity extends GameObject {
         }
     }
 
+    public void isCollide(GameObject object) {
+        if(object instanceof Wall) {
+
+        } else if (object instanceof Entity) {
+
+        }
+    }
+
     //Check if this entity collides with any walls. If it does, pass the wall to the 'collide' method.
     private void checkCollisionWall(ArrayList<Wall> wallList) {
         //The line of the wall rotated so that the ray is along the y axis.
