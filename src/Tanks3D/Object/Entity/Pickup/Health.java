@@ -10,6 +10,8 @@ import java.awt.image.BufferedImage;
 public class Health extends Pickup {
     private final static BufferedImage[] sprites;
     private final static BufferedImage icon;
+    //How much to scale the images when drawn to the screen.
+    private final static double scale = 0.02;
     //The amount of health this pickup restores.
     private static final int health = 50;
 
@@ -21,7 +23,7 @@ public class Health extends Pickup {
     }
 
     public Health(Point2D.Double position) {
-        super(position, sprites, icon, null);
+        super(position, sprites, icon, null, scale);
     }
 
     public void collide(Object object) {

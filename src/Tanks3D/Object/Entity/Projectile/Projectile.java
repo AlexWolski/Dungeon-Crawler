@@ -1,11 +1,11 @@
 package Tanks3D.Object.Entity.Projectile;
 
 import Tanks3D.GameData;
+import Tanks3D.Object.Wall.Wall;
 import Tanks3D.ObjectManager;
 import Tanks3D.Object.Entity.Entity;
 import Tanks3D.Object.Entity.Player;
 import Tanks3D.Object.Wall.BreakableWalls.BreakableWall;
-import Tanks3D.Object.Wall.UnbreakableWall;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -72,13 +72,13 @@ public abstract class Projectile extends Entity {
     }
 
     public void collide(Object object) {
-        //If the round hits a breakable wall, break it.
-        if(object instanceof BreakableWall) {
-            ((BreakableWall) object).breakWall();
-            removeRound();
-        }
-        //If the round hits an unbreakable wall, destroy the round.
-        else if(object instanceof UnbreakableWall) {
+        //If the round hit a wall, cast the wall and test if it is collidable.
+        if(object instanceof Wall) {
+            //If the wall is a breakable wall, break the wall.
+            if (object instanceof BreakableWall)
+                ((BreakableWall) object).breakWall();
+
+            //Remove the round.
             removeRound();
         }
         //If the round hits a player other than the player firing the round, damage it and remove the round.

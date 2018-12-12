@@ -14,8 +14,6 @@ public class MouseManager extends MouseAdapter {
     private static JFrame window;
     //The controller class for the player.
     private static PlayerController playerController;
-    //The position of the frame on the screen.
-    private static Point location;
     //The dimensions of the frame.
     private static Dimension dimension;
     //A robot object used to move the mouse.
@@ -32,7 +30,6 @@ public class MouseManager extends MouseAdapter {
     public static void init(JFrame frame, PlayerController controller) {
         window = frame;
         playerController = controller;
-        location = window.getLocation();
         dimension = window.getSize();
 
         //The game is not paused by default.
@@ -50,7 +47,7 @@ public class MouseManager extends MouseAdapter {
         hiddenCursor = Toolkit.getDefaultToolkit().createCustomCursor(dummy, new Point(0, 0),"hidden cursor");
         window.setCursor(hiddenCursor);
         //Move the cursor to the center of the screen.
-        robot.mouseMove(location.x + dimension.width / 2, location.y + dimension.height / 2);
+        robot.mouseMove(window.getLocation().x + dimension.width / 2, window.getLocation().y + dimension.height / 2);
 
         //Add the mouse manager to the JFrame.
         new MouseManager();
@@ -68,6 +65,7 @@ public class MouseManager extends MouseAdapter {
     }
 
     public static void unPause() {
+        Point location = window.getLocation();
         window.setCursor(hiddenCursor);
         robot.mouseMove(location.x + dimension.width / 2, location.y + dimension.height / 2);
         paused = false;
@@ -88,6 +86,7 @@ public class MouseManager extends MouseAdapter {
     @Override
     public void mouseMoved(MouseEvent event) {
         if(!paused) {
+            Point location = window.getLocation();
             playerController.rotatePlayer((event.getX() - dimension.width / 2.0) * sensitivity);
             robot.mouseMove(location.x + dimension.width / 2, location.y + dimension.height / 2);
         }
@@ -96,6 +95,7 @@ public class MouseManager extends MouseAdapter {
     @Override
     public void mouseDragged(MouseEvent event) {
         if(!paused) {
+            Point location = window.getLocation();
             playerController.rotatePlayer((event.getX() - dimension.width / 2.0) * sensitivity);
             robot.mouseMove(location.x + dimension.width / 2, location.y + dimension.height / 2);
         }

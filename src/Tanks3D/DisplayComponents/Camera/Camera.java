@@ -2,7 +2,6 @@ package Tanks3D.DisplayComponents.Camera;
 
 import Tanks3D.GameData;
 import Tanks3D.Object.Entity.Entity;
-import Tanks3D.Object.Wall.UnbreakableWall;
 import Tanks3D.Object.Wall.Wall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
@@ -208,7 +207,7 @@ public class Camera {
                             int j = 0;
 
                             //Iterate through the ArrayList to where the new slice should be.
-                            while(currentSlice.distToCamera >= visibleWalls.get(j).distToCamera)
+                            while(j < visibleWalls.size() && currentSlice.distToCamera >= visibleWalls.get(j).distToCamera)
                                 j++;
 
                             //Insert the new slice.
@@ -225,8 +224,10 @@ public class Camera {
                                 j--;
                             }
 
+                            //If there are no other objects in the array, just this wall.
                             if(j == -1)
                                 visibleWalls.add(currentSlice);
+                            //Otherwise, insert the wall in the proper place.
                             else
                                 visibleWalls.add(j + 1, currentSlice);
 

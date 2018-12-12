@@ -7,14 +7,11 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 
 public abstract class Pickup extends Entity {
-    //How much to scale the images when drawn to the screen.
-    private final static double scale = 0.02;
-
-    public Pickup(Point2D.Double position, BufferedImage[] sprites, BufferedImage icon, Color imageColor) {
+    public Pickup(Point2D.Double position, BufferedImage[] sprites, BufferedImage icon, Color imageColor, double spriteScale) {
         //Construct the entity with no directionAngle or speed. Use the size of the image for the hitcircle size.
-        super((int)(sprites[0].getWidth() * scale / 2), position, 0, 0);
+        super((int)(sprites[0].getWidth() * spriteScale / 2), position, 0, 0);
         //Set the images of the sprites.
-        super.setSprites(sprites, (int)(sprites[0].getWidth() * scale), (int)(sprites[0].getHeight() * scale));
+        super.setSprites(sprites, (int)(sprites[0].getWidth() * spriteScale), (int)(sprites[0].getHeight() * spriteScale));
         super.setIcon(icon);
         entityColor = imageColor;
 
