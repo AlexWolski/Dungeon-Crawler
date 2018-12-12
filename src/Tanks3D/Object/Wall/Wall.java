@@ -52,8 +52,8 @@ public class Wall extends GameObject {
 
         textureImageList.put("Brick Damage 0", Image.load("resources/Textures/Cracked Brick/Brick Damage 0.png"));
         textureDataList.put("Brick Damage 0", Image.getABGRColorData(textureImageList.get("Brick Damage 0")));
-        textureImageList.put("Brick Damage 1", Image.load("resources/Textures/Cracked Brick/Brick Damage 0.png"));
-        textureDataList.put("Brick Damage 1", Image.getABGRColorData(textureImageList.get("Brick Damage 0")));
+        textureImageList.put("Brick Damage 1", Image.load("resources/Textures/Cracked Brick/Brick Damage 1.png"));
+        textureDataList.put("Brick Damage 1", Image.getABGRColorData(textureImageList.get("Brick Damage 1")));
         textureImageList.put("Brick Damage 2", Image.load("resources/Textures/Cracked Brick/Brick Damage 2.png"));
         textureDataList.put("Brick Damage 2", Image.getABGRColorData(textureImageList.get("Brick Damage 2")));
         textureImageList.put("Brick Damage 3", Image.load("resources/Textures/Cracked Brick/Brick Damage 3.png"));

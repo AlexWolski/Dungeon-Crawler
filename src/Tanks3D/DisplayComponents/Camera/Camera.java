@@ -243,8 +243,8 @@ public class Camera {
         }
     }
 
-    //Draw solid wall slices to the wall buffer.
-    private void drawSolidWalls() {
+    //Draw the wall slices to the wall buffer.
+    private void drawWalls() {
         //Iterate through the wall slices and draw them.
         for(int i = 0; i < canvas.getWidth(); i++)
             if(!wallBuffer.get(i).isEmpty())
@@ -287,7 +287,7 @@ public class Camera {
             //Empty the list of entities.
             visibleEntities.clear();
 
-            //Iterate through the entity list and draw the slices that are visible.
+            //Iterate through the entity list and the visible entities to the list.
             for(Entity entity : gameData.entityList) {
                 //Scan the entity if it is visible.
                 if (entity.getVisible()) {
@@ -302,59 +302,80 @@ public class Camera {
                     //Get the distance from the camera to the wall.
                     double dist = getDistToWall(rotatedLine, currentRay);
 
-                    //If the entity intersects with the ray and it is in front of the walls, draw it.
-                    if (dist > 0 && (wallBuffer.get(i).isEmpty() || dist <= wallBuffer.get(i).get(wallBuffer.get(i).size()-1).distToCamera)) {
-                        //Copy the entity's position.
-                        rotatedPoint.setLocation(entity.position.x, entity.position.y);
-                        //Rotate it to in front of the ray.
-                        FastMath.rotate(rotatedPoint, cameraPosition, -entityAngle);
-                        FastMath.subtract(rotatedPoint, cameraPosition);
-                        //Recalculate the distance to the center of the entity, not where it intersects.
-                        dist = rotatedPoint.y *  FastMath.cos(entityAngle - cameraAngle.getValue());
+                    //Draw the entity if it intersects with the ray.
+                    if (dist > 0) {
+                        //The furthest visible wall in this slice.
+                        Wall farthestWall = null;
+                        //The distance to the furthest wall.
+                        double farthestDistance = 0.0;
 
-                        //Create and temporarily hold an object slice before its stored in the array list.
-                        ObjectSlice temp = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(cameraAngle.getValue()), entity.getSpritePixelData(cameraAngle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
+                        //If the wall buffer isn't empty, get the farthest object and distance.
+                        if (!wallBuffer.get(i).isEmpty()) {
+                            farthestWall = (Wall) wallBuffer.get(i).get(wallBuffer.get(i).size() - 1).object;
+                            farthestDistance = wallBuffer.get(i).get(wallBuffer.get(i).size() - 1).distToCamera;
+                        }
 
-                        //If the array list is empty, add the object slice.
-                        if (visibleEntities.isEmpty())
-                            visibleEntities.add(temp);
-                            //Otherwise, insert the object slice in order by distance.
-                        else
-                            for (int j = 0; j < visibleEntities.size(); j++) {
-                                if (dist < visibleEntities.get(j).distToCamera) {
-                                    visibleEntities.add(j, temp);
-                                    break;
+                        //If the entity isn't behind an opaque wall, add it to the list.
+                        if (farthestWall == null || farthestWall.isSeeThrough() || dist <= farthestDistance) {
+                            //Copy the entity's position.
+                            rotatedPoint.setLocation(entity.position.x, entity.position.y);
+                            //Rotate it to in front of the ray.
+                            FastMath.rotate(rotatedPoint, cameraPosition, -entityAngle);
+                            FastMath.subtract(rotatedPoint, cameraPosition);
+                            //Recalculate the distance to the center of the entity, not where it intersects.
+                            dist = rotatedPoint.y * FastMath.cos(entityAngle - cameraAngle.getValue());
+
+                            //Create and temporarily hold an object slice before its stored in the array list.
+                            ObjectSlice temp = new ObjectSlice(entity, dist, entity.getzPos(), entity.getSprite(cameraAngle.getValue()), entity.getSpritePixelData(cameraAngle.getValue()), entity.entityColor, -rotatedLine.x1 / (rotatedLine.x2 - rotatedLine.x1));
+
+                            //If the array list is empty, add the object slice.
+                            if (visibleEntities.isEmpty())
+                                visibleEntities.add(temp);
+                                //Otherwise, insert the object slice in order by distance.
+                            else
+                                for (int j = 0; j < visibleEntities.size(); j++) {
+                                    if (dist < visibleEntities.get(j).distToCamera) {
+                                        visibleEntities.add(j, temp);
+                                        break;
+                                    }
+                                    //If the object slice is farther than the rest, add it to the end of the list.
+                                    if (j == visibleEntities.size() - 1) {
+                                        visibleEntities.add(temp);
+                                        break;
+                                    }
                                 }
-                                //If the object slice is farther than the rest, add it to the end of the list.
-                                if (j == visibleEntities.size() - 1) {
-                                    visibleEntities.add(temp);
-                                    break;
-                                }
-                            }
+                        }
                     }
                 }
             }
 
-            //The current position in the list of see through walls.
-            int j = 0;
-            //An ArrayList containing the see through walls.
-            ArrayList<ObjectSlice> wallList = wallBuffer.get(i);
+            //If there are no walls, just draw the entities.
+            if(wallBuffer.get(i).isEmpty())
+                for (ObjectSlice slice : visibleEntities)
+                    drawSlice(slice, i);
+            //Otherwise, draw both the entities and walls.
+            else {
+                //The current position in the list of see through walls.
+                int j = 0;
+                //An ArrayList containing the see through walls.
+                ArrayList<ObjectSlice> wallList = wallBuffer.get(i);
 
-            //Draw all of the entities and see through walls in order from nearest to farthest.
-            for(ObjectSlice slice : visibleEntities) {
-                //Draw all of the see through walls in front of the entity.
-                while(j < wallList.size() - 1 && wallList.get(j).distToCamera < slice.distToCamera) {
-                    drawSlice(wallList.get(j), i);
-                    j++;
+                //Draw all of the entities and see through walls in order from nearest to farthest.
+                for (ObjectSlice slice : visibleEntities) {
+                    //Draw all of the see through walls in front of the entity.
+                    while (j < wallList.size() && wallList.get(j).distToCamera < slice.distToCamera) {
+                        drawSlice(wallList.get(j), i);
+                        j++;
+                    }
+
+                    //Draw the entity.
+                    drawSlice(slice, i);
                 }
 
-                //Draw the entity.
-                drawSlice(slice, i);
+                //Draw the remaining see through walls behind all of the entities.
+                for (; j < wallList.size() - 1; j++)
+                    drawSlice(wallList.get(j), i);
             }
-
-            //Draw the remaining see through walls behind all of the entities.
-            for(; j < wallList.size() - 1; j++)
-                drawSlice(wallList.get(j), i);
 
             //Move on to the next ray.
             currentRay += rayAngle;
@@ -368,7 +389,7 @@ public class Camera {
 
         calculateWallBuffer();
         drawEntitiesAndSeeThrough();
-        drawSolidWalls();
+        drawWalls();
         drawBackground();
     }
 }
