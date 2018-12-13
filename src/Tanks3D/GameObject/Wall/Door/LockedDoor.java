@@ -1,6 +1,7 @@
 package Tanks3D.GameObject.Wall.Door;
 
 import Tanks3D.GameObject.Entity.Player;
+import Tanks3D.SoundManager;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -23,7 +24,10 @@ public abstract class LockedDoor extends Door {
             if(player.getKey() != null) {
                 locked = false;
                 setTexture(unlockedImage);
+                SoundManager.playSound("Unlock");
             }
+            else
+                SoundManager.playSound("Locked Door");
         }
         else
             super.use(player);

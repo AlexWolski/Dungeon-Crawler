@@ -40,7 +40,7 @@ public class Player extends Entity implements Update {
     //A list of objects that the player can interact with.
     private final ArrayList<Usable> usableList;
     //The player's position and directionAngle when it is spawned.
-    private final SpawnPoint spawnPoint;
+    private SpawnPoint spawnPoint;
     //The angle that the player is facing.
     private final MutableDouble viewAngle;
     //The direction the player is moving relative to the camera.
@@ -58,7 +58,7 @@ public class Player extends Entity implements Update {
     private boolean alive;
 
     //The size of the hit circle around the tank.
-    private final static int hitCircleRadius = 10;
+    private final static int hitCircleRadius = 8;
     //How much to scale the images when drawn to the screen.
     private final static double scale = 0.04;
     //How high projectiles are fired.
@@ -289,6 +289,9 @@ public class Player extends Entity implements Update {
     }
     public void setControlAngle(double controlAngle) {
         this.controlAngle = controlAngle;
+    }
+    public void setSpawnPoint(SpawnPoint spawnPoint) {
+        this.spawnPoint = spawnPoint;
     }
     public double getMaxSpeed() {
         return maxSpeed;

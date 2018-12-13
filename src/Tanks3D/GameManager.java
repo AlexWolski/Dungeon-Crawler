@@ -191,6 +191,7 @@ public abstract class GameManager {
         Projectile.init();
 
         //Reset the player.
+        gameData.player.setSpawnPoint(gameData.gameLevel.getPlayerSpawn());
         gameData.player.resetPlayer();
     }
 
@@ -206,7 +207,7 @@ public abstract class GameManager {
 
     public static void nextLevel() {
         level++;
-        reset();
+        restarting = true;
     }
 
     public static void pause() {

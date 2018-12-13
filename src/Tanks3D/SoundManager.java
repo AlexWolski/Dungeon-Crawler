@@ -36,6 +36,9 @@ public final class SoundManager {
         audioClips.put("Health", "resources/Sounds/Pickup/Health.wav");
         audioClips.put("Key", "resources/Sounds/Pickup/Key.wav");
         audioClips.put("Crossbow", "resources/Sounds/Pickup/Crossbow.wav");
+
+        audioClips.put("Locked Door", "resources/Sounds/Action/Locked Door.wav");
+        audioClips.put("Unlock", "resources/Sounds/Action/Unlock.wav");
     }
 
     public static void playSound(String soundFile) {

@@ -80,11 +80,43 @@ public final class Level {
             mapHeight = 300;
         }
         else if(levelFile.equals("Level 2.txt")) {
-            playerSpawn = new SpawnPoint(new Point2D.Double(0, 0), 0);
+            playerSpawn = new SpawnPoint(new Point2D.Double(-50, 0), 90);
 
             floorColor = new Color(80, 40, 0).getRGB();
             ceilColor = Color.BLACK.getRGB();
 
+
+            //Spawn Cage
+            ObjectManager.add(new Wall(new Point2D.Double(-70, 15), new Point2D.Double(-70, -15), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Wall(new Point2D.Double(-70, 15), new Point2D.Double(140, 15), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Wall(new Point2D.Double(-70, -15), new Point2D.Double(0, -15), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Wall(new Point2D.Double(0, -15), new Point2D.Double(40, -15), true, true, true, "Fence", null));
+            ObjectManager.add(new Wall(new Point2D.Double(40, -15), new Point2D.Double(40, -5), true, true, true, "Fence", null));
+            ObjectManager.add(new LockedFenceDoor(new Point2D.Double(40, 15), new Point2D.Double(40, -5), 80, null));
+
+            //Spawn key
+            ObjectManager.add(new Key(new Point2D.Double(20, -20)));
+
+            //Rest of room
+            ObjectManager.add(new Wall(new Point2D.Double(140, 15), new Point2D.Double(140, -25), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Stairs(new Point2D.Double(140, -25), new Point2D.Double(140, -45), "Dirt Stairs", null));
+            ObjectManager.add(new Wall(new Point2D.Double(140, -45), new Point2D.Double(140, -85), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Wall(new Point2D.Double(140, -85), new Point2D.Double(-80, -85), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Wall(new Point2D.Double(-100, -85), new Point2D.Double(-70, -15), false, true, true, "Dirt 1", null));
+
+            //Secret secret
+            ObjectManager.add(new BlockedHole(new Point2D.Double(-80, -85), new Point2D.Double(-100, -85), null));
+            ObjectManager.add(new Wall(new Point2D.Double(-80, -85), new Point2D.Double(-80, -120), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Wall(new Point2D.Double(-80, -120), new Point2D.Double(-100, -120), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Wall(new Point2D.Double(-100, -120), new Point2D.Double(-100, -85), false, true, true, "Dirt 1", null));
+            ObjectManager.add(new Key(new Point2D.Double(-90, -110)));
+
+            //No-exit fence
+            ObjectManager.add(new Wall(new Point2D.Double(80, 15), new Point2D.Double(80, -65), true, true, true, "Fence", null));
+            ObjectManager.add(new LockedFenceDoor(new Point2D.Double(80, -65), new Point2D.Double(80, -85), 80, null));
+
+            //Crossbow
+            ObjectManager.add(new CrossbowPickup(new Point2D.Double(-40, -50)));
 
             mapCenter = new Point2D.Double(0, 0);
             mapWidth = 300;
