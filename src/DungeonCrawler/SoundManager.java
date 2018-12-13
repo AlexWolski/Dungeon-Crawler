@@ -39,6 +39,7 @@ public final class SoundManager {
 
         audioClips.put("Locked Door", "resources/Sounds/Action/Locked Door.wav");
         audioClips.put("Unlock", "resources/Sounds/Action/Unlock.wav");
+        audioClips.put("Invalid", "resources/Sounds/Action/Invalid.wav");
     }
 
     public static void playSound(String soundFile) {
