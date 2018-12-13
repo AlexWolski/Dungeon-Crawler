@@ -1,5 +1,4 @@
 # csc413-SecondGame
 
-## Student Name :
-## Student ID :
-
+## Student Name :	Alex Wolski
+## Student ID :		918276364
