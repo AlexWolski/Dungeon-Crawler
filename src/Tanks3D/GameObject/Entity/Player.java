@@ -3,6 +3,7 @@ package Tanks3D.GameObject.Entity;
 import Tanks3D.GameData;
 import Tanks3D.GameManager;
 import Tanks3D.GameObject.Update;
+import Tanks3D.GameObject.Usable;
 import Tanks3D.Item.Item;
 import Tanks3D.GameObject.SpawnPoint;
 import Tanks3D.GameObject.Wall.*;
@@ -13,6 +14,7 @@ import Tanks3D.Utilities.Wrappers.MutableDouble;
 import Tanks3D.Weapon.Weapon;
 
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ public class Player extends Entity implements Update {
     //The farthest an enemy can be and the player still be able to hit it.
     private final static double meleReach = 5;
 
+    //A list of objects that the player can interact with.
+    private final ArrayList<Usable> usableList;
     //The player's position and directionAngle when it is spawned.
     private final SpawnPoint spawnPoint;
     //The angle that the player is facing.
@@ -78,8 +82,9 @@ public class Player extends Entity implements Update {
         footstepSounds = new String[] { "Footstep 1", "Footstep 2", "Footstep 3", "Footstep 4", "Footstep 5" };
     }
 
-    public Player(SpawnPoint spawnPoint) {
+    public Player(SpawnPoint spawnPoint, ArrayList<Usable> usableList) {
         super(hitCircleRadius, new Point2D.Double(spawnPoint.getPosition().x, spawnPoint.getPosition().y), spawnPoint.getAngle(), 0);
+        this.usableList = usableList;
         this.spawnPoint = spawnPoint;
         this.rotationSpeed = 0;
 
@@ -209,7 +214,67 @@ public class Player extends Entity implements Update {
     }
 
     public void use() {
-        System.out.println("use");
+        //Only check for usable object if there are any.
+        if(!usableList.isEmpty()) {
+            //The object that the player will interact with.
+            Usable object = null;
+            //The distance to that object.
+            double objectDistance = 0;
+
+            //How far in the x and y directions the player can reach.
+            double reachX = FastMath.cos(viewAngle.getValue()) * useReach;
+            double reachY = FastMath.sin(viewAngle.getValue()) * useReach;
+
+            //Create a line extending from the player towards where the player is looking with a length of useReach.
+            Line2D.Double interactLine = new Line2D.Double(getPosition().x, getPosition().y, getPosition().x - reachX, getPosition().y - reachY);
+
+            //Check if the interact line collides with any entities.
+            for(Usable usable : usableList) {
+                if (usable instanceof Entity) {
+                    Entity entity = (Entity) usable;
+                    Point2D.Double rotatedPoint = null;
+
+                    //If the entity doesn't collide with the end of the interact line, check if it collides with the the line itself.
+                    if (!FastMath.isPointInCircle(new Point2D.Double(interactLine.x2, interactLine.y2), entity.position, entity.getHitCircleRadius())) {
+                        //Rotate the entity's position to in front of the player
+                        rotatedPoint = new Point2D.Double(entity.position.x, entity.position.y);
+                        FastMath.rotate(rotatedPoint, getPosition(), -viewAngle.getValue());
+                        //Translate the position so that it is along the y-axis.
+                        FastMath.subtract(rotatedPoint, position);
+
+                        if (!(rotatedPoint.x >= -entity.getHitCircleRadius() || rotatedPoint.x <= entity.getHitCircleRadius()))
+                            continue;
+                    }
+
+                    //If the entity is within reach and it is the first object checked or it is closer than the saved object, save the entity.
+                    if (rotatedPoint.y <= useReach && (object == null || rotatedPoint.y < objectDistance)) {
+                        object = usable;
+                        objectDistance = rotatedPoint.y;
+                    }
+                } else {
+                    Wall wall = (Wall) usable;
+
+                    //Get the line from the wall, rotate it to in front of the player, and translate it so it is in front of the origin.
+                    Line2D.Double line = wall.getLine();
+                    FastMath.rotate(line, position, -viewAngle.getValue());
+                    FastMath.translate(line, -position.x, -position.y);
+
+                    //Get the distance from the wall to the player.
+                    double dist = FastMath.getYIntercept(line);
+
+                    //If the wall is within reach and it is the first object checked or it is closer than the saved object, save the wall.
+                    if (dist <= useReach && (object == null || dist < objectDistance)) {
+                        object = usable;
+                        objectDistance = dist;
+                    }
+                }
+            }
+
+            if(object != null)
+                System.out.println(object);
+            else
+                System.out.println("nope");
+        }
     }
 
     public void resetPlayer() {

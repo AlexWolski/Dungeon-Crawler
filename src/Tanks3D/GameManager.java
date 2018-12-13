@@ -86,7 +86,7 @@ public abstract class GameManager {
         gameWindow = new DisplayWindow("Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
 
         //Initialize the game data elements.
-        gameData.player = new Player(gameData.gameLevel.getPlayerSpawn());
+        gameData.player = new Player(gameData.gameLevel.getPlayerSpawn(), gameData.usableList);
         ObjectManager.add(gameData.player);
         gameData.camera = new Camera(gameData, gameWindow.getScreenBuffer(), gameData.player.getPosition(), gameData.player.getzPos(), gameData.player.getAngle());
         gameData.hud = new HUD(gameWindow.getScreenBuffer());

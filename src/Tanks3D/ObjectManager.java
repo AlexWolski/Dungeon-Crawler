@@ -15,9 +15,11 @@ public class ObjectManager {
     //The objects that will be removed.
     private static ArrayList<Entity> entitiesToRemove;
     private static ArrayList<Wall> wallsToRemove;
+    private static ArrayList<Update> objectsToStopUpdating;
     //The objects that will be added.
     private static ArrayList<Entity> entitiesToAdd;
     private static ArrayList<Wall> wallsToAdd;
+    private static ArrayList<Update> objectsToStartUpdating;
 
     //This class is non-instantiable.
     private ObjectManager() {
@@ -25,24 +27,27 @@ public class ObjectManager {
 
     static void init(GameData data) {
         gameData = data;
+
         entitiesToRemove = new ArrayList<>();
         wallsToRemove = new ArrayList<>();
+        objectsToStopUpdating = new ArrayList<>();
+
         entitiesToAdd = new ArrayList<>();
         wallsToAdd = new ArrayList<>();
+        objectsToStartUpdating = new ArrayList<>();
     }
 
     //Given an object, determine its type and add it to the list of objects to remove.
     public static void remove(GameObject objectToRemove) {
-        //If the object was in the usable or update list, remove it.
         gameData.usableList.remove(objectToRemove);
-        gameData.updateList.remove(objectToRemove);
 
         if(objectToRemove instanceof Entity)
             entitiesToRemove.add((Entity) objectToRemove);
         else if(objectToRemove instanceof Wall)
             wallsToRemove.add((Wall) objectToRemove);
 
-        System.out.println("test");
+        if(objectToRemove instanceof Update)
+            objectsToStopUpdating.add((Update) objectToRemove);
     }
 
     //Given an object, determine its type and add it to the list of objects to add.
@@ -52,10 +57,10 @@ public class ObjectManager {
         else if(objectToAdd instanceof Wall)
             wallsToAdd.add((Wall) objectToAdd);
 
+        if(objectToAdd instanceof Update)
+            objectsToStartUpdating.add((Update) objectToAdd);
         if(objectToAdd instanceof Usable)
             gameData.usableList.add((Usable) objectToAdd);
-        if(objectToAdd instanceof Update)
-            gameData.updateList.add((Update) objectToAdd);
     }
 
     //Remove objects that need to be removed from the entity and wall lists.
@@ -72,6 +77,12 @@ public class ObjectManager {
             wallsToAdd.clear();
         }
 
+        //If there are entities to start updating, start updating them and clear the list.
+        if(!objectsToStartUpdating.isEmpty()) {
+            gameData.updateList.addAll(objectsToStartUpdating);
+            objectsToStartUpdating.clear();
+        }
+
         //If there are entities to remove, remove them and clear the list.
         if(!entitiesToRemove.isEmpty()) {
             for (Entity entity : entitiesToRemove)
@@ -79,11 +90,18 @@ public class ObjectManager {
             entitiesToRemove.clear();
         }
 
-        //If there are entities to remove, remove them and clear the list.
+        //If there are walls to remove, remove them and clear the list.
         if(!wallsToRemove.isEmpty()) {
             for (Wall wall : wallsToRemove)
                 gameData.wallList.remove(wall);
             wallsToRemove.clear();
+        }
+
+        //If there are entities to stop updating, start stop them and clear the list.
+        if(!objectsToStopUpdating.isEmpty()) {
+            for (Update object : objectsToStopUpdating)
+                gameData.updateList.remove(object);
+            objectsToStopUpdating.clear();
         }
     }
 }
