@@ -31,7 +31,7 @@ S 	= Backwards
 A 	= Left
 D 	= Right
 SPACE	= Fire
-E	= Interact
+E	= Interact with doors and pickups
 
 Move Mouse	= Look left or right
 Left Click	= Fire
