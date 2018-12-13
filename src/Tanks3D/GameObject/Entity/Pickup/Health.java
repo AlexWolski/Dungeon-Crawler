@@ -28,13 +28,16 @@ public class Health extends Pickup {
     }
 
     public void collide(Object object) {
-        if(object instanceof Player) {
-            //Play the health sound effect.
-            SoundManager.playSound("Health");
-            //Heal the player.
-            ((Player) object).heal(health);
-            //Remove the health pickup.
-            ObjectManager.remove(this);
-        }
+        if(object instanceof Player)
+            use((Player) object);
+    }
+
+    public void use(Player player) {
+        //Play the health sound effect.
+        SoundManager.playSound("Health");
+        //Heal the player.
+        player.heal(health);
+        //Remove the health pickup.
+        ObjectManager.remove(this);
     }
 }

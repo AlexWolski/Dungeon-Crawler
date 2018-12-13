@@ -27,13 +27,16 @@ public class CrossbowPickup extends Pickup {
     }
 
     public void collide(Object object) {
-        if(object instanceof Player) {
-            //Play the key sound effect.
-            SoundManager.playSound("Crossbow");
-            //Remove the key pickup.
-            ObjectManager.remove(this);
-            //Give the player a crossbow.
-            ((Player)object).addWeapon(new Crossbow(((Player)object)));
-        }
+        if(object instanceof Player)
+            use((Player) object);
+    }
+
+    public void use(Player player) {
+        //Play the key sound effect.
+        SoundManager.playSound("Crossbow");
+        //Remove the key pickup.
+        ObjectManager.remove(this);
+        //Give the player a crossbow.
+        player.addWeapon(new Crossbow(player));
     }
 }

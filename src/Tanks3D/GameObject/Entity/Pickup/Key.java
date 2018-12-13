@@ -26,13 +26,16 @@ public class Key extends Pickup {
     }
 
     public void collide(Object object) {
-        if(object instanceof Player) {
-            //Play the key sound effect.
-            SoundManager.playSound("Key");
-            //Remove the key pickup.
-            ObjectManager.remove(this);
-            //Give the player a key.
-            ((Player)object).addItem(new Tanks3D.Item.Key());
-        }
+        if(object instanceof Player)
+            use((Player) object);
+    }
+
+    public void use(Player player) {
+        //Play the key sound effect.
+        SoundManager.playSound("Key");
+        //Remove the key pickup.
+        ObjectManager.remove(this);
+        //Give the player a key.
+        player.addItem(new Tanks3D.Item.Key());
     }
 }

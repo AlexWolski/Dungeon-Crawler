@@ -231,28 +231,24 @@ public class Player extends Entity implements Update {
             //Check if the interact line collides with any entities.
             for(Usable usable : usableList) {
                 if (usable instanceof Entity) {
-                    //Prototype code. Not tested.
-//                    Entity entity = (Entity) usable;
-//                    Point2D.Double rotatedPoint = null;
-//
-//                    //If the entity doesn't collide with the end of the interact line, check if it collides with the the line itself.
-//                    if (!FastMath.isPointInCircle(new Point2D.Double(interactLine.x2, interactLine.y2), entity.position, entity.getHitCircleRadius())) {
-//                        //Rotate the entity's position to in front of the player
-//                        rotatedPoint = new Point2D.Double(entity.position.x, entity.position.y);
-//                        FastMath.rotate(rotatedPoint, getPosition(), -viewAngle.getValue());
-//                        //Translate the position so that it is along the y-axis.
-//                        FastMath.subtract(rotatedPoint, position);
-//
-//                        if (!(rotatedPoint.x >= -entity.getHitCircleRadius() || rotatedPoint.x <= entity.getHitCircleRadius()))
-//                            continue;
-//                    }
-//
-//                    //If the entity is within reach and it is the first object checked or it is closer than the saved object, save the entity.
-//                    if (rotatedPoint.y <= useReach && (object == null || rotatedPoint.y < objectDistance)) {
-//                        object = usable;
-//                        objectDistance = rotatedPoint.y;
-//                    }
-                } else {
+                    Entity entity = (Entity) usable;
+
+                    //Rotate the entity's position to in front of the player
+                    Point2D.Double rotatedPoint = new Point2D.Double(entity.position.x, entity.position.y);
+                    FastMath.rotate(rotatedPoint, getPosition(), -viewAngle.getValue());
+                    //Translate the position so that it is along the y-axis.
+                    FastMath.subtract(rotatedPoint, position);
+
+                    if (FastMath.isPointInCircle(new Point2D.Double(interactLine.x2, interactLine.y2), entity.position, entity.getHitCircleRadius()) ||
+                            (rotatedPoint.x >= -entity.getHitCircleRadius() && rotatedPoint.x <= entity.getHitCircleRadius())) {
+                        //If the entity is within reach and it is the first object checked or it is closer than the saved object, save the entity.
+                        if (rotatedPoint.y >= 0 &&  rotatedPoint.y <= useReach && (object == null || rotatedPoint.y < objectDistance)) {
+                            object = usable;
+                            objectDistance = rotatedPoint.y;
+                        }
+                    }
+                }
+                else {
                     Wall wall = (Wall) usable;
 
                     //Get the line from the wall, rotate it to in front of the player, and translate it so it is in front of the origin.
