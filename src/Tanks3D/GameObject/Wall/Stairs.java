@@ -7,16 +7,21 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 public class Stairs extends Wall {
+    private boolean triggered = false;
+
     public Stairs(Point2D.Double Point1, Point2D.Double Point2, String textureName, Color textureColor) {
         super(Point1, Point2, false, true, true, textureName, textureColor);
     }
 
     public void action() {
-        //Play the stairs sound effect.
-        SoundManager.playSound("Stairs");
-        //Prevent the player from triggering the action more than once.
-        characterCollidable = false;
-        //
-        GameManager.nextLevel();
+        if(!triggered) {
+            //Play the stairs sound effect.
+            SoundManager.playSound("Stairs");
+            //Move on to the next level.
+            GameManager.nextLevel();
+
+            //Only activate the stairs once.
+            triggered = true;
+        }
     }
 }

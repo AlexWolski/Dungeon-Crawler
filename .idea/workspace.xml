@@ -9,14 +9,13 @@
     <list default="true" id="ee0992c8-61b3-4767-b2a8-a386d8d1bb00" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/GameManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/GameManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/GameObject/Entity/Player.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/GameObject/Entity/Player.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/GameObject/Wall/Door/LockedDoor.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/GameObject/Wall/Door/LockedDoor.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/GameObject/Wall/Stairs.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/GameObject/Wall/Stairs.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Level.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/Level.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/ObjectManager.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/SoundManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/csc413-tankgame-AlexWolski/Tanks3D/SoundManager.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Tanks3D/GameManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/GameManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Tanks3D/GameObject/Entity/Player.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/GameObject/Entity/Player.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Door/LockedDoor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Door/LockedDoor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/Level.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/Level.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Tanks3D/SoundManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/SoundManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Stairs.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Stairs.java" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -26,7 +25,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="CoverageDataManager">
-    <SUITE FILE_PATH="coverage/Tank_Game$GameManager.ic" NAME="GameManager Coverage Results" MODIFIED="1544675264893" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
+    <SUITE FILE_PATH="coverage/Tank_Game$GameManager.ic" NAME="GameManager Coverage Results" MODIFIED="1544685611320" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
       <FILTER>Tanks3D.DisplayComponents.Camera.*</FILTER>
     </SUITE>
     <SUITE FILE_PATH="coverage/Tank_Game$Game.ic" NAME="Game Coverage Results" MODIFIED="1540200485130" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="idea" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false">
@@ -46,24 +45,24 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="java" value="9083" />
-          <entry key="txt" value="256" />
+          <entry key="java" value="9292" />
+          <entry key="txt" value="283" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="9083" />
-          <entry key="PLAIN_TEXT" value="256" />
+          <entry key="JAVA" value="9292" />
+          <entry key="PLAIN_TEXT" value="283" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="java" value="68" />
+          <entry key="java" value="69" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="JAVA" value="68" />
+          <entry key="JAVA" value="69" />
         </counts>
       </usages-collector>
     </session>
@@ -76,8 +75,20 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="196" lean-forward="true" selection-start-line="196" selection-end-line="196" />
+            <state relative-caret-position="305">
+              <caret line="194" column="32" selection-start-line="194" selection-start-column="32" selection-end-line="194" selection-end-column="32" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Stairs.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="323">
+              <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -88,8 +99,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameObject/Entity/Player.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="443">
-              <caret line="126" selection-start-line="126" selection-end-line="126" />
+            <state relative-caret-position="390">
+              <caret line="286" column="21" selection-start-line="286" selection-start-column="21" selection-end-line="286" selection-end-column="21" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -214,12 +225,12 @@
         <option value="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Door/LockedWoodDoor.java" />
         <option value="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Door/LockedFenceDoor.java" />
         <option value="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Door/Door.java" />
-        <option value="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Stairs.java" />
         <option value="$PROJECT_DIR$/src/Tanks3D/ObjectManager.java" />
-        <option value="$PROJECT_DIR$/src/Tanks3D/GameObject/Entity/Player.java" />
         <option value="$PROJECT_DIR$/src/Tanks3D/SoundManager.java" />
         <option value="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Door/LockedDoor.java" />
         <option value="$PROJECT_DIR$/src/Tanks3D/Level.java" />
+        <option value="$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Stairs.java" />
+        <option value="$PROJECT_DIR$/src/Tanks3D/GameObject/Entity/Player.java" />
         <option value="$PROJECT_DIR$/src/Tanks3D/GameManager.java" />
       </list>
     </option>
@@ -358,7 +369,7 @@
     <property name="SearchEverywhereHistoryKey" value="&#9;FILE&#9;file://C:/Users/Alex Wolski/Desktop/School/Fall/Classes/CSC 413/Assignment 4 (Dungeon Crawler)/csc413-secondgame-AlexWolski/src/Tanks3D/DisplayComponents/Camera/Camera.java" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544684941534" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1544685616754" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
@@ -488,13 +499,6 @@
       <workItem from="1544395762533" duration="3025000" />
       <workItem from="1544409359799" duration="30519000" />
       <workItem from="1544633995635" duration="3493000" />
-    </task>
-    <task id="LOCAL-00030" summary="Bug fixed when player dies">
-      <created>1542776391254</created>
-      <option name="number" value="00030" />
-      <option name="presentableId" value="LOCAL-00030" />
-      <option name="project" value="LOCAL" />
-      <updated>1542776391254</updated>
     </task>
     <task id="LOCAL-00031" summary="Added a pool of rounds">
       <created>1542784977249</created>
@@ -832,7 +836,14 @@
       <option name="project" value="LOCAL" />
       <updated>1544681825159</updated>
     </task>
-    <option name="localTasksCounter" value="79" />
+    <task id="LOCAL-00079" summary="Second level added">
+      <created>1544684956016</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1544684956016</updated>
+    </task>
+    <option name="localTasksCounter" value="80" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -916,7 +927,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Camera height disconnected from wall height" />
     <MESSAGE value="Added mouse manager" />
     <MESSAGE value="Mouse moves camera" />
     <MESSAGE value="Made mouse invisible" />
@@ -941,7 +951,8 @@
     <MESSAGE value="Doors unlock with key" />
     <MESSAGE value="Level 1 Added" />
     <MESSAGE value="Stairs and new level working" />
-    <option name="LAST_COMMIT_MESSAGE" value="Stairs and new level working" />
+    <MESSAGE value="Second level added" />
+    <option name="LAST_COMMIT_MESSAGE" value="Second level added" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -1443,16 +1454,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Stairs.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="19" column="32" selection-start-line="19" selection-start-column="32" selection-end-line="19" selection-end-column="32" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Tanks3D/Level.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
@@ -1469,10 +1470,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameObject/Wall/Stairs.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="19" column="40" selection-start-line="19" selection-start-column="40" selection-end-line="19" selection-end-column="40" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameObject/Entity/Player.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="443">
-          <caret line="126" selection-start-line="126" selection-end-line="126" />
+        <state relative-caret-position="390">
+          <caret line="286" column="21" selection-start-line="286" selection-start-column="21" selection-end-line="286" selection-end-column="21" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1481,8 +1492,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Tanks3D/GameManager.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="196" lean-forward="true" selection-start-line="196" selection-end-line="196" />
+        <state relative-caret-position="305">
+          <caret line="194" column="32" selection-start-line="194" selection-start-column="32" selection-end-line="194" selection-end-column="32" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

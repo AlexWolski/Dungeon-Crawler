@@ -192,7 +192,9 @@ public abstract class GameManager {
 
         //Reset the player.
         gameData.player.setSpawnPoint(gameData.gameLevel.getPlayerSpawn());
-        gameData.player.resetPlayer();
+        gameData.player.reset();
+        //Reset the HUD.
+        gameData.hud.setWin(false);
     }
 
     public static void endGame(boolean win) {
@@ -202,12 +204,17 @@ public abstract class GameManager {
             timeOfGameEnd = System.currentTimeMillis();
             restarting = true;
             gameData.hud.setWin(win);
+            level = 0;
         }
     }
 
     public static void nextLevel() {
         level++;
-        restarting = true;
+
+        if(level >= levelFiles.length)
+            endGame(true);
+        else
+            restarting = true;
     }
 
     public static void pause() {

@@ -274,11 +274,17 @@ public class Player extends Entity implements Update {
         }
     }
 
-    public void resetPlayer() {
+    public void resetSpawn() {
         position.setLocation(spawnPoint.getPosition());
         viewAngle.setValue(spawnPoint.getAngle());
         health = maxHealth;
         alive = true;
+    }
+
+    public void reset() {
+        resetSpawn();
+        weapons.clear();
+        items.clear();
     }
 
     public MutableDouble getViewAngle() {
