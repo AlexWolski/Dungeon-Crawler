@@ -9,6 +9,7 @@ import Tanks3D.GameObject.Wall.BreakableWalls.BlockedHole;
 import Tanks3D.GameObject.Wall.BreakableWalls.CrackedBrick;
 import Tanks3D.GameObject.Wall.Door.Door;
 import Tanks3D.GameObject.Wall.Door.LockedFenceDoor;
+import Tanks3D.GameObject.Wall.Door.LockedWoodDoor;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -30,37 +31,52 @@ public final class Level {
 
     //Read the json objects from the file and create them. Walls are stored in the 'wallObjects' ArrayList.
     private void parseDataFile(String levelFile) {
-        playerSpawn = new SpawnPoint(new Point2D.Double(0, -80), 0);
+        playerSpawn = new SpawnPoint(new Point2D.Double(0, 0), 0);
 
-        floorColor = Color.darkGray.getRGB();
-        ceilColor = Color.darkGray.darker().getRGB();
+        floorColor = new Color(116, 58, 0).getRGB();
+        ceilColor = Color.BLACK.getRGB();
 
-        //Map border
-        ObjectManager.add(new BlockedHole(new Point2D.Double(-100, 0), new Point2D.Double(-50, 86.6025403784), null));
-        ObjectManager.add(new Stairs(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(50, 86.6025403784), "Dirt Stairs", null));
-        ObjectManager.add(new Door(new Point2D.Double(50, 86.6025403784), new Point2D.Double(100, 0), false, true, true, "Locked Wood Door", null));
-        ObjectManager.add(new Wall(new Point2D.Double(100, 0), new Point2D.Double(50, -86.6025403784), false, true, true, "Dirt 1", null));
-        ObjectManager.add(new Wall(new Point2D.Double(50, -86.6025403784), new Point2D.Double(-50, -86.6025403784), false, true, true, "Dirt 2", null));
-        ObjectManager.add(new LockedFenceDoor(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(-100, 0), null));
+        //Cell
+        ObjectManager.add(new Wall(new Point2D.Double(-110, 20), new Point2D.Double(-60, 20), true, true, true, "Fence", null));
+        ObjectManager.add(new LockedFenceDoor(new Point2D.Double(-60, 20), new Point2D.Double(-40, 20), 110,  null));
+        ObjectManager.add(new Wall(new Point2D.Double(-40, 20), new Point2D.Double(40, 20), true, true, true, "Fence", null));
+        ObjectManager.add(new Wall(new Point2D.Double(40, 20), new Point2D.Double(10, -20), false, true, true, "Dirt 2", null));
+        ObjectManager.add(new Wall(new Point2D.Double(10, -20), new Point2D.Double(-100, -20), false, true, true, "Dirt 2", null));
+        ObjectManager.add(new Wall(new Point2D.Double(-100, -20), new Point2D.Double(-120, 0), false, true, true, "Dirt 2", null));
+        ObjectManager.add(new Wall(new Point2D.Double(-120, 0), new Point2D.Double(-110, 20), false, true, true, "Dirt 2", null));
 
-        //Breakable walls
-        ObjectManager.add(new BlockedHole(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(0, 0), null));
-        ObjectManager.add(new CrackedBrick(new Point2D.Double(50, 86.6025403784), new Point2D.Double(0, 0), null));
-        ObjectManager.add(new CrackedBrick(new Point2D.Double(100, 0), new Point2D.Double(0, 0), null));
-        ObjectManager.add(new CrackedBrick(new Point2D.Double(50, -86.6025403784), new Point2D.Double(0, 0), null));
-        ObjectManager.add(new CrackedBrick(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(0, 0), null));
-        ObjectManager.add(new CrackedBrick(new Point2D.Double(-100, 0), new Point2D.Double(0, 0), null));
+        //Cell Key
+        ObjectManager.add(new Key(new Point2D.Double(-110, 0)));
 
-        //Pickups
-        ObjectManager.add(new CrossbowPickup(new Point2D.Double(0, -40)));
-        ObjectManager.add(new Key(new Point2D.Double(-50, 43.3012701892)));
-        ObjectManager.add(new CrossbowPickup(new Point2D.Double(50, 43.3012701892)));
-        ObjectManager.add(new Health(new Point2D.Double(-50, -43.3012701892)));
-        ObjectManager.add(new Health(new Point2D.Double(50, -43.3012701892)));
+        //Hallway
+        ObjectManager.add(new Wall(new Point2D.Double(-110, 20), new Point2D.Double(-110, 40), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(-110, 40), new Point2D.Double(-70, 70), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(-70, 70), new Point2D.Double(60, 70), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(60, 70), new Point2D.Double(90, 30), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(90, 30), new Point2D.Double(90, -90), false, true, true, "Dirt 1", null));
+        //Exit
+        ObjectManager.add(new Stairs(new Point2D.Double(90, -90), new Point2D.Double(70, -90), "Dirt Stairs", null));
+        ObjectManager.add(new Wall(new Point2D.Double(70, -90), new Point2D.Double(70, -40), false, true, true, "Dirt 1", null));
+        //Locked door
+        ObjectManager.add(new LockedWoodDoor(new Point2D.Double(70, -40), new Point2D.Double(90, -40), 110, null));
+        ObjectManager.add(new Wall(new Point2D.Double(70, -40), new Point2D.Double(50, -40), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(50, -40), new Point2D.Double(30, -60), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(30, -60), new Point2D.Double(30, -100), false, true, true, "Dirt 1", null));
+
+        ObjectManager.add(new Wall(new Point2D.Double(40, 20), new Point2D.Double(40, 0), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(40, 0), new Point2D.Double(0, -60), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(0, -60), new Point2D.Double(0, -90), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(0, -90), new Point2D.Double(-20, -80), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(-20, -80), new Point2D.Double(-40, -110), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(-40, -110), new Point2D.Double(0, -120), false, true, true, "Dirt 1", null));
+        ObjectManager.add(new Wall(new Point2D.Double(0, -120), new Point2D.Double(30, -100), false, true, true, "Dirt 1", null));
+
+        //Exit Key
+        ObjectManager.add(new Key(new Point2D.Double(-20, -90)));
 
         mapCenter = new Point2D.Double(0, 0);
-        mapWidth = 200;
-        mapHeight = 200;
+        mapWidth = 300;
+        mapHeight = 300;
     }
 
     public double getMapCenterX() { return mapCenter.x; }

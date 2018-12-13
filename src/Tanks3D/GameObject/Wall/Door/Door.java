@@ -12,9 +12,7 @@ import java.awt.geom.Point2D;
 
 public class Door extends Wall implements Usable, Update {
     //How fast the door opens, in degrees per second.
-    protected final static double swingSpeed = 2.0;
-    //How far the door can move from its original position.
-    protected final static double swingAngle = 85.0;
+    protected final static double swingSpeed = 100.0;
 
     //The angle of the door when it is closed.
     protected final double defaultAngle;
@@ -30,7 +28,7 @@ public class Door extends Wall implements Usable, Update {
     //Determines the direction the door is moving.
     protected boolean clockwise;
 
-    public Door(Point2D.Double point1, Point2D.Double point2, boolean seeThrough, boolean characterCollidable, boolean projectileCollidable, String textureName, Color textureColor) {
+    public Door(Point2D.Double point1, Point2D.Double point2, boolean seeThrough, boolean characterCollidable, boolean projectileCollidable, String textureName, double swingAngle, Color textureColor) {
         super(point1, point2, seeThrough, characterCollidable, projectileCollidable, textureName, textureColor);
         //Calculate the bounds of the movement for the door.
         defaultAngle = angle;
@@ -62,7 +60,7 @@ public class Door extends Wall implements Usable, Update {
 
     public void update(GameData gameData, double deltaTime) {
         if(isMoving) {
-            double angleMoved = swingAngle * deltaTime / 1000;
+            double angleMoved = swingSpeed * deltaTime / 1000;
 
             if(!clockwise)
                 angleMoved *= -1;

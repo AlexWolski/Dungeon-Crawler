@@ -3,6 +3,7 @@ package Tanks3D.DisplayComponents;
 import Tanks3D.GameData;
 import Tanks3D.GameObject.Entity.Entity;
 import Tanks3D.GameObject.Entity.Player;
+import Tanks3D.GameObject.Wall.Stairs;
 import Tanks3D.GameObject.Wall.Wall;
 import Tanks3D.Utilities.Image;
 
@@ -104,9 +105,11 @@ public class Minimap {
         //Draw the walls if they are visible.
         for(Wall wall : gameData.wallList)
             if(wall.getVisible()) {
-                if(wall.isCharacterCollidable())
+                if(wall instanceof Stairs)
+                    graphic.setColor(Color.GREEN);
+                else if(wall.isCharacterCollidable())
                     graphic.setColor(Color.white);
-                else
+                else if(!wall.isCharacterCollidable())
                     graphic.setColor(Color.GRAY);
 
                 drawWall(graphic, wall);

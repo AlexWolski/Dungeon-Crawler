@@ -10,8 +10,8 @@ public abstract class LockedDoor extends Door {
 
     protected boolean locked;
 
-    public LockedDoor(Point2D.Double point1, Point2D.Double point2, boolean seeThrough, boolean characterCollidable, boolean projectileCollidable, String lockedImage, String unlockedImage, Color textureColor) {
-        super(point1, point2, seeThrough, characterCollidable, projectileCollidable, lockedImage, textureColor);
+    public LockedDoor(Point2D.Double point1, Point2D.Double point2, boolean seeThrough, boolean characterCollidable, boolean projectileCollidable, String lockedImage, String unlockedImage, double swingAngle, Color textureColor) {
+        super(point1, point2, seeThrough, characterCollidable, projectileCollidable, lockedImage, swingAngle, textureColor);
 
         this.unlockedImage = unlockedImage;
 
