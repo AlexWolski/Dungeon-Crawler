@@ -37,10 +37,10 @@ public final class Level {
         //Map border
         ObjectManager.add(new BlockedHole(new Point2D.Double(-100, 0), new Point2D.Double(-50, 86.6025403784), null));
         ObjectManager.add(new Stairs(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(50, 86.6025403784), "Dirt Stairs", null));
-        ObjectManager.add(new Door(new Point2D.Double(50, 86.6025403784), new Point2D.Double(100, 0), false, true, true, "Brick", null));
+        ObjectManager.add(new Door(new Point2D.Double(50, 86.6025403784), new Point2D.Double(100, 0), false, true, true, "Locked Wood Door", null));
         ObjectManager.add(new Wall(new Point2D.Double(100, 0), new Point2D.Double(50, -86.6025403784), false, true, true, "Dirt 1", null));
         ObjectManager.add(new Wall(new Point2D.Double(50, -86.6025403784), new Point2D.Double(-50, -86.6025403784), false, true, true, "Dirt 2", null));
-        ObjectManager.add(new Wall(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(-100, 0), false, true, true, "Brick", null));
+        ObjectManager.add(new Door(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(-100, 0), false, true, true, "Locked Fence Door", null));
 
         //Breakable walls
         ObjectManager.add(new BlockedHole(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(0, 0), null));

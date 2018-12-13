@@ -15,6 +15,6 @@ public class Door extends Wall implements Usable {
     }
 
     public void use() {
-
+        System.out.println("Door used!!!");
     }
 }
