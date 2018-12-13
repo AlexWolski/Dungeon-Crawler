@@ -273,7 +273,7 @@ public class Player extends Entity implements Update {
 
             //Call the 'use' method on the nearest usable object in reach if there were any.
             if(object != null)
-                object.use();
+                object.use(this);
         }
     }
 

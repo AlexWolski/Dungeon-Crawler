@@ -8,6 +8,7 @@ import Tanks3D.GameObject.Wall.*;
 import Tanks3D.GameObject.Wall.BreakableWalls.BlockedHole;
 import Tanks3D.GameObject.Wall.BreakableWalls.CrackedBrick;
 import Tanks3D.GameObject.Wall.Door.Door;
+import Tanks3D.GameObject.Wall.Door.LockedFenceDoor;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -40,7 +41,7 @@ public final class Level {
         ObjectManager.add(new Door(new Point2D.Double(50, 86.6025403784), new Point2D.Double(100, 0), false, true, true, "Locked Wood Door", null));
         ObjectManager.add(new Wall(new Point2D.Double(100, 0), new Point2D.Double(50, -86.6025403784), false, true, true, "Dirt 1", null));
         ObjectManager.add(new Wall(new Point2D.Double(50, -86.6025403784), new Point2D.Double(-50, -86.6025403784), false, true, true, "Dirt 2", null));
-        ObjectManager.add(new Door(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(-100, 0), false, true, true, "Locked Fence Door", null));
+        ObjectManager.add(new LockedFenceDoor(new Point2D.Double(-50, -86.6025403784), new Point2D.Double(-100, 0), null));
 
         //Breakable walls
         ObjectManager.add(new BlockedHole(new Point2D.Double(-50, 86.6025403784), new Point2D.Double(0, 0), null));

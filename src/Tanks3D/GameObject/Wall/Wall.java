@@ -18,9 +18,9 @@ public class Wall extends GameObject {
     private BufferedImage texture;
     private byte[] texturePixelData;
     private Color textureColor;
-    private Line2D.Double line;
-    private double length;
-    private double angle;
+    protected Line2D.Double line;
+    protected double length;
+    protected double angle;
     protected boolean seeThrough;
     protected boolean characterCollidable;
     protected boolean projectileCollidable;
