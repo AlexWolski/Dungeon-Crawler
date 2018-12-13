@@ -142,6 +142,11 @@ public class PlayerController {
         }
     }
 
+    //Use an intractable item.
+    public void use() {
+        myPlayer.use();
+    }
+
     //Rotate the player by the given amount.
     public void rotatePlayer(double angle) {
         myPlayer.setViewAngle(myPlayer.getViewAngle().getValue() + angle);

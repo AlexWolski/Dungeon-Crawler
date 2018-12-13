@@ -33,13 +33,16 @@ public class ObjectManager {
 
     //Given an object, determine its type and add it to the list of objects to remove.
     public static void remove(GameObject objectToRemove) {
+        //If the object was in the usable or update list, remove it.
+        gameData.usableList.remove(objectToRemove);
+        gameData.updateList.remove(objectToRemove);
+
         if(objectToRemove instanceof Entity)
             entitiesToRemove.add((Entity) objectToRemove);
         else if(objectToRemove instanceof Wall)
             wallsToRemove.add((Wall) objectToRemove);
 
-        gameData.usableList.remove(objectToRemove);
-        gameData.updateList.remove(objectToRemove);
+        System.out.println("test");
     }
 
     //Given an object, determine its type and add it to the list of objects to add.
@@ -57,6 +60,18 @@ public class ObjectManager {
 
     //Remove objects that need to be removed from the entity and wall lists.
     static void update() {
+        //If there are entities to add, add them and clear the list.
+        if(!entitiesToAdd.isEmpty()) {
+            gameData.entityList.addAll(entitiesToAdd);
+            entitiesToAdd.clear();
+        }
+
+        //If there are entities to add, add them and clear the list.
+        if(!wallsToAdd.isEmpty()) {
+            gameData.wallList.addAll(wallsToAdd);
+            wallsToAdd.clear();
+        }
+
         //If there are entities to remove, remove them and clear the list.
         if(!entitiesToRemove.isEmpty()) {
             for (Entity entity : entitiesToRemove)
@@ -69,18 +84,6 @@ public class ObjectManager {
             for (Wall wall : wallsToRemove)
                 gameData.wallList.remove(wall);
             wallsToRemove.clear();
-        }
-
-        //If there are entities to add, add them and clear the list.
-        if(!entitiesToAdd.isEmpty()) {
-            gameData.entityList.addAll(entitiesToAdd);
-            entitiesToAdd.clear();
-        }
-
-        //If there are entities to add, add them and clear the list.
-        if(!wallsToAdd.isEmpty()) {
-            gameData.wallList.addAll(wallsToAdd);
-            wallsToAdd.clear();
         }
     }
 }

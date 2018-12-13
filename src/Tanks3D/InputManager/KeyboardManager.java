@@ -35,6 +35,7 @@ public final class KeyboardManager {
         inputMap.put(KeyStroke.getKeyStroke(VK_RIGHT, 0, true), "right released");
         inputMap.put(KeyStroke.getKeyStroke(VK_SPACE, 0, false), "space pressed");
         inputMap.put(KeyStroke.getKeyStroke(VK_SPACE, 0, true), "space released");
+        inputMap.put(KeyStroke.getKeyStroke(VK_E, 0, false), "e pressed");
         inputMap.put(KeyStroke.getKeyStroke(VK_ESCAPE, 0, false), "escape pressed");
 
         //Map the classes to the controls.
@@ -52,6 +53,7 @@ public final class KeyboardManager {
         actionMap.put("right released", new LookRight(playerController, false));
         actionMap.put("space pressed", new Fire(playerController, true));
         actionMap.put("space released", new Fire(playerController, false));
+        actionMap.put("e pressed", new Use(playerController));
         actionMap.put("escape pressed", new Pause());
     }
 }

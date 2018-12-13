@@ -29,6 +29,11 @@ public class Player extends Entity implements Update {
     //The distance traveled since the last footstep.
     private double distanceSinceLastStep = 0;
 
+    //The farthest an object can be and the player still be able to use it.
+    private final static double useReach = 5;
+    //The farthest an enemy can be and the player still be able to hit it.
+    private final static double meleReach = 5;
+
     //The player's position and directionAngle when it is spawned.
     private final SpawnPoint spawnPoint;
     //The angle that the player is facing.
@@ -201,6 +206,10 @@ public class Player extends Entity implements Update {
         rotationSpeed = 0;
 
         GameManager.endGame(false);
+    }
+
+    public void use() {
+        System.out.println("use");
     }
 
     public void resetPlayer() {
