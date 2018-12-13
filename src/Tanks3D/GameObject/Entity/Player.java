@@ -7,6 +7,7 @@ import Tanks3D.GameObject.Usable;
 import Tanks3D.Item.Item;
 import Tanks3D.GameObject.SpawnPoint;
 import Tanks3D.GameObject.Wall.*;
+import Tanks3D.Item.Key;
 import Tanks3D.SoundManager;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
@@ -318,5 +319,21 @@ public class Player extends Entity implements Update {
     }
     public void addItem(Item newItem) {
         items.add(newItem);
+    }
+
+    public Key getKey() {
+        Key key = null;
+
+        for(Item item : items) {
+            if (item instanceof Key) {
+                key = (Key) item;
+                break;
+            }
+        }
+
+        if(key != null)
+            items.remove(key);
+
+        return key;
     }
 }
