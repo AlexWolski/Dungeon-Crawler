@@ -1,9 +1,9 @@
 package Tanks3D.DisplayComponents;
 
 import Tanks3D.GameData;
-import Tanks3D.Object.Entity.Entity;
-import Tanks3D.Object.Entity.Player;
-import Tanks3D.Object.Wall.Wall;
+import Tanks3D.GameObject.Entity.Entity;
+import Tanks3D.GameObject.Entity.Player;
+import Tanks3D.GameObject.Wall.Wall;
 import Tanks3D.Utilities.Image;
 
 import java.awt.*;
@@ -102,7 +102,7 @@ public class Minimap {
         Graphics2D graphic = tempImage.createGraphics();
 
         //Draw the walls if they are visible.
-        for(Wall wall : gameData.gameLevel.wallObjects)
+        for(Wall wall : gameData.wallList)
             if(wall.getVisible()) {
                 if(wall.isCharacterCollidable())
                     graphic.setColor(Color.white);

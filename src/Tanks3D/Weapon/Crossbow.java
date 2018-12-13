@@ -1,7 +1,7 @@
 package Tanks3D.Weapon;
 
-import Tanks3D.Object.Entity.Player;
-import Tanks3D.Object.Entity.Projectile.Projectile;
+import Tanks3D.GameObject.Entity.Player;
+import Tanks3D.GameObject.Entity.Projectile.Projectile;
 import Tanks3D.Utilities.FastMath;
 
 import java.awt.image.BufferedImage;

@@ -1,8 +1,8 @@
 package Tanks3D.DisplayComponents.Camera;
 
 import Tanks3D.GameData;
-import Tanks3D.Object.Entity.Entity;
-import Tanks3D.Object.Wall.Wall;
+import Tanks3D.GameObject.Entity.Entity;
+import Tanks3D.GameObject.Wall.Wall;
 import Tanks3D.Utilities.FastMath;
 import Tanks3D.Utilities.Image;
 import Tanks3D.Utilities.Wrappers.MutableDouble;
@@ -169,7 +169,7 @@ public class Camera {
             double furthestWall = 0;
 
             //Iterate through each wall and determine which one to draw.
-            for(Wall wall : gameData.gameLevel.wallObjects) {
+            for(Wall wall : gameData.wallList) {
                 //Scan the wall if it is visible.
                 if(wall.getVisible()) {
                     //Copy the points of the wall.

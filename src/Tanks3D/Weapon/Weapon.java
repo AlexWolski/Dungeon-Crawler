@@ -1,6 +1,6 @@
 package Tanks3D.Weapon;
 
-import Tanks3D.Object.Entity.Player;
+import Tanks3D.GameObject.Entity.Player;
 
 import java.awt.image.BufferedImage;
 

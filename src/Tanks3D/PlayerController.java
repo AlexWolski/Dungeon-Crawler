@@ -1,6 +1,6 @@
 package Tanks3D;
 
-import Tanks3D.Object.Entity.Player;
+import Tanks3D.GameObject.Entity.Player;
 
 //Manage the player and the screen. This extends 'Runnable' so that the draw function can be threaded.
 public class PlayerController {

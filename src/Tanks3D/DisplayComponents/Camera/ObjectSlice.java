@@ -1,6 +1,6 @@
 package Tanks3D.DisplayComponents.Camera;
 
-import Tanks3D.Object.GameObject;
+import Tanks3D.GameObject.GameObject;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

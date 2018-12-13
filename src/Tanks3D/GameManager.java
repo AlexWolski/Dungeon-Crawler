@@ -4,11 +4,11 @@ import Tanks3D.DisplayComponents.Camera.Camera;
 import Tanks3D.DisplayComponents.HUD;
 import Tanks3D.DisplayComponents.Minimap;
 import Tanks3D.DisplayComponents.DisplayWindow;
+import Tanks3D.GameObject.Update;
 import Tanks3D.InputManager.KeyboardManager;
 import Tanks3D.InputManager.MouseManager;
-import Tanks3D.Object.Entity.Entity;
-import Tanks3D.Object.Entity.Player;
-import Tanks3D.Object.Entity.Projectile.Projectile;
+import Tanks3D.GameObject.Entity.Player;
+import Tanks3D.GameObject.Entity.Projectile.Projectile;
 import Tanks3D.Utilities.FastMath;
 
 import java.awt.*;
@@ -64,24 +64,30 @@ public abstract class GameManager {
 
     //Initialize variables. The constructor is private to prevent any classes extending it and creating a new instance.
     static {
+        //Instantiate local objects.
+        gameData = new GameData();
+        //Instantiate the array lists in game data.
+        gameData.wallList = new ArrayList<>();
+        gameData.entityList = new ArrayList<>();
+        gameData.usableList = new ArrayList<>();
+        gameData.updateList = new ArrayList<>();
+
         //Initialize the math class.
         FastMath.init();
         //Initialize the sound class.
         SoundManager.init();
+        //Initialize the garbage manager.
+        ObjectManager.init(gameData);
 
-        //Instantiate local objects.
-        gameData = new GameData();
-        //Create the entity list.
-        gameData.entityList = new ArrayList<>();
         //Load the level from a text file.
-        gameData.gameLevel = new Level(levelFile, gameData.entityList);
+        gameData.gameLevel = new Level(levelFile);
 
         //Create and configure the JFrame. This JFrame will have three panels: the two players screens and a minimap.
         gameWindow = new DisplayWindow("Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
 
         //Initialize the game data elements.
         gameData.player = new Player(gameData.gameLevel.getPlayerSpawn());
-        gameData.entityList.add(gameData.player);
+        ObjectManager.add(gameData.player);
         gameData.camera = new Camera(gameData, gameWindow.getScreenBuffer(), gameData.player.getPosition(), gameData.player.getzPos(), gameData.player.getAngle());
         gameData.hud = new HUD(gameWindow.getScreenBuffer());
         gameData.minimap = new Minimap(gameData, gameWindow.getScreenBuffer(), new Dimension(gameWindow.getHeight()/3, gameWindow.getHeight()/3));
@@ -94,9 +100,7 @@ public abstract class GameManager {
         MouseManager.init(gameWindow, playerController);
 
         //Initialize the round object.
-        Projectile.init(gameData.entityList);
-        //Initialize the garbage collector.
-        ObjectManager.init(gameData.entityList, gameData.gameLevel.wallObjects);
+        Projectile.init();
 
         //The game is not paused by default.
         paused = false;
@@ -110,13 +114,16 @@ public abstract class GameManager {
     }
 
     private static void reset() {
-        //Reset the level.
-        gameData.gameLevel = new Level(levelFile, gameData.entityList);
-        //Reset the entity list.
+        //Clear the entities in game data.
         gameData.entityList.clear();
-        gameData.entityList.add(gameData.player);
+        gameData.usableList.clear();
+        gameData.updateList.clear();
+        //Reset the level.
+        gameData.gameLevel = new Level(levelFile);
+        //Add the player back to the entity and update list.
+        ObjectManager.add(gameData.player);
         //Rest the round pool.
-        Projectile.init(gameData.entityList);
+        Projectile.init();
 
         //Reset the player.
         gameData.player.resetPlayer();
@@ -154,9 +161,9 @@ public abstract class GameManager {
 
         //Run the game if its not paused.
         if(!paused) {
-            //Update the positions of all of the entities. Pass it the iterator in case the entity needs to remove itself from the list.
-            for (Entity entity : gameData.entityList)
-                entity.update(gameData, deltaTime);
+            //Update all of the objects that require updating.
+            for (Update object : gameData.updateList)
+                object.update(gameData, deltaTime);
 
             //Remove or add any objects.
             ObjectManager.update();
