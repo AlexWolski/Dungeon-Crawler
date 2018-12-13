@@ -104,4 +104,18 @@ public class ObjectManager {
             objectsToStopUpdating.clear();
         }
     }
+
+    public static void reset() {
+        entitiesToRemove.clear();
+        wallsToRemove.clear();
+        objectsToStopUpdating.clear();
+        entitiesToAdd.clear();
+        wallsToAdd.clear();
+        objectsToStartUpdating.clear();
+
+        gameData.wallList.clear();
+        gameData.entityList.clear();
+        gameData.updateList.clear();
+        gameData.usableList.clear();
+    }
 }

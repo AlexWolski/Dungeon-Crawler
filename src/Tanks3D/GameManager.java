@@ -16,8 +16,10 @@ import java.util.ArrayList;
 
 //Controls the entire game. The program enters from this class, which is an abstract.
 public abstract class GameManager {
-    //Constant settings.
-    private final static String levelFile = "Underground Arena.txt";
+    //The different levels.
+    private final static String[] levelFiles;
+    //The current level.
+    private static int level = 0;
     //Size of the display.
     private final static int defaultWidth = 1200;
     private final static int defaultHeight = 800;
@@ -64,6 +66,9 @@ public abstract class GameManager {
 
     //Initialize variables. The constructor is private to prevent any classes extending it and creating a new instance.
     static {
+        //Populate the levels array.
+        levelFiles = new String[] { "Level 1.txt", "Level 2.txt" };
+
         //Instantiate local objects.
         gameData = new GameData();
         //Instantiate the array lists in game data.
@@ -80,7 +85,7 @@ public abstract class GameManager {
         ObjectManager.init(gameData);
 
         //Load the level from a text file.
-        gameData.gameLevel = new Level(levelFile);
+        gameData.gameLevel = new Level(levelFiles[0]);
 
         //Create and configure the JFrame. This JFrame will have three panels: the two players screens and a minimap.
         gameWindow = new DisplayWindow("Tanks 3D", new Dimension(defaultWidth, defaultHeight), titleBarHeight);
@@ -111,22 +116,6 @@ public abstract class GameManager {
         //Remove
         //Set the timer for the FPS count.
         time = timeOfLastFrame;
-    }
-
-    private static void reset() {
-        //Clear the entities in game data.
-        gameData.entityList.clear();
-        gameData.usableList.clear();
-        gameData.updateList.clear();
-        //Reset the level.
-        gameData.gameLevel = new Level(levelFile);
-        //Add the player back to the entity and update list.
-        ObjectManager.add(gameData.player);
-        //Rest the round pool.
-        Projectile.init();
-
-        //Reset the player.
-        gameData.player.resetPlayer();
     }
 
     //Get the current time, calculate the time elapsed since the last frame, and store it in 'deltaTime;.
@@ -191,6 +180,20 @@ public abstract class GameManager {
         frames++;
     }
 
+    private static void reset() {
+        //Clear the entities in game data.
+        ObjectManager.reset();
+        //Reset the level.
+        gameData.gameLevel = new Level(levelFiles[level]);
+        //Add the player back to the entity and update list.
+        ObjectManager.add(gameData.player);
+        //Rest the round pool.
+        Projectile.init();
+
+        //Reset the player.
+        gameData.player.resetPlayer();
+    }
+
     public static void endGame(boolean win) {
         //If the game is not already restarting, restart it.
         if(!restarting) {
@@ -199,6 +202,11 @@ public abstract class GameManager {
             restarting = true;
             gameData.hud.setWin(win);
         }
+    }
+
+    public static void nextLevel() {
+        level++;
+        reset();
     }
 
     public static void pause() {

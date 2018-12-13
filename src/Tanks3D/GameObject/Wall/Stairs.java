@@ -1,5 +1,6 @@
 package Tanks3D.GameObject.Wall;
 
+import Tanks3D.GameManager;
 import Tanks3D.SoundManager;
 
 import java.awt.*;
@@ -15,5 +16,7 @@ public class Stairs extends Wall {
         SoundManager.playSound("Stairs");
         //Prevent the player from triggering the action more than once.
         characterCollidable = false;
+        //
+        GameManager.nextLevel();
     }
 }
