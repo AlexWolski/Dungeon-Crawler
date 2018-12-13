@@ -17,7 +17,7 @@ public class Door extends Wall implements Usable, Update {
     protected final static double swingAngle = 85.0;
 
     //The angle of the door when it is closed.
-    protected final double closedAngle;
+    protected final double defaultAngle;
     //The angle of the door when its fully opened in one direction.
     protected final double minAngle;
     //The angle of the door when its fully opened in the other direction.
@@ -27,27 +27,58 @@ public class Door extends Wall implements Usable, Update {
     protected double targetAngle;
     //Determines if the door is moving or not.
     protected boolean isMoving;
+    //Determines the direction the door is moving.
+    protected boolean clockwise;
 
     public Door(Point2D.Double point1, Point2D.Double point2, boolean seeThrough, boolean characterCollidable, boolean projectileCollidable, String textureName, Color textureColor) {
         super(point1, point2, seeThrough, characterCollidable, projectileCollidable, textureName, textureColor);
         //Calculate the bounds of the movement for the door.
-        closedAngle = angle;
-        minAngle = closedAngle - swingAngle;
-        maxAngle = closedAngle + swingAngle;
+        defaultAngle = angle;
+        minAngle = defaultAngle - swingAngle;
+        maxAngle = defaultAngle + swingAngle;
 
         isMoving = false;
     }
 
     public void use(Player player) {
-        targetAngle = minAngle;
-        isMoving = true;
+        //Only move the door if it isn't already moving.
+        if(!isMoving) {
+            //If the door is open, close it.
+            if (angle == minAngle || angle == maxAngle)
+                targetAngle = defaultAngle;
+            //Else,
+            else
+                targetAngle = minAngle;
+
+            //Determine if the wall will rotate clockwise or counter clockwise.
+            if(targetAngle > angle)
+                clockwise = true;
+            else
+                clockwise = false;
+
+            isMoving = true;
+        }
     }
 
     public void update(GameData gameData, double deltaTime) {
-        if(angle != targetAngle) {
+        if(isMoving) {
             double angleMoved = swingAngle * deltaTime / 1000;
 
-            angle += angleMoved;
+            if(!clockwise)
+                angleMoved *= -1;
+
+            if(angle < targetAngle && angle + angleMoved > targetAngle) {
+                isMoving = false;
+                angleMoved = targetAngle - angle;
+                angle = targetAngle;
+            }
+            else if(angle > targetAngle && angle + angleMoved < targetAngle) {
+                isMoving = false;
+                angleMoved = targetAngle - angle;
+                angle = targetAngle;
+            }
+            else
+                angle += angleMoved;
 
             Point2D.Double rotatedPoint = new Point2D.Double(line.x2, line.y2);
             FastMath.rotate(rotatedPoint, getPoint1(), angleMoved);
