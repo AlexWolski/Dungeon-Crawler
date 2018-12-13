@@ -21,7 +21,7 @@ public abstract class LockedDoor extends Door {
 
     public void use(Player player) {
         if(locked) {
-            if(player.getKey() != null) {
+            if(player.useKey() != null) {
                 locked = false;
                 setTexture(unlockedImage);
                 SoundManager.playSound("Unlock");

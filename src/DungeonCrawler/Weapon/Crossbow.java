@@ -3,16 +3,28 @@ package DungeonCrawler.Weapon;
 import DungeonCrawler.GameObject.Entity.Player;
 import DungeonCrawler.GameObject.Entity.Projectile.Projectile;
 import DungeonCrawler.Utilities.FastMath;
+import DungeonCrawler.Utilities.Image;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 public class Crossbow extends Weapon {
+    //An array of images of the crossbow.
+    private static final BufferedImage[] images;
+    //The amount to scale the image.
+    private static double scale = 2;
+
     //The number of milliseconds it takes before the tank can attack again.
     private static final int attackCooldown = 100;
     //The last time the weapon was fired.
     private long lastAttack;
     //Determines if the player can attack again or not.
     private boolean reloading;
+
+    static {
+        images = new BufferedImage[1];
+        images[0] = Image.load("resources/Weapons/Crossbow/Crossbow 2/Ready.png");
+    }
 
     public Crossbow(Player owner) {
         super(owner);
@@ -40,6 +52,10 @@ public class Crossbow extends Weapon {
     }
 
     public void draw(BufferedImage canvas) {
+        Graphics2D graphic = canvas.createGraphics();
 
+        int width = (int)(images[0].getWidth() * scale);
+        int height = (int)(images[0].getHeight() * scale);
+        graphic.drawImage(images[0], canvas.getWidth()/2 - width/2, canvas.getHeight() - height, width, height, null);
     }
 }

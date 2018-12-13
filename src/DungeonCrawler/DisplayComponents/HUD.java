@@ -1,9 +1,11 @@
 package DungeonCrawler.DisplayComponents;
 
 import DungeonCrawler.Utilities.Image;
+import DungeonCrawler.Weapon.Weapon;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 //A Heads Up Display that shows the player's health, and lives.
 public class HUD {
@@ -67,7 +69,7 @@ public class HUD {
     }
 
     //Draw the player's status.
-    public void draw(int maxHealth, int health) {
+    public void draw(int maxHealth, int health, ArrayList<Weapon> weapons) {
         Graphics2D graphic = canvas.createGraphics();
 
         //If the game is not paused, draw the player's stats.
@@ -91,6 +93,10 @@ public class HUD {
             graphic.setStroke(new BasicStroke(2));
             graphic.setColor(Color.white);
             graphic.drawRect(healthBarPos.x, healthBarPos.y, healthBarDim.width, healthBarDim.height);
+
+            //Draw the player's weapons.
+            for(Weapon weapon : weapons)
+                weapon.draw(canvas);
 
             //If the playerController won the game, display the winning message.
             if (win)

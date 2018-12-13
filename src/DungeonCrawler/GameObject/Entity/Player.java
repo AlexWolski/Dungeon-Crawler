@@ -329,11 +329,14 @@ public class Player extends Entity implements Update {
     public void addWeapon(Weapon newWeapon) {
         weapons.add(newWeapon);
     }
+    public ArrayList<Weapon> getWeapons() {
+        return weapons;
+    }
     public void addItem(Item newItem) {
         items.add(newItem);
     }
 
-    public Key getKey() {
+    public Key useKey() {
         Key key = null;
 
         for(Item item : items) {

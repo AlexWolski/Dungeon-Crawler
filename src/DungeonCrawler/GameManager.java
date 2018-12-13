@@ -159,7 +159,7 @@ public abstract class GameManager {
         }
 
         gameData.camera.draw();
-        gameData.hud.draw(gameData.player.getMaxHealth(), gameData.player.getHealth());
+        gameData.hud.draw(gameData.player.getMaxHealth(), gameData.player.getHealth(), gameData.player.getWeapons());
 
         //Only draw the minimap if the game is not paused.
         if(!paused)
