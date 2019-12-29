@@ -1,4 +1,5 @@
-# csc413-SecondGame
+# Dungeon Crawler 3D
 
-## Student Name :	Alex Wolski
-## Student ID :		918276364
+### A Psuedo-3D dungeon crawler game made in Java
+
+![Screenshot](https://i.imgur.com/lSarQDL.png)
